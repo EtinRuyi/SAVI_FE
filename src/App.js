@@ -8,6 +8,8 @@ import { GlobalProvider } from './context/GlobalState';
 //import { useAuth } from './context/auth/AuthState'; // Import useAuth hook
 import 'react-toastify/dist/ReactToastify.css';
 import Home from '../src/pages/home/Home';
+import ForgetPassword from './pages/Reset/ForgetPassword';
+import ResetPassword from './pages/Reset/ResetPassword';
 
 // App component
 function App() {
@@ -16,10 +18,12 @@ function App() {
       <Suspense fallback="loading">
         <Router>
           <GlobalProvider>
-              <Routes>
-                {/* ... (your existing routes) */}
-                <Route path="/" element={<Home />} />
-              </Routes>
+            <Routes>
+              {/* ... (your existing routes) */}
+              <Route path="/" element={<Home />} />
+              <Route path="/resetpassword" element={<ForgetPassword />} />
+              <Route path="/confirmpassword" element={<ResetPassword />} />
+            </Routes>
           </GlobalProvider>
         </Router>
       </Suspense>

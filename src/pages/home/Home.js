@@ -1,28 +1,25 @@
 import React from 'react';
 import styled from 'styled-components';
+import Footer from './Footer';
+import Header from './Header';
+import FirstSection from './LandBody/Section1';
+import SecondSection from './LandBody/Section2';
+import ThirdSection from './LandBody/Section3';
+import FourthSection from './LandBody/Section4';
+import FifthSection from './LandBody/Section5';
 
-// Styled components
-const HomeContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  background-color: #f2f2f2;
-`;
 
-const WelcomeMessage = styled.h1`
-  font-size: 2rem;
-  color: #333;
-  margin-bottom: 20px;
-`;
-
-const Home = () => {
+const Home = (props) => {
   return (
-    <HomeContainer>
-      <WelcomeMessage>You are welcome to Savi Project</WelcomeMessage>
-      {/* Add more components or content as needed */}
-    </HomeContainer>
+    <>
+  <Header/>
+  <FirstSection/>
+  <SecondSection/>
+  <ThirdSection/>
+  <FourthSection/>
+  <FifthSection/>
+  <Footer/>
+   </>
   );
 };
 
