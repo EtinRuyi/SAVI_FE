@@ -8,6 +8,7 @@ import { GlobalProvider } from './context/GlobalState';
 //import { useAuth } from './context/auth/AuthState'; // Import useAuth hook
 import 'react-toastify/dist/ReactToastify.css';
 import Home from '../src/pages/home/Home';
+import Kyc from './pages/Kyc';
 import ForgetPassword from './pages/Reset/ForgetPassword';
 import ResetPassword from './pages/Reset/ResetPassword';
 
@@ -21,6 +22,7 @@ function App() {
             <Routes>
               {/* ... (your existing routes) */}
               <Route path="/" element={<Home />} />
+              <Route path="/kyc-verification" element={<Kyc />} />
               <Route path="/resetpassword" element={<ForgetPassword />} />
               <Route path="/confirmpassword" element={<ResetPassword />} />
             </Routes>
