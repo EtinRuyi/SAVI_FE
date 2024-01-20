@@ -11,6 +11,10 @@ import Home from '../src/pages/home/Home';
 import Kyc from './pages/Kyc';
 import ForgetPassword from './pages/Reset/ForgetPassword';
 import ResetPassword from './pages/Reset/ResetPassword';
+import DashBoard from './pages/DashBoard';
+import GlobalStyles  from './global';
+
+
 
 // App component
 function App() {
@@ -19,10 +23,12 @@ function App() {
       <Suspense fallback="loading">
         <Router>
           <GlobalProvider>
+            <GlobalStyles/>
             <Routes>
               {/* ... (your existing routes) */}
               <Route path="/" element={<Home />} />
               <Route path="/kyc-verification" element={<Kyc />} />
+              <Route path="/dashboard" element={<DashBoard />} />
               <Route path="/resetpassword" element={<ForgetPassword />} />
               <Route path="/confirmpassword" element={<ResetPassword />} />
             </Routes>
