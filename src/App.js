@@ -7,14 +7,14 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { GlobalProvider } from './context/GlobalState';
 //import { useAuth } from './context/auth/AuthState'; // Import useAuth hook
 import 'react-toastify/dist/ReactToastify.css';
-import Home from '../src/pages/home/Home';
 import Kyc from './pages/Kyc';
 import ForgetPassword from './pages/Reset/ForgetPassword';
 import ResetPassword from './pages/Reset/ResetPassword';
 import DashBoard from './pages/DashBoard';
 import GlobalStyles  from './global';
-
-
+import LandingPage from './pages/landingPage/LandingPage'
+import Signin from './pages/signinSignup/SignIn';
+import Signup from './pages/signinSignup/SignUp';
 
 // App component
 function App() {
@@ -26,11 +26,13 @@ function App() {
             <GlobalStyles/>
             <Routes>
               {/* ... (your existing routes) */}
-              <Route path="/" element={<Home />} />
+              <Route path="/" element={<LandingPage />} />
               <Route path="/kyc-verification" element={<Kyc />} />
               <Route path="/dashboard" element={<DashBoard />} />
               <Route path="/resetpassword" element={<ForgetPassword />} />
               <Route path="/confirmpassword" element={<ResetPassword />} />
+              <Route path="/signin" element={<Signin />} />
+              <Route path="/signup" element={<Signup />} />
             </Routes>
           </GlobalProvider>
         </Router>
