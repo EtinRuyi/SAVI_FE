@@ -12,6 +12,7 @@ import ForgetPassword from './pages/Reset/ForgetPassword';
 import ResetPassword from './pages/Reset/ResetPassword';
 import DashBoard from './pages/DashBoard';
 import GlobalStyles  from './global';
+import Sidebar from "./components/navs/Sidebar"
 import LandingPage from './pages/landingPage/LandingPage'
 import Signin from './pages/signinSignup/SignIn';
 import Signup from './pages/signinSignup/SignUp';
@@ -31,6 +32,7 @@ function App() {
               <Route path="/dashboard" element={<DashBoard />} />
               <Route path="/resetpassword" element={<ForgetPassword />} />
               <Route path="/confirmpassword" element={<ResetPassword />} />
+              <Route path="/sidebar" element={<Sidebar />} />
               <Route path="/signin" element={<Signin />} />
               <Route path="/signup" element={<Signup />} />
             </Routes>
