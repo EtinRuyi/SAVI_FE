@@ -1,54 +1,75 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Link } from "react-router-dom";
-import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
-import SignInInput from "../../components/SignInInput";
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+import SignInInput from '../../components/SignInInput';
+import { GoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 
+const SignIn = () => {
+  const [email, setEmail] = useState('');
+  const [signInAttempted, setSignInAttempted] = useState(false);
+  const [loginError, setLoginError] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
+  const responseGoogleSuccess = async (response) => {
+    console.log(response);
+    setSignInAttempted(true);
+    axios
+      .post(
+        `https://localhost:7226/api/Authentication/signin-google/${response.credential}`
+      )
+      .then((backendResponse) => {
+        console.log(backendResponse.data);
+        navigate('/dashboard');
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+  const responseGoogleFailure = (error) => {
+    setSignInAttempted(true);
+    setLoginError('Google Sign-In failed. Please try again.');
+    console.error('Google Sign-In failed. Please try again.', error);
+  };
 
-  const SignIn = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const navigate = useNavigate();
-
-    const handleSignIn = async (e) => {
-      e.preventDefault();
-      if(email==="" || password===""){
-        alert("Input your email and password");
-        toast.error('Input your email and password');
-        return;
-      }
-      try {
-        const response = await axios.post('https://localhost:7226/api/Authentication/Login', {
+  const handleSignIn = async (e) => {
+    e.preventDefault();
+    if (email === '' || password === '') {
+      alert('Input your email and password');
+      toast.error('Input your email and password');
+      return;
+    }
+    try {
+      const response = await axios.post(
+        'https://localhost:7226/api/Authentication/Login',
+        {
           email,
           password,
-        });
-        
-        const data = response.data;
-        if(data.succeeded){
-          toast.success('Login success. '+data.message);
-          localStorage.setItem('email', email);
-        navigate('/dashboard'); 
-        }else{
-          toast.error('Login failed. '+data.message);
         }
-        
-      } catch (error) {
-        toast.error('Login failed. '+error);
+      );
+
+      const data = response.data;
+      if (data.succeeded) {
+        toast.success('Login success. ' + data.message);
+        localStorage.setItem('email', email);
+        navigate('/dashboard');
+      } else {
+        toast.error('Login failed. ' + data.message);
       }
-    };
-
-
-
+    } catch (error) {
+      toast.error('Login failed. ' + error);
+    }
+  };
 
   return (
     <SignInRoot>
       <FrameContainer1>
         <Link to="/">
-          {" "}
+          {' '}
           <Savi>Savi.</Savi>
         </Link>
 
@@ -77,13 +98,12 @@ import axios from 'axios';
           <FrameContainer2>
             <FrameParent>
               <ButtondefaultParent>
-                <Buttondefault style={{ cursor: "pointer" }} >
-                  <Iconadd alt="" />
-                  <GoogleIcon alt="" src="/google.svg" />
-                  {/* <Text2 placeholder="Sign in with Google" type="text" /> */}
-                  Sign in with Google
-                  <Iconadd alt="" />
-                </Buttondefault>
+                <GoogleContainer>
+                  <GoogleLogin
+                    onSuccess={responseGoogleSuccess}
+                    onError={responseGoogleFailure}
+                  />
+                </GoogleContainer>
                 <DividerParent>
                   <DividerIcon loading="eager" alt="" src="/divider.svg" />
                   <Text3>OR</Text3>
@@ -99,7 +119,7 @@ import axios from 'axios';
                       placeholder="Enter your email"
                       type="text"
                       value={email}
-                      onChange={(e)=>setEmail(e.target.value)}
+                      onChange={(e) => setEmail(e.target.value)}
                     />
 
                     <SignInInput
@@ -108,22 +128,21 @@ import axios from 'axios';
                       placeholder="***********************"
                       type="password"
                       value={password}
-                      onChange={(e)=>setPassword(e.target.value)}
+                      onChange={(e) => setPassword(e.target.value)}
                     />
                   </ButtondefaultParent>
                   <Link to="/reset-password">
-                   <CTA >Forgot password</CTA>
+                    <CTA>Forgot password</CTA>
                   </Link>
-                 
                 </ButtondefaultParent>
-                  <Ctadefault onClick={handleSignIn}>                    
-                    <Text7>Login</Text7>
-                  </Ctadefault>
+                <Ctadefault onClick={handleSignIn}>
+                  <Text7>Login</Text7>
+                </Ctadefault>
               </FrameGroup>
             </FrameParent>
             <FooterFrame>
               <DontHaveAn>{`Don’t have an account ? `}</DontHaveAn>
-              <Link  to="/signup">
+              <Link to="/signup">
                 <SignUpHere>Sign Up here</SignUpHere>
               </Link>
             </FooterFrame>
@@ -154,6 +173,10 @@ const Savi = styled.h3`
     font-size: var(--font-size-lgi);
     line-height: 1.69rem;
   }
+`;
+const GoogleContainer = styled.div`
+  margin: auto;
+  text-align: center;
 `;
 const EasyGroupSavings = styled.h1`
   margin: 0;
@@ -298,42 +321,42 @@ const Iconadd = styled.img`
   flex-shrink: 0;
   display: none;
 `;
-const GoogleIcon = styled.img`
-  position: relative;
-  width: 1.5rem;
-  height: 1.5rem;
-  overflow: hidden;
-  flex-shrink: 0;
-  min-height: 1.5rem;
-`;
-const Text2 = styled.input`
-  width: calc(100% - 56px);
-  border: none;
-  outline: none;
-  font-family: var(--body-textmedium-16);
-  font-size: var(--body-textmedium-16-size);
-  background-color: transparent;
-  position: relative;
-  letter-spacing: 0.15px;
-  line-height: 140%;
-  color: var(--grey-400);
-  text-align: left;
-  display: flex;
-  align-items: center;
-`;
-const Buttondefault = styled.div`
-  align-self: stretch;
-  border-radius: var(--br-5xs);
-  background-color: var(--white);
-  border: 1px solid var(--grey-300);
-  overflow: hidden;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  padding: var(--padding-xs) var(--padding-base);
-  gap: var(--gap-5xs);
-`;
+// const GoogleIcon = styled.img`
+//   position: relative;
+//   width: 1.5rem;
+//   height: 1.5rem;
+//   overflow: hidden;
+//   flex-shrink: 0;
+//   min-height: 1.5rem;
+// `;
+// const Text2 = styled.input`
+//   width: calc(100% - 56px);
+//   border: none;
+//   outline: none;
+//   font-family: var(--body-textmedium-16);
+//   font-size: var(--body-textmedium-16-size);
+//   background-color: transparent;
+//   position: relative;
+//   letter-spacing: 0.15px;
+//   line-height: 140%;
+//   color: var(--grey-400);
+//   text-align: left;
+//   display: flex;
+//   align-items: center;
+// `;
+// const Buttondefault = styled.div`
+//   align-self: stretch;
+//   border-radius: var(--br-5xs);
+//   background-color: var(--white);
+//   border: 1px solid var(--grey-300);
+//   overflow: hidden;
+//   display: flex;
+//   flex-direction: row;
+//   align-items: center;
+//   justify-content: center;
+//   padding: var(--padding-xs) var(--padding-base);
+//   gap: var(--gap-5xs);
+// `;
 const DividerIcon = styled.img`
   position: relative;
   width: 8.75rem;
@@ -366,94 +389,94 @@ const ButtondefaultParent = styled.div`
   justify-content: flex-start;
   gap: var(--gap-base);
 `;
-const Text4 = styled.div`
-  position: relative;
-  font-size: var(--body-textmedium-16-size);
-  letter-spacing: 0.15px;
-  line-height: 140%;
-  font-weight: 600;
-  font-family: var(--body-textmedium-16);
-  color: var(--main-text);
-  text-align: left;
-`;
-const Text5 = styled.input`
-  width: 100%;
-  border: none;
-  outline: none;
-  font-family: var(--body-textmedium-16);
-  font-size: var(--body-textmedium-16-size);
-  background-color: transparent;
-  position: relative;
-  letter-spacing: 0.15px;
-  line-height: 140%;
-  color: var(--grey-400);
-  text-align: left;
-  display: flex;
-  align-items: center;
-`;
-const Buttondefault1 = styled.div`
-  align-self: stretch;
-  border-radius: var(--br-5xs);
-  background-color: var(--white);
-  border: 1px solid var(--grey-300);
-  overflow: hidden;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  padding: var(--padding-xs) var(--padding-base);
-  gap: var(--gap-5xs);
-`;
-const TextParent = styled.div`
-  align-self: stretch;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  gap: var(--gap-5xs);
-`;
-const Text6 = styled.input`
-  width: calc(100% - 24px);
-  border: none;
-  outline: none;
-  font-family: var(--body-textmedium-16);
-  font-size: var(--button-normal-14-size);
-  background-color: transparent;
-  position: relative;
-  line-height: 1.25rem;
-  color: var(--grey-400);
-  text-align: left;
-  display: flex;
-  align-items: center;
-`;
-const EyeIcon = styled.img`
-  position: relative;
-  width: 1.5rem;
-  height: 1.5rem;
-  overflow: hidden;
-  flex-shrink: 0;
-`;
-const TextGroup = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--gap-xl);
-`;
-const Buttondefault2 = styled.div`
-  align-self: stretch;
-  border-radius: var(--br-5xs);
-  background-color: var(--white);
-  border: 1px solid var(--grey-300);
-  overflow: hidden;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  padding: var(--padding-xs) 1.06rem var(--padding-xs) var(--padding-base);
-  gap: var(--gap-5xs);
-`;
+// const Text4 = styled.div`
+//   position: relative;
+//   font-size: var(--body-textmedium-16-size);
+//   letter-spacing: 0.15px;
+//   line-height: 140%;
+//   font-weight: 600;
+//   font-family: var(--body-textmedium-16);
+//   color: var(--main-text);
+//   text-align: left;
+// `;
+// const Text5 = styled.input`
+//   width: 100%;
+//   border: none;
+//   outline: none;
+//   font-family: var(--body-textmedium-16);
+//   font-size: var(--body-textmedium-16-size);
+//   background-color: transparent;
+//   position: relative;
+//   letter-spacing: 0.15px;
+//   line-height: 140%;
+//   color: var(--grey-400);
+//   text-align: left;
+//   display: flex;
+//   align-items: center;
+// `;
+// const Buttondefault1 = styled.div`
+//   align-self: stretch;
+//   border-radius: var(--br-5xs);
+//   background-color: var(--white);
+//   border: 1px solid var(--grey-300);
+//   overflow: hidden;
+//   display: flex;
+//   flex-direction: row;
+//   align-items: center;
+//   justify-content: flex-start;
+//   padding: var(--padding-xs) var(--padding-base);
+//   gap: var(--gap-5xs);
+// `;
+// const TextParent = styled.div`
+//   align-self: stretch;
+//   display: flex;
+//   flex-direction: column;
+//   align-items: flex-start;
+//   justify-content: flex-start;
+//   gap: var(--gap-5xs);
+// `;
+// const Text6 = styled.input`
+//   width: calc(100% - 24px);
+//   border: none;
+//   outline: none;
+//   font-family: var(--body-textmedium-16);
+//   font-size: var(--button-normal-14-size);
+//   background-color: transparent;
+//   position: relative;
+//   line-height: 1.25rem;
+//   color: var(--grey-400);
+//   text-align: left;
+//   display: flex;
+//   align-items: center;
+// `;
+// const EyeIcon = styled.img`
+//   position: relative;
+//   width: 1.5rem;
+//   height: 1.5rem;
+//   overflow: hidden;
+//   flex-shrink: 0;
+// `;
+// const TextGroup = styled.div`
+//   flex: 1;
+//   display: flex;
+//   flex-direction: row;
+//   align-items: center;
+//   justify-content: space-between;
+//   gap: var(--gap-xl);
+// `;
+// const Buttondefault2 = styled.div`
+//   align-self: stretch;
+//   border-radius: var(--br-5xs);
+//   background-color: var(--white);
+//   border: 1px solid var(--grey-300);
+//   overflow: hidden;
+//   display: flex;
+//   flex-direction: row;
+//   align-items: center;
+//   justify-content: flex-start;
+//   padding: var(--padding-xs) 1.06rem var(--padding-xs) var(--padding-base);
+//   gap: var(--gap-5xs);
+// `;
 const CTA = styled.div`
   position: relative;
   font-size: var(--body-textmedium-16-size);
@@ -611,7 +634,7 @@ const SignInRoot = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   gap: var(--gap-0xs);
-  background-image: url("/sign-in@3x.png");
+  background-image: url('/sign-in@3x.png');
   background-size: 100% 110%;
   background-repeat: no-repeat;
   background-position: left;
@@ -630,4 +653,3 @@ const SignInRoot = styled.div`
     background-size: cover;
   }
 `;
-

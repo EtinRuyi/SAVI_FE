@@ -6,13 +6,16 @@ import reportWebVitals from './reportWebVitals';
 // import { ToastContainer } from 'react-toastify';
 // import 'react-toastify/dist/ReactToastify.css';
 import GlobalStyles from "./global";
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 ReactDOM.render(
+  <GoogleOAuthProvider clientId="667855328126-eflhj0idirqrejsvfm1616prpbpfr03j.apps.googleusercontent.com">
   <React.StrictMode>
     <GlobalStyles />
     <App />
     {/* <ToastContainer /> */}
-  </React.StrictMode>,
+  </React.StrictMode>
+  </GoogleOAuthProvider>,
   document.getElementById('root')
 );
 
