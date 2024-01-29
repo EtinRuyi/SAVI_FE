@@ -16,6 +16,8 @@ import Sidebar from "./components/navs/Sidebar"
 import LandingPage from './pages/landingPage/LandingPage'
 import Signin from './pages/signinSignup/SignIn';
 import Signup from './pages/signinSignup/SignUp';
+import PersonalSavings from "./pages/PersonalSavings";
+import PersonalSavingsNoGoals from "./pages/PersonalSavingsNoGoals";
 
 // App component
 function App() {
@@ -35,6 +37,9 @@ function App() {
               <Route path="/sidebar" element={<Sidebar />} />
               <Route path="/signin" element={<Signin />} />
               <Route path="/signup" element={<Signup />} />
+              <Route path="/personalsaving" element={<PersonalSavings />} />
+              <Route path="/personalsavingnogoal" element={<PersonalSavingsNoGoals />} />
+
             </Routes>
           </GlobalProvider>
         </Router>
