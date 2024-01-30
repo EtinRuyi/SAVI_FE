@@ -1,4 +1,4 @@
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle } from 'styled-components';
 
 export default createGlobalStyle`
     body {
@@ -471,7 +471,73 @@ export default createGlobalStyle`
 --br-81xl: 100px;
 --br-5xs: 8px;
 
+/* fonts */
+--button-semi-bold-14: Inter;
+--font-bodoni-moda: 'Bodoni Moda';
+
+/* font sizes */
+--body-text-bold-16-size: 1rem;
+--button-semi-bold-14-size: 0.88rem;
+--font-size-xl: 1.25rem;
+--headline-bold-48-size: 3rem;
+--font-size-13xl: 2rem;
+--xs-bold-size: 0.75rem;
+--font-size-mini: 0.94rem;
+--headline-bold-24-size: 1.5rem;
+
+/* Colors */
+--grey-50: #f9fafb;
+--gray-100: #f3f4f6;
+--white: #fff;
+--gray-300: #d1d5db;
+--grey-300: #d0d5dd;
+--gray-400: #9ca3af;
+--grey-400: #98a2b3;
+--neutral-800: #1e293b;
+--main-text: #101828;
+--white-white-15: rgba(255, 255, 255, 0.15);
+--primary-color: #b5179e;
+--color-black: #000;
+--savi-50: #f5b9ed;
+--savi: #f38fe5;
+--color-darkslategray: #475569;
+--blue-500: #3b82f6;
+--blue-1: #2f80ed;
+--teal-500: #14b8a6;
+--gray-200: #e5e7eb;
+--blue-100: #dbeafe;
+--blue-300: #93c5fd;
+
+/* Gaps */
+--gap-5xs: 0.5rem;
+--gap-5xl: 1.5rem;
+--gap-13xl: 2rem;
+--gap-base: 1rem;
+--gap-3xs: 0.63rem;
+--gap-9xs: 0.25rem;
+--gap-81xl: 6.25rem;
+
+/* Paddings */
+--padding-3xs: 0.63rem;
+--padding-5xl: 1.5rem;
+--padding-13xl: 2rem;
+--padding-base: 1rem;
+--padding-5xs: 0.5rem;
+--padding-9xs: 0.25rem;
+--padding-21xl: 2.5rem;
+--padding-xs: 0.75rem;
+
+/* Border radiuses */
+--br-81xl: 100px;
+--br-181xl: 200px;
+--br-1860xl-1: 1879.1px;
+--br-base: 16px;
+--br-xs: 12px;
+--br-7xs: 6px;
+--br-12xs: 1px;
+--br-11xs: 2px;
+--br-5xs: 8px;
+--br-980xl: 999px;
 
 }
-
 `;

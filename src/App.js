@@ -11,13 +11,14 @@ import Kyc from './pages/Kyc';
 import ForgetPassword from './pages/Reset/ForgetPassword';
 import ResetPassword from './pages/Reset/ResetPassword';
 import DashBoard from './pages/DashBoard';
-import GlobalStyles  from './global';
-import Sidebar from "./components/navs/Sidebar"
-import LandingPage from './pages/landingPage/LandingPage'
+import GlobalStyles from './global';
+import Sidebar from './components/navs/Sidebar';
+import LandingPage from './pages/landingPage/LandingPage';
 import Signin from './pages/signinSignup/SignIn';
 import Signup from './pages/signinSignup/SignUp';
-import PersonalSavings from "./pages/PersonalSavings";
-import PersonalSavingsNoGoals from "./pages/PersonalSavingsNoGoals";
+import PersonalSavings from './pages/PersonalSavings';
+import PersonalSavingsNoGoals from './pages/PersonalSavingsNoGoals';
+import PersonalSaving from './pages/savings/PersonalSaving';
 
 // App component
 function App() {
@@ -26,7 +27,7 @@ function App() {
       <Suspense fallback="loading">
         <Router>
           <GlobalProvider>
-            <GlobalStyles/>
+            <GlobalStyles />
             <Routes>
               {/* ... (your existing routes) */}
               <Route path="/" element={<LandingPage />} />
@@ -38,8 +39,11 @@ function App() {
               <Route path="/signin" element={<Signin />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/personalsaving" element={<PersonalSavings />} />
-              <Route path="/personalsavingnogoal" element={<PersonalSavingsNoGoals />} />
-
+              <Route
+                path="/personalsavingnogoal"
+                element={<PersonalSavingsNoGoals />}
+              />
+              <Route path="/personalsavings" element={<PersonalSaving />} />
             </Routes>
           </GlobalProvider>
         </Router>
