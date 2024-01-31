@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import AddMoreGoals from '../../components/AddMoreGoals';
 import PortalPopup from '../../components/PortalPopup';
 import WithdrawFunds1 from '../../components/savings/WithdrawFunds1';
@@ -9,6 +9,7 @@ const PersonalSaving = () => {
   const [isAddMoreGoalsOpen, setAddMoreGoalsOpen] = useState(false);
   const [isWithdrawFundsOpen, setWithdrawFundsOpen] = useState(false);
   const [isWithdrawFunds1Open, setWithdrawFunds1Open] = useState(false);
+  const [personalSavingData, setPersonalSavingData] = useState(null);
 
   const openAddMoreGoals = useCallback(() => {
     setAddMoreGoalsOpen(true);
@@ -38,6 +39,22 @@ const PersonalSaving = () => {
     setWithdrawFunds1Open(false);
   }, []);
 
+  useEffect(() => {
+    // Function to fetch personal savings data from the API
+    const fetchPersonalSavingData = async () => {
+      try {
+        const response = await fetch("https://localhost:7226/api/Saving/PersonalSavingDetails");
+        const data = await response.json();
+        setPersonalSavingData(data);
+      } catch (error) {
+        console.error('Error fetching personal savings data:', error);
+      }
+    };
+
+    // Call the function to fetch data
+    fetchPersonalSavingData();
+  }, []);
+
   return (
     <>
       <PersonalSavingRoot>
@@ -48,7 +65,7 @@ const PersonalSaving = () => {
         <MyGoalParent>
           <MyGoal onClick={onMyGoalTextClick}>My Goal</MyGoal>
           <IconsolidcheveronRight2 alt="" src="/iconsolidcheveronright.svg" />
-          <TripToBali>Trip to Bali</TripToBali>
+          <TripToBali>{personalSavingData?.goalName || 'Trip to Bali'}</TripToBali>
         </MyGoalParent>
         <FrameGroup>
           <FrameContainer>
@@ -56,31 +73,28 @@ const PersonalSaving = () => {
               <AmountSavedParent>
                 <Savings>Amount Saved</Savings>
                 <Parent1>
-                  <B>₦200,000</B>
+                  <B>{personalSavingData?.amountSaved || '₦200,000'}</B>
                   <EyeSlashIcon alt="" />
                 </Parent1>
               </AmountSavedParent>
               <AmountSavedParent>
                 <Savings>Total Target</Savings>
                 <Parent1>
-                  <B>₦1,000,000</B>
+                  <B>{personalSavingData?.totalTarget || '₦1,000,000'}</B>
                   <EyeSlashIcon alt="" />
                 </Parent1>
               </AmountSavedParent>
               <AmountSavedParent>
                 <Savings>Days left</Savings>
                 <Parent1>
-                  <B>205 days</B>
+                  <B>{personalSavingData?.daysLeft || '205 days'}</B>
                   <EyeSlashIcon alt="" />
                 </Parent1>
               </AmountSavedParent>
             </FrameDiv>
             <FrameParent1>
               <IconaddCircleOutlineParent onClick={openWithdrawFunds}>
-                <IconaddCircleOutline
-                  alt=""
-                  src="/iconadd-circle-outline.svg"
-                />
+                <IconaddCircleOutline alt="" src="/iconadd-circle-outline.svg" />
                 <PageName>Fund Target</PageName>
               </IconaddCircleOutlineParent>
               <SendParent onClick={openWithdrawFunds1}>
