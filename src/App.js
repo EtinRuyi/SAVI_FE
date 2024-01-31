@@ -20,6 +20,7 @@ import FundSavings from './components/modal/FundSavings';
 import PersonalSavings from './pages/PersonalSavings';
 import PersonalSavingsNoGoals from './pages/PersonalSavingsNoGoals';
 import PersonalSaving from './pages/savings/PersonalSaving';
+import Savings from './pages/Savings/Savings';
 
 // App component
 function App() {
@@ -39,13 +40,14 @@ function App() {
               <Route path="/sidebar" element={<Sidebar />} />
               <Route path="/signin" element={<Signin />} />
               <Route path="/signup" element={<Signup />} />
-              <Route path="/fundsaving" element={< FundSavings/>} />
+              <Route path="/fundsaving" element={<FundSavings />} />
               <Route path="/personalsaving" element={<PersonalSavings />} />
               <Route
                 path="/personalsavingnogoal"
                 element={<PersonalSavingsNoGoals />}
               />
               <Route path="/personalsavings" element={<PersonalSaving />} />
+              <Route path="/savings" element={<Savings />} />
             </Routes>
           </GlobalProvider>
         </Router>

@@ -1,0 +1,42 @@
+{
+
+    "data": {
+        "goals": [
+    {
+        "category": "Travel",
+        "title": "Trip to Bahamas",
+        "amount": "500/6000",
+        "progress": "30%"
+
+    },
+    {
+        "category": "Travel",
+        "title": "Trip to Bahamas",
+        "amount": "500/6000",
+        "progress": "40%"
+
+    },
+    {
+        "category": "Travel",
+        "title": "Trip to Bahamas",
+        "amount": "500/6000",
+        "progress": "60%"
+
+    },
+    {
+        "category": "Travel",
+        "title": "Trip to Bahamas",
+        "amount": "500/6000",
+        "progress": "40%"
+
+    },
+    {
+        "category": "Travel",
+        "title": "Trip to Bahamas",
+        "amount": "500/6000",
+        "progress": "60%"
+
+    }
+]
+}
+}
