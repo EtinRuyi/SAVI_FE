@@ -19,9 +19,9 @@ import Signup from './pages/signinSignup/SignUp';
 import FundSavings from './components/modal/FundSavings';
 import PersonalSavings from './pages/PersonalSavings';
 import PersonalSavingsNoGoals from './pages/PersonalSavingsNoGoals';
-import PersonalSaving from './pages/savings/PersonalSaving';
+import PersonalSaving from './pages/Savings/PersonalSaving';
 import Savings from './pages/Savings/Savings';
-
+import ExploreGroup from './pages/Group/ExploreGroup';
 // App component
 function App() {
   return (
@@ -48,6 +48,7 @@ function App() {
               />
               <Route path="/personalsavings" element={<PersonalSaving />} />
               <Route path="/savings" element={<Savings />} />
+              <Route path="/exploregroup" element={<ExploreGroup />} />
             </Routes>
           </GlobalProvider>
         </Router>

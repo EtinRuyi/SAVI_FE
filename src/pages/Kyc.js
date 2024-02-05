@@ -14,8 +14,8 @@ const Heading = styled.div`
   text-align: center;
 `;
 const Paragraph = styled.p`
-  font-size: 11px;
-  text-align: center;
+  font-size: 16px;
+  text-align: start;
 `;
 const Span = styled.span`
   color: #b5179e;
