@@ -14,7 +14,7 @@ const Notification = (props) => {
 const Div = styled.div`
   align-self: center;
   display: flex;
-  margin-top: 300px;
+  margin-top: 200px;
   margin-left: 250px;
   flex-direction: column;
   font-size: 16px;

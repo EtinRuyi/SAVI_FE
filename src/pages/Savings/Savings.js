@@ -12,6 +12,7 @@ const Content = styled.div`
   flex-direction: column;
   gap: 24px;
   position: relative;
+  background-color: #f9fafb;
 `;
 
 const Savings = () => {
