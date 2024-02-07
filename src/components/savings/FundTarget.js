@@ -1,24 +1,55 @@
+import axios from 'axios';
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import styled from 'styled-components';
 
-const WithdrawFunds1 = () => {
+function FundTarget({savingsId}) {
   const [amountToSave, setAmountToSave] = useState('');
 
+  
   const handleAmountChange = (event) => {
     // Allow only digits (0-9) and update the amountToSave
     const newAmount = event.target.value.replace(/\D/g, '');
     setAmountToSave(newAmount);
   };
 
-  const handleSaveSubmit = () => {
-    // Replace the following line with your actual API call or other submission logic
-    console.log('Submitting amount to save:', amountToSave);
+  const handleSaveSubmit = async () => {
+let description = "";
+let amount = amountToSave;
+let walletNumber = localStorage.getItem("walletNumber");
+let userId = localStorage.getItem("userId");
+
+    try {
+      const response = await axios.post(
+        'https://localhost:7226/api/Saving/fund-personal-saving',
+        {
+          
+            description,
+            amount,
+            walletNumber,
+            savingsId,
+            userId
+        }
+      );
+
+      const data = response.data;
+
+      if (data.succeeded) {
+        toast.success(data.message);
+        console.log(data.data.balance);
+        localStorage.setItem('balance', data.data.balance);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error('' + error);
+    }
   };
 
   return (
     <WithdrawFundsRoot>
       <TextWrapper>
-        <Text1>Access Your Wallet</Text1>
+        <Text1>Fund Target</Text1>
       </TextWrapper>
       <Text2>
         <TextTxt>
@@ -49,7 +80,7 @@ const WithdrawFunds1 = () => {
   );
 };
 
-export default WithdrawFunds1;
+export default FundTarget;
 
 const Text1 = styled.b`
   position: relative;

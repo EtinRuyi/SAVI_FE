@@ -9,7 +9,7 @@ import Success from "../../components/modal/Success"
 const Group11Image = styled.img`
   width: 110px;
   height: 30px;
-  margin-right: 4px; 
+  margin-right: 4px;
 `;
 
 const JoinButton = styled.button`
@@ -32,7 +32,7 @@ const MyGoals = styled.b`
 const AddNewGoal = styled.div`
   position: relative;
   font-size: 14px;
- 
+
   line-height: 16px;
   font-weight: 500;
   color: #2f80ed;
@@ -54,7 +54,7 @@ const FrameChild = styled.img`
   position: relative;
   border-radius: 8px;
   height: 200px;
-  
+
   flex-shrink: 0;
   object-fit: cover;
 `;
@@ -63,7 +63,7 @@ const AvatarIcon = styled.img`
   position: relative;
   border-radius: 999px;
   height: 16px;
-  
+
   flex-shrink: 0;
   object-fit: cover;
   display: none;
@@ -72,7 +72,7 @@ const StarsIcon = styled.img`
   width: 12px;
   position: relative;
   height: 12px;
- 
+
   flex-shrink: 0;
   display: none;
 `;
@@ -87,22 +87,19 @@ const Status1 = styled.div`
 const Placeholder = styled.div`
   position: relative;
   font-weight: 500;
- 
-  
 `;
 const Placeholder1 = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
-  padding-top:  5px;
-  
+  padding-top: 5px;
 `;
 const XLgIcon = styled.img`
   width: 8px;
   position: relative;
   height: 8px;
- 
+
   flex-shrink: 0;
 `;
 const CloseIcon = styled.div`
@@ -113,7 +110,7 @@ const CloseIcon = styled.div`
   display: none;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;;
+  justify-content: space-between;
 `;
 const BadgeAndTag = styled.div`
   border-radius: 999px;
@@ -143,7 +140,7 @@ const TripToBali = styled.div`
   position: relative;
   font-size: 18px;
   letter-spacing: 0.009em;
-  line-height: 1.5; 
+  line-height: 1.5;
   font-weight: 300;
 `;
 
@@ -152,7 +149,7 @@ const BadgeParent = styled.div`
   flex-direction: column;
   justify-content: space-between;
   gap: 10px;
-  width: 100%;  
+  width: 100%;
 `;
 
 const FrameDiv = styled.div`
@@ -169,10 +166,7 @@ const FrameContainer = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: center;
- 
 `;
-
-
 
 const FrameGroup = styled.div`
   background-color: #fff;
@@ -210,10 +204,10 @@ const FrameParent1 = styled.div`
 
 const PersonalSavingRoot = styled.div`
   width: 100%;
-  position: relative;
+  //position: relative;
   background-color: #f9fafb;
-  height: 1024px;
-  
+  //height: 1024px;
+
   text-align: left;
   font-size: 32px;
   color: #000;
@@ -226,7 +220,6 @@ const JoinContainer = styled.div`
   justify-content: space-between;
 `;
 
-
 const VerticalDotsImage = styled.img`
   width: 16px;
   height: 16px;
@@ -236,7 +229,7 @@ const VerticalDotsImage = styled.img`
 const Group111Image = styled.img`
   width: 110px;
   height: 30px;
-  margin-right: 4px; 
+  margin-right: 4px;
 `;
 
 const ImageContainer = styled.div`
@@ -285,51 +278,7 @@ const ExploreGroup = () => {
     setLogoutModalOpen(false);
   }, []);
 
-  // const joinGroup = useCallback(async () => {
-  //   try {
-  //     const response = await fetch("https://localhost:7226/api/GroupMembers/join-group");
-  //     const data = await response.json();
-  //     setJoinGroup(data);
-  //     setSuccessful(true); // Set successful to true when join operation is successful
-  //   } catch (error) {
-  //     console.error('Error joining group:', error);
-  //   }
-  // }, []);
-
-  const joinGroup = () => {
-    setSuccessful(true);
-  };
   
-  useEffect(() => {
-   
-    const fetchExploreGroupData = async () => {
-      try {
-        const response = await fetch("https://localhost:7226/api/Group/get-explore-details");
-        const data = await response.json();
-        setExploreGroupData(data);
-      } catch (error) {
-        console.error('Error fetching Explore Group data:', error);
-      }
-    };
-
-    // Call the function to fetch data
-    fetchExploreGroupData();
-  }, []);
-
-  
-  useEffect(() => {
-    const fetchJoinGroup = async () => {
-      try {
-        const response = await fetch("https://localhost:7226/api/GroupMembers/join-group");
-        const data = await response.json();
-        setJoinGroup(data);
-      } catch (error) {
-        console.error('Error fetching Join Group data:', error);
-      }
-    };
-
-    fetchJoinGroup();
-  }, []);
 
   return (
     <>
@@ -337,69 +286,13 @@ const ExploreGroup = () => {
         <MyGoalsParent>
           <MyGoals>Explore Goals</MyGoals>
           <AddNewGoal onClick={openAddMoreGoals}>
-  <img src="/filter-list.png" alt="filter" /> filter
-</AddNewGoal>
+            <img src="/filter-list.png" alt="filter" /> filter
+          </AddNewGoal>
         </MyGoalsParent>
+
         <FrameParent1>
-          <FrameGroup onClick={onFrameContainerClick}>
-            <FrameContainer>
-              <FrameDiv>
-                <FrameChild alt="" src={ExploreGroupData?.SafeLandScapeImageURL || '/Frame-388134972.png'} />
-                <BadgeParent>
-                  <Badge>
-                    <BadgeAndTag>
-                        <Placeholder>{ExploreGroupData?.GroupStatus || 'Waiting'}</Placeholder>
-                        
-                    </BadgeAndTag>
+         
 
-                    <JoinContainer>
-                  <Group11Image alt="" src="/group11.png" />
-                  <JoinButton className="mx-3" onClick={joinGroup}>{JoinGroup || 'Join'}</JoinButton>
-
-                  <VerticalDotsImage
-                        alt=""
-                        src="/dots-vertical.svg"
-                        onClick={toggleGroupFrame}
-                      />
-                </JoinContainer>
-                  </Badge>
-                  <TripToBali className="mt-3">{ExploreGroupData?.GroupName || 'Money Palava Savers'}</TripToBali>
-                  <Paragraph><span>{ExploreGroupData?.PurposeAndGoal || 'Make we save together, chop better life! Join this group if you want to flex and still save money for better days. We go show you as money fit run belle and still dey for account.'}</span></Paragraph>
-                  <ImageContainer>
-                  <div>
-            <img src="/Contribution.png" alt="contribution" />
-          <p>{ExploreGroupData?.ContributionAmount || '₦500,000'}</p>
-          </div>
-          <div><img src="/Exp. Withdrawal.png" alt="Expected withdrawal" />
-          <p> ₦3,500,000</p>
-          </div>
-          <div>
-          <img src="/Saving Freq.png" alt="saving frequency" />
-          <p>{ExploreGroupData?.Frequency || 'Monthly'}</p>
-          </div>
-          <div>
-          <img src="/Duration.png" alt="duration" />
-          <p>8 mons</p>
-          </div>
-          <div>
-          <img src="/Available Slot.png" alt="available slot" />
-          <p>{ExploreGroupData?.MemberCount || '3 of 5'}</p>
-          </div>
-        </ImageContainer>
-        <TextViewGroup>
-            {/* Your text view group content goes here */}
-            {/* You can use additional styled components for styling */}
-            <p>
-              <a href="#">View Group</a>
-            </p>
-          </TextViewGroup>
-                  </BadgeParent> 
-              </FrameDiv>
-              
-             
-            </FrameContainer>
-          
-          </FrameGroup>
           <FrameParent>
             <FrameContainer>
               <FrameDiv>
@@ -413,59 +306,51 @@ const ExploreGroup = () => {
                         <Status1 />
                         <Placeholder>{ExploreGroupData?.GroupStatus || 'Waiting'}</Placeholder>
                       </Placeholder1>
-                     
+
                       <StarsIcon alt="" src="/chevronright.svg" />
                       <CloseIcon>
                         <XLgIcon alt="" src="/xlg.svg" />
                       </CloseIcon>
                     </BadgeAndTag>
                     <JoinContainer>
-                  <Group111Image alt="" src="/group111.png" />
-                  <JoinButton className="mx-3" onClick={joinGroup}>{JoinGroup || 'Join'}</JoinButton>
-
-                  <VerticalDotsImage
+                      <Group111Image alt="" src="/group111.png" />
+                      <JoinButton className="mx-3">Join</JoinButton>
+                      <VerticalDotsImage
                         alt=""
                         src="/dots-vertical.svg"
                         onClick={toggleGroupFrame}
                       />
-                </JoinContainer>
-               
+                    </JoinContainer>
                   </Badge>
-                  <TripToBali className="mt-3">{ExploreGroupData?.GroupName || 'Sabi-Sabi Slay Queens'}</TripToBali>
-                  <div>{ExploreGroupData?.PurposeAndGoal || 'Attention Slay Queens! Una wey sabi fashion and glam, join this group make we save money for the latest trends and slay effortlessly. No dulling, we go blend fashion and savings like jollof rice and chicken!'}</div>
+                  <TripToBali className="mt-3">
+                    Sabi-Sabi Slay Queens
+                  </TripToBali>
+                  <div>
+                    Attention Slay Queens! Una wey sabi fashion and glam, join
+                    this group make we save money for the latest trends and slay
+                    effortlessly. No dulling, we go blend fashion and savings
+                    like jollof rice and chicken!
+                  </div>
                   <ImageContainer>
-          <div>
-            <img src="/Contribution.png" alt="contribution" />
-          <p>{ExploreGroupData?.ContributionAmount || '₦500,000'}</p>
-          </div>
-          <div><img src="/Exp. Withdrawal.png" alt="Expected withdrawal" />
-          <p> ₦4,000,000</p>
-          </div>
-          <div>
-          <img src="/Saving Freq.png" alt="saving frequency" />
-          <p>{ExploreGroupData?.Frequency || 'Daily'}</p>
-          </div>
-          <div>
-          <img src="/Duration.png" alt="duration" />
-          <p>8 mons</p>
-          </div>
-          <div>
-          <img src="/Available Slot.png" alt="available slot" />
-          <p>{ExploreGroupData?.MemberCount || '2 of 5'}</p>
-          </div>
-        </ImageContainer>
-        <TextViewGroup>
-            {/* Your text view group content goes here */}
-            {/* You can use additional styled components for styling */}
-            <p>
-              <a href="#">View Group</a>
-            </p>
-          </TextViewGroup>
+                    <img src="/Frame 38813498.png" alt="contribution" />
+                    <img
+                      src="/Frame 38813499 (1).png"
+                      alt="Expected withdrawal"
+                    />
+                    <img src="/Frame 38813500 (1).png" alt="saving frequency" />
+                    <img src="/Frame 38813501.png" alt="duration" />
+                    <img src="/Frame 38813502 (1).png" alt="available slot" />
+                  </ImageContainer>
+                  <TextViewGroup>
+                    {/* Your text view group content goes here */}
+                    {/* You can use additional styled components for styling */}
+                    <p>
+                      <a href="#">View Group</a>
+                    </p>
+                  </TextViewGroup>
                 </BadgeParent>
               </FrameDiv>
-             
             </FrameContainer>
-           
           </FrameParent>
           <FrameParent>
             <FrameContainer>
@@ -480,62 +365,52 @@ const ExploreGroup = () => {
                         <Status1 />
                         <Placeholder>{ExploreGroupData?.GroupStatus || 'Waiting'}</Placeholder>
                       </Placeholder1>
-                      
+
                       <StarsIcon alt="" src="/chevronright.svg" />
                       <CloseIcon>
                         <XLgIcon alt="" src="/xlg.svg" />
                       </CloseIcon>
                     </BadgeAndTag>
                     <JoinContainer>
-                  <Group111Image alt="" src="/group111.png" />
-                  <JoinButton className="mx-3" onClick={joinGroup}>{JoinGroup || 'Join'}</JoinButton>
-
-                  <VerticalDotsImage
+                      <Group111Image alt="" src="/group111.png" />
+                      <JoinButton className="mx-3">Join</JoinButton>
+                      <VerticalDotsImage
                         alt=""
                         src="/dots-vertical.svg"
                         onClick={toggleGroupFrame}
                       />
-                </JoinContainer>
+                    </JoinContainer>
                   </Badge>
-                  <TripToBali className="mt-3">{ExploreGroupData?.GroupName || 'Naija Travel Squad'}</TripToBali>
-                  <div>{ExploreGroupData?.PurposeAndGoal || 'If you be proper ajala, join this group sharp sharp! We dey save money to explore Naija and beyond. From Lagos to Calabar, Abuja to Port Harcourt, we go waka waka together and scatter ground!'}</div>
-                  <ImageContainer>
+                  <TripToBali className="mt-3">Naija Travel Squad</TripToBali>
                   <div>
-            <img src="/Contribution.png" alt="contribution" />
-          <p>{ExploreGroupData?.ContributionAmount || '₦500,000'}</p>
-          </div>
-          <div><img src="/Exp. Withdrawal.png" alt="Expected withdrawal" />
-          <p> ₦4,000,000</p>
-          </div>
-          <div>
-          <img src="/Saving Freq.png" alt="saving frequency" />
-          <p>{ExploreGroupData?.Frequency || 'Monthly'}</p>
-          </div>
-          <div>
-          <img src="/Duration.png" alt="duration" />
-          <p>8 mons</p>
-          </div>
-          <div>
-          <img src="/Available Slot.png" alt="available slot" />
-          <p>{ExploreGroupData?.MemberCount || '4 of 5'}</p>
-          </div>
-        </ImageContainer>
-        <TextViewGroup>
-            {/* Your text view group content goes here */}
-            {/* You can use additional styled components for styling */}
-            <p>
-              <a href="#">View Group</a>
-            </p>
-          </TextViewGroup>
+                    If you be proper ajala, join this group sharp sharp! We dey
+                    save money to explore Naija and beyond. From Lagos to
+                    Calabar, Abuja to Port Harcourt, we go waka waka together
+                    and scatter ground!
+                  </div>
+                  <ImageContainer>
+                    <img src="/Frame 38813498.png" alt="contribution" />
+                    <img
+                      src="/Frame 38813499 (1).png"
+                      alt="Expected withdrawal"
+                    />
+                    <img src="/Frame 38813500.png" alt="saving frequency" />
+                    <img src="/Frame 38813501.png" alt="duration" />
+                    <img src="/Frame 38813502 (1).png" alt="available slot" />
+                  </ImageContainer>
+                  <TextViewGroup>
+                    {/* Your text view group content goes here */}
+                    {/* You can use additional styled components for styling */}
+                    <p>
+                      <a href="#">View Group</a>
+                    </p>
+                  </TextViewGroup>
                 </BadgeParent>
               </FrameDiv>
-              
             </FrameContainer>
-          
           </FrameParent>
         </FrameParent1>
-       
-       
+
       </PersonalSavingRoot>
       {isAddMoreGoalsOpen && (
         <PortalPopup
@@ -555,27 +430,16 @@ const ExploreGroup = () => {
           <LogoutModal onClose={closeLogoutModal} />
         </PortalPopup>
       )}
-      
-      {isGroupFrameOpen && (
-  <PortalPopup
-    overlayColor="rgba(113, 113, 113, 0.3)"
-    placement="Centered"
-    onOutsideClick={closeGroupFrame}
-  >
-      <GroupFrame onClose={closeGroupFrame} />
-  </PortalPopup>
-)}
 
-{isSuccessful && (
+      {isGroupFrameOpen && (
         <PortalPopup
           overlayColor="rgba(113, 113, 113, 0.3)"
           placement="Centered"
-          onOutsideClick={() => setSuccessful(false)} // Close the modal when clicked outside
+          onOutsideClick={closeGroupFrame}
         >
-          <Success onClose={() => setSuccessful(false)} />
+          <GroupFrame onClose={closeGroupFrame} />
         </PortalPopup>
       )}
-
     </>
   );
 };

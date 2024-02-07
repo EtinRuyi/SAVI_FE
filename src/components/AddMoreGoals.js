@@ -1,14 +1,30 @@
-import { useState, useCallback } from "react";
-import PortalPopup from "./PortalPopup";
-import styled from "styled-components";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import TimeFrame from "./TimeFrame";
+import { useState, useCallback } from 'react';
+import PortalPopup from './PortalPopup';
+import styled from 'styled-components';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import TimeFrame from './TimeFrame';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+
+
 
 const AddMoreGoals = () => {
   const [isFrameOpen, setFrameOpen] = useState(false);
-  const [startDate, setStartDate] = useState(null);
-  const [withdrawalDate, setWithdrawalDate] = useState(null);
+  const [startDatee, setStartDate] = useState(null);
+  const [targetDate, setWithdrawalDate] = useState(null);
+  const [showFrame, setShowFrame] = useState(false); 
+  const[title, setTitle] = useState(null);
+  const[goalAmount, setGoalAmount] = useState(null);
+  const [avatar, setAvatar] = useState(null); 
+  const [isAutomatic, setIsAutomatic] = useState(false); 
+  const [amountToAdd, setAmountToAdd] = useState(0); 
+  const [frequency, setFrequency] = useState(0); 
+  
+  const handleAutoSaveAmountView = (event) => {
+    setIsAutomatic(event.target.value==="1");
+     setShowFrame(event.target.value==="1");
+  };
 
   const openFrame = useCallback(() => {
     setFrameOpen(true);
@@ -18,46 +34,47 @@ const AddMoreGoals = () => {
     setFrameOpen(false);
   }, []);
 
-  const handleSubmit = async () => {
-    try {
-      // Gather data from the input fields
-      const targetValue = document.getElementById("targetInput").value;
-      const amountValue = document.getElementById("amountInput").value;
-      const frequencyValue = document.getElementById("frequencyInput").value;
-      const startDateValue = document.getElementById("startDateInput").value;
-      const withdrawalDateValue = document.getElementById(
-        "withdrawalDateInput"
-      ).value;
+  const isFormDataEmpty = (formData) => {
+    for (const value of formData.values()) {
+      if (!value.trim()) {
+        return true; // Return true if any value is empty or contains only whitespace
+      }
+    }
+    return false; 
+  };
 
-      // Prepare the data for the API request
-      const requestData = {
-        target: targetValue,
-        amount: amountValue,
-        frequency: frequencyValue,
-        startDate: startDate,
-        withdrawalDate: withdrawalDate,
+  const handleSubmit = async () => {
+    const freq = parseInt(document.getElementById("frequencyInput").value);
+    try {
+      const formData = {
+        title: title,
+        goalAmount: goalAmount,
+        avatar: "",
+        startDate: new Date(startDatee).toISOString(),
+        targetDate: new Date(targetDate).toISOString(),
+        isAutomatic: isAutomatic,
+        amountToAdd: amountToAdd,
+        frequency: freq,
+        walletNumber:localStorage.getItem("walletNumber")
       };
 
-      // Make the API request
-      const response = await fetch("YOUR_API_ENDPOINT", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          // Add any other headers if needed
-        },
-        body: JSON.stringify(requestData),
-      });
-
-      // Check if the request was successful (status code 2xx)
-      if (response.ok) {
-        // Handle success (e.g., show a success message)
-        console.log("Submit successful!");
-      } else {
-        // Handle errors (e.g., show an error message)
-        console.error("Submit failed:", response.statusText);
+      await  axios.post('https://localhost:7226/api/Saving/createPersonalSaving', formData)
+    .then(response => {
+      console.log("data",response.data.message);
+      if(response.data.succeeded){
+        toast.success(response.data.message);
+        //window.location.reload();
+      }else{
+        toast.error(response.data.message);
       }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+  
+
     } catch (error) {
-      console.error("Error during submit:", error);
+      console.error('Error during submit:', error);
     }
   };
 
@@ -83,13 +100,14 @@ const AddMoreGoals = () => {
                     <Buttondefault>
                       <label htmlFor="targetInput" style={{ flex: 1 }}>
                         <input
+                        onChange={(e) => setTitle(e.target.value)}
                           type="text"
                           id="targetInput"
                           placeholder="Type here"
                           style={{
-                            width: "100%",
-                            border: "none",
-                            outline: "none",
+                            width: '100%',
+                            border: 'none',
+                            outline: 'none',
                           }}
                         />
                       </label>
@@ -104,13 +122,14 @@ const AddMoreGoals = () => {
                     <Buttondefault>
                       <label htmlFor="amountInput" style={{ flex: 1 }}>
                         <input
-                          type="text"
+                          type="number"
+                          onChange={(e) => setGoalAmount(e.target.value)}
                           id="amountInput"
-                          placeholder="Numbers only"
+                          placeholder="Target amount"
                           style={{
-                            width: "100%",
-                            border: "none",
-                            outline: "none",
+                            width: '100%',
+                            border: 'none',
+                            outline: 'none',
                           }}
                         />
                       </label>
@@ -124,46 +143,103 @@ const AddMoreGoals = () => {
                     <Text3>Frequency</Text3>
                     <Buttondefault1>
                       <label htmlFor="frequencyInput" style={{ flex: 1 }}>
-                        <input
-                          type="text"
+                        <select
                           id="frequencyInput"
+                          onChange={(e) => setFrequency(e.target.value)}
                           placeholder="Pick your frequency"
                           style={{
-                            width: "100%",
-                            border: "none",
-                            outline: "none",
+                            width: '100%',
+                            height: '100%',
+                            border: 'none',
+                            outline: 'none',
+                            cursor: 'pointer',
                           }}
-                        />
+                        >
+                          <option value="">--select--</option>
+                          <option value="0">Daily</option>
+                          <option value="1">Weekly</option>
+                          <option value="2">Montly</option>
+                        </select>
                       </label>
-                      <ArrowDropDownIcon
-                        alt=""
-                        src="/arrow-drop-down.svg"
-                        onClick={openFrame}
-                      />
                     </Buttondefault1>
                   </TextParent>
                 </FrameWrapper>
               </FrameWrapper>
+              <FrameWrapper>
+                <FrameWrapper>
+                  <TextParent>
+                    <Text3>Is Automatic</Text3>
+                    <Buttondefault1>
+                      <label htmlFor="isautomatic" style={{ flex: 1 }}>
+                        <select
+                          onChange={handleAutoSaveAmountView}
+                          id="isautomatic"
+                          placeholder=""
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            border: 'none',
+                            outline: 'none',
+                            cursor: 'pointer',
+                          }}
+                        >
+                          <option value="0">NO</option>
+                          <option value="1">YES</option>
+                        </select>
+                      </label>
+                    </Buttondefault1>
+                  </TextParent>
+                </FrameWrapper>
+              </FrameWrapper>
+              {showFrame && (
+                <FrameWrapper>
+                  <FrameWrapper>
+                    <TextParent>
+                      <Text3>Automatic Save Amount</Text3>
+                      <Buttondefault>
+                        <label htmlFor="autosaveamount" style={{ flex: 1 }}>
+                          <input
+                            type="number"
+                            onChange={(e) => setAmountToAdd(e.target.value)}
+                            id="autosaveamount"
+                            placeholder="Auto Save Amount"
+                            style={{
+                              width: '100%',
+                              border: 'none',
+                              outline: 'none',
+                            }}
+                          />
+                        </label>
+                      </Buttondefault>
+                    </TextParent>
+                  </FrameWrapper>
+                </FrameWrapper>
+              )}
               <FrameParent1>
                 <FrameWrapper>
                   <TextParent>
                     <Text3>Start Date</Text3>
                     <StyledDatePicker
-                      selected={startDate}
+                      selected={startDatee}
                       onChange={(date) => setStartDate(date)}
                       placeholderText="Pick your date"
                       dateFormat="MMMM d, yyyy"
+                      id="startdate"
+                      onKeyDown={(e) => e.preventDefault()}
                     />
                   </TextParent>
                 </FrameWrapper>
+
                 <FrameWrapper>
                   <TextParent>
                     <Text3>Withdrawal Date</Text3>
                     <StyledDatePicker
-                      selected={withdrawalDate}
+                      selected={targetDate}
                       onChange={(date) => setWithdrawalDate(date)}
                       placeholderText="Pick your date"
                       dateFormat="MMMM d, yyyy"
+                      id="withdrawaldate"
+                      onKeyDown={(e) => e.preventDefault()}
                     />
                   </TextParent>
                 </FrameWrapper>
@@ -259,7 +335,7 @@ const StyledDatePicker = styled(DatePicker)`
   font-size: var(--button-semi-bold-14-size);
   color: black;
   margin: 0; /* Add this to remove any default margin */
-
+  cursor: pointer;
   &:focus {
     outline: none;
     border-color: var(--primary-color);

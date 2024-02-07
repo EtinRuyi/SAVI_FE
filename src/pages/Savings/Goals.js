@@ -1,10 +1,14 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, redirect } from 'react-router-dom';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
-const Goals = ({ imageSrc, category, title, amount, progress }) => {
+
+//
+const Goals = ({ imageSrc, category, title, amount, progress,id }) => { 
   return (
-    <CardContainer to="empty-page">
+   
+    <CardContainer to={"/personal-saving-details?id="+id}>
       <CardHeader>
         <CardInfo>
           <CardImage loading="lazy" src={imageSrc} />
@@ -27,8 +31,7 @@ const CardContainer = styled(Link)`
   display: flex;
   flex-direction: column;
   padding: 24px;
-  margin-left: 310px;
-  margin-right: 131px;
+  margin-right: 31px;
   text-decoration: none;
 
   &:hover {

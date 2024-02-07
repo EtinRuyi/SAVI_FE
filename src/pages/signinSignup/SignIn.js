@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom';
@@ -14,6 +14,16 @@ const SignIn = () => {
   const [loginError, setLoginError] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+
+  function parseJwt (token) {
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+    return JSON.parse(jsonPayload);
+  }
+  
 
   const responseGoogleSuccess = async (response) => {
     console.log(response);
@@ -53,9 +63,18 @@ const SignIn = () => {
       );
 
       const data = response.data;
+      
       if (data.succeeded) {
-        toast.success('Login success. ' + data.message);
+        toast.success(data.message);
+        const payload = parseJwt(data.data.jwToken);        
+        const response = await fetch(`https://localhost:7226/api/Wallet/GetWalletByUserId?userId=${payload.sub}`);
+        const result = await response.json();
+        console.log("result", result);
+        localStorage.setItem('walletNumber', result.data.walletNumber);
+        //localStorage.setItem('balance', result.data.balance);
         localStorage.setItem('email', email);
+        localStorage.setItem('userId', payload.sub);
+        localStorage.setItem('fullname', payload.given_name);
         navigate('/dashboard');
       } else {
         toast.error('Login failed. ' + data.message);

@@ -1,4 +1,38 @@
-import styled from "styled-components";
+import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+
+const LogoutModal = () => {
+  const navigate = useNavigate();
+
+  const logout = async (e) => {
+    localStorage.clear();
+    navigate('/');
+  };
+
+  return (
+    <LogoutModalRoot>
+      <GroupParent>
+        <FrameChild alt="" src="/group-39889@2x.png" />
+        <AreYouSureYouWantToLogOWrapper>
+          <AreYouSure1>Are you sure you want to log out?</AreYouSure1>
+        </AreYouSureYouWantToLogOWrapper>
+        <FrameWrapper onClick={logout}>
+          <HeaderTextWrapper>
+            <HeaderText2>Log out</HeaderText2>
+          </HeaderTextWrapper>
+        </FrameWrapper>
+        <FrameDiv>
+          <HeaderTextContainer>
+            <HeaderText2>Cancel</HeaderText2>
+          </HeaderTextContainer>
+        </FrameDiv>
+      </GroupParent>
+      <CloseIcon1 alt="" src="/close@2x.png" />
+    </LogoutModalRoot>
+  );
+};
+
+export default LogoutModal;
 
 const FrameChild = styled.img`
   position: relative;
@@ -36,6 +70,7 @@ const HeaderTextWrapper = styled.div`
 `;
 const FrameWrapper = styled.div`
   display: flex;
+  cursor: pointer;
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
@@ -90,29 +125,3 @@ const LogoutModalRoot = styled.div`
   color: var(--main-text);
   font-family: var(--text-md-medium);
 `;
-
-const LogoutModal = () => {
-  return (
-    <LogoutModalRoot>
-      <GroupParent>
-        <FrameChild alt="" src="/group-39889@2x.png" />
-        <AreYouSureYouWantToLogOWrapper>
-          <AreYouSure1>Are you sure you want to log out?</AreYouSure1>
-        </AreYouSureYouWantToLogOWrapper>
-        <FrameWrapper>
-          <HeaderTextWrapper>
-            <HeaderText2>Log out</HeaderText2>
-          </HeaderTextWrapper>
-        </FrameWrapper>
-        <FrameDiv>
-          <HeaderTextContainer>
-            <HeaderText2>Cancel</HeaderText2>
-          </HeaderTextContainer>
-        </FrameDiv>
-      </GroupParent>
-      <CloseIcon1 alt="" src="/close@2x.png" />
-    </LogoutModalRoot>
-  );
-};
-
-export default LogoutModal;

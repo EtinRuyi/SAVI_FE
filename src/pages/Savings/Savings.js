@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import Head from './Header';
-import Notification from './Notification';
 import Goals from './Goals';
-import PersonalGoalsData from './PersonalGoalsData.json';
 import image from '../../assets/images/Image1.png';
 
 const Content = styled.div`
@@ -18,28 +15,43 @@ const Content = styled.div`
 const Savings = () => {
   const [goalsData, setGoalsData] = useState([]);
 
+  
+
   useEffect(() => {
-    // Fetching data from the imported JSON file
-    setGoalsData(PersonalGoalsData?.data?.goals || []);
+    
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`https://localhost:7226/api/Saving/list/${localStorage.getItem("walletNumber")}`);
+        const result = await response.json();
+        if(result.succeeded){
+          console.log(result);
+          setGoalsData(result.data);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    
+    fetchData();
+    
   }, []);
 
   return (
     <>
       <Content>
-        <Head />
-        {goalsData.length > 0 ? (
+        {
           goalsData.map((goal) => (
-            <Goals
+            
+            <Goals          
               imageSrc={image}
-              category={goal.category}
+              category="Progress"
               title={goal.title}
-              amount={goal.amount}
-              progress={goal.progress}
+              amount= {goal.balance+"/"+goal.goalAmount}
+              progress={(goal.balance/goal.goalAmount*100)+"%"}
+              id={goal.id}
             />
           ))
-        ) : (
-          <Notification />
-        )}
+        }
       </Content>
     </>
   );

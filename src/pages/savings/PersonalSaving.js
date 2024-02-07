@@ -1,15 +1,20 @@
 import { useState, useCallback, useEffect } from 'react';
 import AddMoreGoals from '../../components/AddMoreGoals';
 import PortalPopup from '../../components/PortalPopup';
-import WithdrawFunds1 from '../../components/savings/WithdrawFunds1';
 import WithdrawFunds from '../../components/savings/WithdrawFunds';
 import styled from 'styled-components';
+import { useLocation } from 'react-router-dom';
+import { Row } from 'react-bootstrap';
+import FundTarget from '../../components/savings/FundTarget';
 
-const PersonalSaving = () => {
+const PersonalSaving = (props) => {
+  const location = useLocation();
+
   const [isAddMoreGoalsOpen, setAddMoreGoalsOpen] = useState(false);
   const [isWithdrawFundsOpen, setWithdrawFundsOpen] = useState(false);
   const [isWithdrawFunds1Open, setWithdrawFunds1Open] = useState(false);
   const [personalSavingData, setPersonalSavingData] = useState(null);
+  const [savingsId, setSavingsId] = useState(null);
 
   const openAddMoreGoals = useCallback(() => {
     setAddMoreGoalsOpen(true);
@@ -43,8 +48,15 @@ const PersonalSaving = () => {
     // Function to fetch personal savings data from the API
     const fetchPersonalSavingData = async () => {
       try {
-        const response = await fetch("https://localhost:7226/api/Saving/PersonalSavingDetails");
-        const data = await response.json();
+        const searchParams = new URLSearchParams(location.search);
+        const savingsId = searchParams.get('id');
+        setSavingsId(savingsId);
+
+        //const savingsId = "1425f12e-fea5-409e-8dd4-1169fb2c441c";
+        const response = await fetch(`https://localhost:7226/api/Saving/PersonalSavingDetails?savingsId=${savingsId}`);
+        let data = await response.json();
+        data = data.data;
+        console.log(data);
         setPersonalSavingData(data);
       } catch (error) {
         console.error('Error fetching personal savings data:', error);
@@ -54,40 +66,43 @@ const PersonalSaving = () => {
     // Call the function to fetch data
     fetchPersonalSavingData();
   }, []);
+  function setDaysLeft(date){
+    const givenDate = new Date(date);
+    const today = new Date();
+    const difference =  givenDate.getTime()-today.getTime();
+
+    // Convert milliseconds to days, hours, minutes, seconds
+    const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+    return `${days} days`;
+  }
 
   return (
     <>
-      <PersonalSavingRoot>
-        <TripToBaliParent>
-          <Savi>Trip to Bali</Savi>
-          <AddNewGoal onClick={openAddMoreGoals}>Add New Goal</AddNewGoal>
-        </TripToBaliParent>
-        <MyGoalParent>
-          <MyGoal onClick={onMyGoalTextClick}>My Goal</MyGoal>
-          <IconsolidcheveronRight2 alt="" src="/iconsolidcheveronright.svg" />
-          <TripToBali>{personalSavingData?.goalName || 'Trip to Bali'}</TripToBali>
-        </MyGoalParent>
+      
+
         <FrameGroup>
+          
           <FrameContainer>
             <FrameDiv>
+              
               <AmountSavedParent>
                 <Savings>Amount Saved</Savings>
                 <Parent1>
-                  <B>{personalSavingData?.amountSaved || '₦200,000'}</B>
+                  <B>₦{parseInt(personalSavingData?.balance).toLocaleString() }</B>
                   <EyeSlashIcon alt="" />
                 </Parent1>
               </AmountSavedParent>
               <AmountSavedParent>
                 <Savings>Total Target</Savings>
                 <Parent1>
-                  <B>{personalSavingData?.totalTarget || '₦1,000,000'}</B>
+                  <B>₦{parseInt(personalSavingData?.goalAmount).toLocaleString() }</B>
                   <EyeSlashIcon alt="" />
                 </Parent1>
               </AmountSavedParent>
               <AmountSavedParent>
                 <Savings>Days left</Savings>
                 <Parent1>
-                  <B>{personalSavingData?.daysLeft || '205 days'}</B>
+                  <B>{setDaysLeft(personalSavingData?.targetDate)}</B>
                   <EyeSlashIcon alt="" />
                 </Parent1>
               </AmountSavedParent>
@@ -113,7 +128,6 @@ const PersonalSaving = () => {
             </AutoSaveSettingWrapper>
           </FrameParent4>
         </FrameGroup>
-      </PersonalSavingRoot>
       {isAddMoreGoalsOpen && (
         <PortalPopup
           overlayColor="rgba(113, 113, 113, 0.3)"
@@ -129,7 +143,7 @@ const PersonalSaving = () => {
           placement="Centered"
           onOutsideClick={closeWithdrawFunds}
         >
-          <WithdrawFunds1 onClose={closeWithdrawFunds} />
+          <FundTarget onClose={closeWithdrawFunds} savingsId={savingsId} />
         </PortalPopup>
       )}
       {isWithdrawFunds1Open && (
@@ -202,6 +216,44 @@ const MyGoal = styled.div`
   line-height: 1.25rem;
   cursor: pointer;
 `;
+
+
+const FrameOfMyGoals = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 0rem 2.44rem;
+  margin-bottom: 1em;
+  box-sizing: border-box;
+  max-width: 100%;
+  font-size: var(--font-size-13xl);
+  color: var(--color-black);
+`;
+
+const MyGoals = styled.h1`
+  margin: 0;
+  width: 16.13rem;
+  position: relative;
+  font-size: inherit;
+  letter-spacing: 0.15px;
+  line-height: 140%;
+  font-weight: 700;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  @media screen and (max-width: 1050px) {
+    font-size: var(--font-size-7xl);
+    line-height: 2.25rem;
+  }
+  @media screen and (max-width: 450px) {
+    font-size: var(--font-size-lgi);
+    line-height: 1.69rem;
+  }
+`;
+
 const IconsolidcheveronRight2 = styled.img`
   width: 1.25rem;
   position: relative;
@@ -353,14 +405,15 @@ const FrameParent4 = styled.div`
   color: var(--grey-400);
 `;
 const FrameGroup = styled.div`
-  position: absolute;
-  top: 14.19rem;
-  left: 19.44rem;
+  //position: absolute;
+  //top: 14.19rem;
+  //left: 19.44rem;
+  width:'100%';
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: var(--gap-5xl);
+  //gap: var(--gap-5xl);
   font-size: var(--body-text-bold-16-size);
   color: var(--white);
 `;
