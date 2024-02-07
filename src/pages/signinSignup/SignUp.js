@@ -56,13 +56,12 @@ const SignUp = () => {
         }
       );
 
-      const data = response.data;
-      if (data.succeeded) {
-        toast.success(data.message);
-      } else {
-        toast.error(data.message);
-      }
-      console.log(data.succeeded);
+      // const data = response.data;
+      // if (data.succeeded) {
+        toast.success("User registered successfully")
+      // } else {
+      //   toast.error("Failed to register user");
+      // }
 
       //localStorage.setItem('token', token);
       //navigate('/user_dashboard'); // Redirect to your dashboard or desired route
@@ -80,19 +79,7 @@ const SignUp = () => {
         <Text1>Welcome to Savi.</Text1>
         <FrameParent>
           <FrameGroup>
-            <ButtondefaultParent>
-              <GoogleContainer>
-                <GoogleLogin
-                  onSuccess={responseGoogleSuccess}
-                  onError={responseGoogleFailure}
-                />
-              </GoogleContainer>
-              <DividerParent>
-                <DividerIcon alt="" src="/divider.svg" />
-                <Text3>OR</Text3>
-                <DividerIcon alt="" src="/divider.svg" />
-              </DividerParent>
-            </ButtondefaultParent>
+           
             <FrameContainer>
               <FrameWrapper>
                 <ButtondefaultParent>

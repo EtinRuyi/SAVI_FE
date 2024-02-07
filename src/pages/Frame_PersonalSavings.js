@@ -6,8 +6,8 @@ import styled from 'styled-components';
 import { useCallback, useState } from 'react';
 import PortalPopup from '../components/PortalPopup';
 import AddMoreGoals from '../components/AddMoreGoals';
-import PersonalSaving from './savings/PersonalSaving';
-import Savings from './savings/Savings';
+//import PersonalSaving from '../../src/pages/Savings/PersonalSaving';
+import Savings from '../../src/pages/Savings/Savings';
 
 
 const Frame_PersonalSaving = () => {

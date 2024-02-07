@@ -2,16 +2,28 @@ import { Container, Row } from 'react-bootstrap';
 import '../App.css';
 import Header from '../components/navs/Header';
 import Sidebar from '../components/navs/Sidebar';
-import PersonalSaving from './savings/PersonalSaving';
+import PersonalSaving from '../../src/pages/Savings/PersonalSaving';
 import styled from 'styled-components';
+import AddMoreGoals from '../components/AddMoreGoals';
 import { useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import PortalPopup from '../components/PortalPopup';
 
 const Frame_PersonalSavingDetails = () => {
   const navigate = useNavigate();
   const onMyGoalTextClick = useCallback(() => {
     navigate("/personalsaving");
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  const [isAddMoreGoalsOpen, setAddMoreGoalsOpen] = useState(false);
+
+  const openAddMoreGoals = useCallback(() => {
+    setAddMoreGoalsOpen(true);
+  }, []);
+  const closeAddMoreGoals = useCallback(() => {
+    setAddMoreGoalsOpen(false);
+  }, []);
+
   const [personalSavingData, setPersonalSavingData] = useState(null);
 
   const location = useLocation();
@@ -37,6 +49,7 @@ const Frame_PersonalSavingDetails = () => {
 
     // Call the function to fetch data
     fetchPersonalSavingData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
 
@@ -63,7 +76,7 @@ const Frame_PersonalSavingDetails = () => {
             <Row style={{ width: '100%' }}>
               <FrameOfMyGoals>
                <MyGoals>{personalSavingData?.title}</MyGoals>
-                <AddNewGoal>Add New Goal</AddNewGoal>
+               <AddNewGoal onClick={openAddMoreGoals}>Add New Goal</AddNewGoal>
               </FrameOfMyGoals>
             </Row>
 
@@ -73,6 +86,15 @@ const Frame_PersonalSavingDetails = () => {
           </Container>
         </div>
       </div>
+      {isAddMoreGoalsOpen && (
+        <PortalPopup
+          overlayColor="rgba(113, 113, 113, 0.3)"
+          placement="Centered"
+          onOutsideClick={closeAddMoreGoals}
+        >
+          <AddMoreGoals onClose={closeAddMoreGoals} />
+        </PortalPopup>
+      )}
     </>
   );
 };

@@ -34,7 +34,18 @@ const SignIn = () => {
       )
       .then((backendResponse) => {
         console.log(backendResponse.data);
+        let val = backendResponse.data;
+        console.log("val", val.data[0]);
+        if(val.succeeded){
+       localStorage.setItem('email', val.data[0]);
+        localStorage.setItem('userId', val.data[3]);
+        localStorage.setItem('fullname', val.data[2]);
+        localStorage.setItem('walletNumber', val.data[1]);
         navigate('/dashboard');
+        }else{
+          toast.error(val.message);
+        }
+        
       })
       .catch((error) => {
         console.error(error);
@@ -71,7 +82,6 @@ const SignIn = () => {
         const result = await response.json();
         console.log("result", result);
         localStorage.setItem('walletNumber', result.data.walletNumber);
-        //localStorage.setItem('balance', result.data.balance);
         localStorage.setItem('email', email);
         localStorage.setItem('userId', payload.sub);
         localStorage.setItem('fullname', payload.given_name);

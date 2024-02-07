@@ -18,7 +18,7 @@ const Goals = ({ imageSrc, category, title, amount, progress,id }) => {
             <CardAmount>{amount}</CardAmount>
           </CardContent>
         </CardInfo>
-        <CardProgress>{progress}</CardProgress>
+        <CardProgress>{parseFloat(progress).toFixed(1)}%</CardProgress>
       </CardHeader>
       <ProgressBar progress={progress} />
     </CardContainer>
