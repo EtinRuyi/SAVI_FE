@@ -7,7 +7,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { GlobalProvider } from './context/GlobalState';
 //import { useAuth } from './context/auth/AuthState'; // Import useAuth hook
 import 'react-toastify/dist/ReactToastify.css';
-import KYC from './pages/KYC';
+import KYC from './pages/Kyc';
 import ForgetPassword from './pages/Reset/ForgetPassword';
 import ResetPassword from './pages/Reset/ResetPassword';
 import DashBoard from './pages/Frame_Dashboard';
@@ -22,6 +22,8 @@ import ExploreGroup from './pages/Frame_Group';
 import MyGoalsEmpty from './pages/Frame_MyGoalsEmpty';
 import Groupsempty from './pages/Frame_GroupEmpty';
 import PersonalSavingDetails from './pages/Frame_PersonalSavingDetails';
+import CreateSavingsGroupForm  from './pages/Group/CreateNewSavingsGroup';
+import CreateGroupSuccessModal from './components/modal/CreateGroupSuccess';
 // App component
 function App() {
   return (
@@ -46,6 +48,8 @@ function App() {
               <Route path="/groups" element={<Groupsempty />} />
               <Route path="/personal-saving-details" element={<PersonalSavingDetails />} />
               <Route path="/explore-groups" element={<ExploreGroup />} />
+              <Route path="/CreateSavingsGroupForms" element={<CreateSavingsGroupForm />} />
+              <Route path="/CreateGroupSuccessModals" element={<CreateGroupSuccessModal />} />
             </Routes>
           </GlobalProvider>
         </Router>

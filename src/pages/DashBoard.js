@@ -6,7 +6,7 @@ import { useCallback, useEffect, useState } from 'react';
 import PortalPopup from '../components/PortalPopup';
 import DepositFunds from '../components/DepositFunds';
 import { useNavigate } from 'react-router-dom';
-import KYC from './KYC';
+import KYC from './Kyc';
 
 
 
