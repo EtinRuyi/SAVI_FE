@@ -10,8 +10,22 @@ const GroupSavings = () => {
   const [activeSavings, setActiveSavings] = useState([]);
 
   useEffect(() => {
-    // Fetching data from the imported JSON file
-    setActiveSavings(activeSavingsData?.data?.activesavings || []);
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `https://localhost:7226/api/Group/allActiveGroups`
+        );
+        const result = await response.json();
+        if (result.succeeded) {
+          console.log(result);
+          setActiveSavings(result.data);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
   }, []);
   return (
     <>
@@ -21,13 +35,13 @@ const GroupSavings = () => {
           activeSavings.map((activesaving) => (
             <ActiveSaving
               imageSrc={image}
-              progress={activesaving.progress}
-              title={activesaving.title}
-              savings={activesaving.savings}
-              withdrawal={activesaving.withdrawal}
+              progress={'Ongoing'}
+              title={activesaving.groupName}
+              savings={activesaving.contributionAmount}
+              withdrawal={activesaving.contributionAmount}
               frequency={activesaving.frequency}
-              duration={activesaving.duration}
-              cashoutDate={activesaving.cashoutDate}
+              duration={activesaving.frequency}
+              cashoutDate={activesaving.expectedEndDate}
             />
           ))
         ) : (

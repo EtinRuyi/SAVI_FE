@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import CreateGroupSuccessModal from '../../components/modal/CreateGroupSuccess'
+import CreateGroupSuccessModal from '../../components/modal/CreateGroupSuccess';
 
 const OuterContainer = styled.div`
   margin: 20px; /* Adjust margin off the screen size */
@@ -29,8 +29,10 @@ const Image = styled.img`
 
 const Description = styled.p`
   text-align: center;
-  font-weight: ${({ bold }) => (bold ? 'bold' : 'normal')}; /* Make bold if bold prop is true */
-  font-size: ${({ small }) => (small ? '0.8em' : '1em')}; /* Make smaller if small prop is true */
+  font-weight: ${({ bold }) =>
+    bold ? 'bold' : 'normal'}; /* Make bold if bold prop is true */
+  font-size: ${({ small }) =>
+    small ? '0.8em' : '1em'}; /* Make smaller if small prop is true */
   color: black; /* Make text black */
 `;
 
@@ -125,16 +127,28 @@ const CreateSavingsGroupForm = () => {
       <FormContainer>
         <Title>Create New Savings Group</Title>
         <Image src="/image.png" alt="Savings Group" />
-        <Description bold>Drop your image here or <Link href="#">browse</Link></Description>
-        <Description small>Drop an image that represents the title of your savings group here</Description>
+        <Description bold>
+          Drop your image here or <Link href="#">browse</Link>
+        </Description>
+        <Description small>
+          Drop an image that represents the title of your savings group here
+        </Description>
         <Form>
           <FormGroup>
             <Label htmlFor="groupName">Group Name</Label>
-            <Input type="text" id="groupName" placeholder="Enter the name of the group" />
+            <Input
+              type="text"
+              id="groupName"
+              placeholder="Enter the name of the group"
+            />
           </FormGroup>
           <FormGroup>
             <Label htmlFor="contributionAmount">Contribution Amount</Label>
-            <Input type="number" id="contributionAmount" placeholder="Enter amount" />
+            <Input
+              type="number"
+              id="contributionAmount"
+              placeholder="Enter amount"
+            />
           </FormGroup>
           <Row>
             <Col>
@@ -169,7 +183,11 @@ const CreateSavingsGroupForm = () => {
             <Col>
               <FormGroup>
                 <Label htmlFor="numParticipants">Number of Participants</Label>
-                <Input type="number" id="numParticipants" placeholder="Enter the number of people" />
+                <Input
+                  type="number"
+                  id="numParticipants"
+                  placeholder="Enter the number of people"
+                />
               </FormGroup>
             </Col>
           </Row>
@@ -184,11 +202,19 @@ const CreateSavingsGroupForm = () => {
           </FormGroup>
           <FormGroup>
             <Label htmlFor="purposeAndGoals">Purpose and Goals</Label>
-            <TextArea id="purposeAndGoals" rows="4" placeholder="Enter purpose and goals"></TextArea>
+            <TextArea
+              id="purposeAndGoals"
+              rows="4"
+              placeholder="Enter purpose and goals"
+            ></TextArea>
           </FormGroup>
           <FormGroup>
             <Label htmlFor="termsAndConditions">Terms and Conditions</Label>
-            <TextArea id="termsAndConditions" rows="4" placeholder="Enter terms and conditions"></TextArea>
+            <TextArea
+              id="termsAndConditions"
+              rows="4"
+              placeholder="Enter terms and conditions"
+            ></TextArea>
           </FormGroup>
           <BigButton type="submit">Add New Group</BigButton>
         </Form>

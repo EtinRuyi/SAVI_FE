@@ -27,11 +27,11 @@ const ActiveSaving = ({
             <Details>
               <Savings>
                 <div className="text">Savings</div>
-                <div className="content">₦ {savings}</div>
+                <div className="content">₦{savings}</div>
               </Savings>
               <Widthdrawal>
                 <div className="text">Withdrawal</div>
-                <div className="content">₦ {withdrawal}</div>
+                <div className="content">₦{withdrawal}</div>
               </Widthdrawal>
               <Freq>
                 <div className="text">Saving Freq</div>
@@ -39,7 +39,7 @@ const ActiveSaving = ({
               </Freq>
               <Duration>
                 <div className="text">Duration</div>
-                <div className="content">{duration}</div>
+                <div className="content">{duration} Months</div>
               </Duration>
               <CashoutDate>
                 <div className="text">Cash Out Date</div>
