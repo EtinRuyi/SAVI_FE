@@ -31,6 +31,7 @@ import Savings from './pages/Savings/Savings';
 import GroupSavings from './pages/GroupSavings/GroupSavings';
 
 import PersonalSaving from './pages/Savings/PersonalSaving';
+import GroupFlow from './pages/Group/GroupFlow';
 // import ExploreGroup from './pages/Group/ExploreGroup';
 // App component
 function App() {
@@ -76,7 +77,9 @@ function App() {
                 path="/CreateGroupSuccessModals"
                 element={<CreateGroupSuccessModal />}
               />
+               <Route path="/groupflow" element={<GroupFlow />} />
             </Routes>
+           
           </GlobalProvider>
         </Router>
       </Suspense>
