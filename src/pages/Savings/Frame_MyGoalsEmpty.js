@@ -1,11 +1,11 @@
 import { Container, Row } from 'react-bootstrap';
-import '../App.css';
-import Header from '../components/navs/Header';
-import Sidebar from '../components/navs/Sidebar';
+import '../../App.css';
+import Header from '../../components/navs/Header';
+import Sidebar from '../../components/navs/Sidebar';
 import styled from 'styled-components';
 import { useCallback, useEffect, useState } from 'react';
-import PortalPopup from '../components/PortalPopup';
-import AddMoreGoals from '../components/AddMoreGoals';
+import PortalPopup from '../../components/PortalPopup';
+import AddMoreGoals from '../../components/AddMoreGoals';
 import { useNavigate } from 'react-router-dom';
 const Frame_MyGoalsEmpty = () => {
 

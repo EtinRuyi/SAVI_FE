@@ -2,20 +2,34 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
+import Swal from 'sweetalert2';
 
-function FundTarget({savingsId}) {
+function FundTarget({savingsId, onClose, refreshGoal}) {
   const [amountToSave, setAmountToSave] = useState('');
 
   
-  const handleAmountChange = (event) => {
+  const handleAmountChanges = (event) => {
     // Allow only digits (0-9) and update the amountToSave
     const newAmount = event.target.value.replace(/\D/g, '');
     setAmountToSave(newAmount);
   };
+  const handleAmountChange = (e) => {
+    const sanitizedValue = e.target.value.replace(/,/g, '');
+
+    if (sanitizedValue === '') {
+      setAmountToSave('');
+      return;
+    }
+
+    const formattedValue = parseFloat(sanitizedValue);
+    let numm = formattedValue.toLocaleString();
+    setAmountToSave(numm);
+   
+  };
 
   const handleSaveSubmit = async () => {
 let description = "";
-let amount = amountToSave;
+let amount = amountToSave.replace(/,/g, '');
 let walletNumber = localStorage.getItem("walletNumber");
 let userId = localStorage.getItem("userId");
 
@@ -35,14 +49,17 @@ let userId = localStorage.getItem("userId");
       const data = response.data;
 
       if (data.succeeded) {
-        toast.success(data.message);
+        // toast.success(data.message);
+        Swal.fire('Success',data.message,'success');
         console.log(data.data.balance);
         localStorage.setItem('balance', data.data.balance);
+        onClose();
+        refreshGoal();
       } else {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error('' + error);
+      toast.error('erro' + error);
     }
   };
 

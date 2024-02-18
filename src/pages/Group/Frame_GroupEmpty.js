@@ -1,10 +1,46 @@
 import styled from 'styled-components';
-import '../App.css';
-import Header from '../components/navs/Header';
-import Sidebar from '../components/navs/Sidebar';
+import '../../App.css';
+import Header from '../../components/navs/Header';
+import Sidebar from '../../components/navs/Sidebar';
 import { Container, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import PortalPopup from '../../components/PortalPopup';
+import { useEffect, useState } from 'react';
+import CreateSavingsGroupForm from './CreateNewSavingsGroup';
+import { useNavigate } from 'react-router-dom';
+
 const Frame_GroupEmpty = () => {
+  const navigate = useNavigate();
+  const [activeSavings, setActiveSavings] = useState("");
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`https://localhost:7226/api/Group/GetGroupsByUserId?userId=${localStorage.getItem("userId")}`);
+        const result = await response.json();
+        console.log(result.data);
+        if(result.data.length>0){          
+          setActiveSavings(result.data);
+          navigate('/active-groups');
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+
+
+
+  const [isNewGroup, setNewGroup]= useState(false);
+
+  const openNewGroupForm = ()=>{
+    setNewGroup(true);
+  };
+  const closeNewGroupForm = ()=>{
+    setNewGroup(false);
+  };
   return (
     <>
       <Header />
@@ -30,7 +66,7 @@ const Frame_GroupEmpty = () => {
             </CreateNewTargetCallToActi>
             <FrameOfAddNewTarget>
               <TextForAddNewTarget >
-                <CreateANew>create a new group</CreateANew> 
+                <CreateANew onClick={openNewGroupForm} >create a new group</CreateANew> 
                 <span style={{color:'black',cursor:'default'}}>&nbsp;or&nbsp;</span> 
                <Link style={{textDecoration:'none'}} to="/explore-groups"> <CreateANew>explore groups</CreateANew></Link>
               </TextForAddNewTarget>
@@ -41,6 +77,16 @@ const Frame_GroupEmpty = () => {
           </Container>
         </div>
       </div>
+      {isNewGroup && (
+        <PortalPopup
+          overlayColor="rgba(113, 113, 113, 0.3)"
+          placement="Centered"
+          onOutsideClick={closeNewGroupForm}
+        >
+          
+          <CreateSavingsGroupForm onClose={closeNewGroupForm}/>
+        </PortalPopup>
+      )}
     </>
   );
 };

@@ -15,20 +15,15 @@ const SignIn = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  function parseJwt(token) {
+  function parseJwt (token) {
     var base64Url = token.split('.')[1];
     var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    var jsonPayload = decodeURIComponent(
-      window
-        .atob(base64)
-        .split('')
-        .map(function (c) {
-          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        })
-        .join('')
-    );
+    var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
     return JSON.parse(jsonPayload);
   }
+  
 
   const responseGoogleSuccess = async (response) => {
     console.log(response);
@@ -38,17 +33,19 @@ const SignIn = () => {
         `https://localhost:7226/api/Authentication/signin-google/${response.credential}`
       )
       .then((backendResponse) => {
-        if (backendResponse.data.succeeded) {
-          let val = backendResponse.data;     
-          localStorage.setItem('email', val.data[0]);
-          localStorage.setItem('userId', val.data[3]);
-          localStorage.setItem('fullname', val.data[2]);
-          localStorage.setItem('walletNumber', val.data[1]);
-          toast.success(backendResponse.data.message);
-          navigate('/dashboard');
-        } else {
-          toast.error(backendResponse.data.message);
+        console.log(backendResponse.data);
+        let val = backendResponse.data;
+        console.log("val", val.data[0]);
+        if(val.succeeded){
+       localStorage.setItem('email', val.data[0]);
+        localStorage.setItem('userId', val.data[3]);
+        localStorage.setItem('fullname', val.data[2]);
+        localStorage.setItem('walletNumber', val.data[1]);
+        navigate('/dashboard');
+        }else{
+          toast.error(val.message);
         }
+        
       })
       .catch((error) => {
         console.error(error);
@@ -77,15 +74,13 @@ const SignIn = () => {
       );
 
       const data = response.data;
-
+      
       if (data.succeeded) {
         toast.success(data.message);
-        const payload = parseJwt(data.data.jwToken);
-        const response = await fetch(
-          `https://localhost:7226/api/Wallet/GetWalletByUserId?userId=${payload.sub}`
-        );
+        const payload = parseJwt(data.data.jwToken);        
+        const response = await fetch(`https://localhost:7226/api/Wallet/GetWalletByUserId?userId=${payload.sub}`);
         const result = await response.json();
-        console.log('result', result);
+        console.log("result", result);
         localStorage.setItem('walletNumber', result.data.walletNumber);
         localStorage.setItem('email', email);
         localStorage.setItem('userId', payload.sub);

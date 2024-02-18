@@ -141,7 +141,6 @@ const SearchInput = styled.input`
 
 const DashboardRoot = styled.div`
    position: fixed;
-  background-color: var(--grey-50);
   width: 100%;
   height: 6.5em;
   box-sizing: border-box; /* Include the border in the total width/height */

@@ -1,13 +1,13 @@
 import { Container, Row } from 'react-bootstrap';
-import '../App.css';
-import Header from '../components/navs/Header';
-import Sidebar from '../components/navs/Sidebar';
+import '../../App.css';
+import Header from '../../components/navs/Header';
+import Sidebar from '../../components/navs/Sidebar';
 import styled from 'styled-components';
-import { useCallback, useState } from 'react';
-import PortalPopup from '../components/PortalPopup';
-import AddMoreGoals from '../components/AddMoreGoals';
+import { useCallback, useEffect, useState } from 'react';
+import PortalPopup from '../../components/PortalPopup';
+import AddMoreGoals from '../../components/AddMoreGoals';
 //import PersonalSaving from '../../src/pages/Savings/PersonalSaving';
-import Savings from '../../src/pages/Savings/Savings';
+import Savings from './Savings';
 
 
 const Frame_PersonalSaving = () => {
@@ -21,6 +21,24 @@ const Frame_PersonalSaving = () => {
     setAddMoreGoalsOpen(false);
   }, []);
 
+  const [goalsData, setGoalsData] = useState([]);
+
+  const fetchPersonalSavings = async () => {
+    try {
+      const response = await fetch(`https://localhost:7226/api/Saving/list/${localStorage.getItem("walletNumber")}`);
+      const result = await response.json();
+      if(result.succeeded){
+        console.log(result);
+        setGoalsData(result.data);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+  
+  useEffect(() => {
+    fetchPersonalSavings();    
+  }, []);
 
   return (
     <>
@@ -36,7 +54,7 @@ const Frame_PersonalSaving = () => {
               <AddNewGoal onClick={openAddMoreGoals}>Add New Goal</AddNewGoal>
           </FrameOfMyGoals>
           </Row>
-          <Savings/>
+          <Savings goalsData={goalsData}/>
           </Container>
         </div>
       </div>
@@ -46,7 +64,7 @@ const Frame_PersonalSaving = () => {
           placement="Centered"
           onOutsideClick={closeAddMoreGoals}
         >
-          <AddMoreGoals onClose={closeAddMoreGoals} />
+          <AddMoreGoals onClose={closeAddMoreGoals} fetchPersonalSavings={fetchPersonalSavings}/>
         </PortalPopup>
       )}
     </>

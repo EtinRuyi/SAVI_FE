@@ -4,10 +4,9 @@ import PortalPopup from '../../components/PortalPopup';
 import WithdrawFunds from '../../components/savings/WithdrawFunds';
 import styled from 'styled-components';
 import { useLocation } from 'react-router-dom';
-import { Row } from 'react-bootstrap';
 import FundTarget from '../../components/savings/FundTarget';
 
-const PersonalSaving = (props) => {
+const PersonalSaving = () => {
   const location = useLocation();
 
   const [isAddMoreGoalsOpen, setAddMoreGoalsOpen] = useState(false);
@@ -16,18 +15,9 @@ const PersonalSaving = (props) => {
   const [personalSavingData, setPersonalSavingData] = useState(null);
   const [savingsId, setSavingsId] = useState(null);
 
-  const openAddMoreGoals = useCallback(() => {
-    setAddMoreGoalsOpen(true);
-  }, []);
-
   const closeAddMoreGoals = useCallback(() => {
     setAddMoreGoalsOpen(false);
   }, []);
-
-  const onMyGoalTextClick = useCallback(() => {
-    // Please sync "Personal Saving" to the project
-  }, []);
-
   const openWithdrawFunds = useCallback(() => {
     setWithdrawFundsOpen(true);
   }, []);
@@ -43,16 +33,12 @@ const PersonalSaving = (props) => {
   const closeWithdrawFunds1 = useCallback(() => {
     setWithdrawFunds1Open(false);
   }, []);
-
-  useEffect(() => {
-    // Function to fetch personal savings data from the API
-    const fetchPersonalSavingData = async () => {
+  const fetchPersonalSavingData = async () => {
       try {
         const searchParams = new URLSearchParams(location.search);
         const savingsId = searchParams.get('id');
         setSavingsId(savingsId);
 
-        //const savingsId = "1425f12e-fea5-409e-8dd4-1169fb2c441c";
         const response = await fetch(`https://localhost:7226/api/Saving/PersonalSavingDetails?savingsId=${savingsId}`);
         let data = await response.json();
         data = data.data;
@@ -62,10 +48,15 @@ const PersonalSaving = (props) => {
         console.error('Error fetching personal savings data:', error);
       }
     };
-
-    // Call the function to fetch data
+  useEffect(() => {
     fetchPersonalSavingData();
   }, []);
+
+  const refreshGoal = () => {
+    fetchPersonalSavingData();
+    console.log("refreshed goal");
+  };
+
   function setDaysLeft(date){
     const givenDate = new Date(date);
     const today = new Date();
@@ -143,7 +134,7 @@ const PersonalSaving = (props) => {
           placement="Centered"
           onOutsideClick={closeWithdrawFunds}
         >
-          <FundTarget onClose={closeWithdrawFunds} savingsId={savingsId} />
+          <FundTarget onClose={closeWithdrawFunds} savingsId={savingsId} refreshGoal={refreshGoal} />
         </PortalPopup>
       )}
       {isWithdrawFunds1Open && (
@@ -152,7 +143,7 @@ const PersonalSaving = (props) => {
           placement="Centered"
           onOutsideClick={closeWithdrawFunds1}
         >
-          <WithdrawFunds onClose={closeWithdrawFunds1} />
+          <WithdrawFunds onClose={closeWithdrawFunds1}  savingsId={savingsId} refreshGoal={refreshGoal} />
         </PortalPopup>
       )}
     </>
@@ -161,11 +152,7 @@ const PersonalSaving = (props) => {
 
 export default PersonalSaving;
 
-const Savi = styled.b`
-  position: relative;
-  letter-spacing: 0.15px;
-  line-height: 140%;
-`;
+
 
 const Savings = styled.div`
   position: relative;

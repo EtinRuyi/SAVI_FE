@@ -17,21 +17,17 @@ import LandingPage from './pages/landingPage/LandingPage';
 import Signin from './pages/signinSignup/SignIn';
 import Signup from './pages/signinSignup/SignUp';
 import FundSavings from './components/modal/FundSavings';
-import PersonalSavings from './pages/Frame_PersonalSavings';
-import ExploreGroup from './pages/Frame_Group';
-import MyGoalsEmpty from './pages/Frame_MyGoalsEmpty';
-import Groupsempty from './pages/Frame_GroupEmpty';
-import PersonalSavingDetails from './pages/Frame_PersonalSavingDetails';
-import CreateSavingsGroupForm from './pages/Group/CreateNewSavingsGroup';
+import PersonalSavings from './pages/savings/Frame_PersonalSavings';
+import ExploreGroup from './pages/group/Frame_ExploreGroup';
+import MyGoalsEmpty from './pages/savings/Frame_MyGoalsEmpty';
+import Groupsempty from './pages/group/Frame_GroupEmpty';
+import PersonalSavingDetails from './pages/savings/Frame_PersonalSavingDetails';
+import CreateSavingsGroupForm from './pages/group/CreateNewSavingsGroup';
 import CreateGroupSuccessModal from './components/modal/CreateGroupSuccess';
-// import PersonalSavings from './pages/PersonalSavings';
-// import PersonalSavingsNoGoals from './pages/PersonalSavingsNoGoals';
-// import PersonalSaving from './pages/savings/PersonalSaving';
-import Savings from './pages/Savings/Savings';
-import GroupSavings from './pages/GroupSavings/GroupSavings';
-
-import PersonalSaving from './pages/Savings/PersonalSaving';
-import GroupFlow from './pages/Group/GroupFlow';
+import ActiveGroupDetails from './pages/group/ActiveGroupDetails';
+import ExploreGroupDetails from './pages/group/ExploreGroupDetails';
+import ActiveGroups from './pages/group/ActiveGroups';
+import GroupFlow from './pages/group/GroupFlow';
 // import ExploreGroup from './pages/Group/ExploreGroup';
 // App component
 function App() {
@@ -54,29 +50,14 @@ function App() {
               <Route path="/signup" element={<Signup />} />
               <Route path="/fundsaving" element={<FundSavings />} />
               <Route path="/personalsaving" element={<PersonalSavings />} />
-              <Route path="/groupsavings" element={<GroupSavings />} />
-              {/* <Route
-                path="/personalsavingnogoal"
-                element={<PersonalSavingsNoGoals />}
-              /> */}
-              {/* <Route path="/personalsavings" element={<PersonalSaving />} /> */}
-              <Route path="/savings" element={<Savings />} />
-              <Route path="/personalsavings" element={<PersonalSaving />} />
-              <Route path="/exploregroup" element={<ExploreGroup />} />
               <Route path="/groups" element={<Groupsempty />} />
-              <Route
-                path="/personal-saving-details"
-                element={<PersonalSavingDetails />}
-              />
+              <Route  path="/personal-saving-details" element={<PersonalSavingDetails />}  />
               <Route path="/explore-groups" element={<ExploreGroup />} />
-              <Route
-                path="/CreateSavingsGroupForms"
-                element={<CreateSavingsGroupForm />}
-              />
-              <Route
-                path="/CreateGroupSuccessModals"
-                element={<CreateGroupSuccessModal />}
-              />
+              <Route  path="/CreateSavingsGroupForms"  element={<CreateSavingsGroupForm />}  />
+              <Route path="/CreateGroupSuccessModals"  element={<CreateGroupSuccessModal />} />
+              <Route path="/active-groups"  element={<ActiveGroups />}  />
+              <Route path="/active-group-details"  element={<ActiveGroupDetails />}  />
+              <Route path="/explore-group-details"  element={<ExploreGroupDetails />}  />
                <Route path="/groupflow" element={<GroupFlow />} />
             </Routes>
            

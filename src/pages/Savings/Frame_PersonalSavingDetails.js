@@ -1,13 +1,13 @@
 import { Container, Row } from 'react-bootstrap';
-import '../App.css';
-import Header from '../components/navs/Header';
-import Sidebar from '../components/navs/Sidebar';
-import PersonalSaving from '../../src/pages/Savings/PersonalSaving';
+import '../../App.css';
+import Header from '../../components/navs/Header';
+import Sidebar from '../../components/navs/Sidebar';
+import PersonalSaving from './PersonalSaving';
 import styled from 'styled-components';
-import AddMoreGoals from '../components/AddMoreGoals';
+import AddMoreGoals from '../../components/AddMoreGoals';
 import { useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import PortalPopup from '../components/PortalPopup';
+import PortalPopup from '../../components/PortalPopup';
 
 const Frame_PersonalSavingDetails = () => {
   const navigate = useNavigate();
@@ -22,21 +22,16 @@ const Frame_PersonalSavingDetails = () => {
   }, []);
   const closeAddMoreGoals = useCallback(() => {
     setAddMoreGoalsOpen(false);
+    console.log("closeAddMoreGoals ran");
   }, []);
 
   const [personalSavingData, setPersonalSavingData] = useState(null);
 
   const location = useLocation();
-  
-  useEffect(() => {
-    // Function to fetch personal savings data from the API
-    const fetchPersonalSavingData = async () => {
+  const fetchPersonalSavingData = async () => {
       try {
         const searchParams = new URLSearchParams(location.search);
         const savingsId = searchParams.get('id');
-
-
-        //const savingsId = "1425f12e-fea5-409e-8dd4-1169fb2c441c";
         const response = await fetch(`https://localhost:7226/api/Saving/PersonalSavingDetails?savingsId=${savingsId}`);
         let data = await response.json();
         data = data.data;
@@ -47,10 +42,10 @@ const Frame_PersonalSavingDetails = () => {
       }
     };
 
-    // Call the function to fetch data
+  useEffect(() => {
     fetchPersonalSavingData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
 
 
 
@@ -81,7 +76,7 @@ const Frame_PersonalSavingDetails = () => {
             </Row>
 
             <Row style={{ width: '100%' }}>
-              <PersonalSaving data={personalSavingData}/>
+              <PersonalSaving data={personalSavingData} />
             </Row>
           </Container>
         </div>

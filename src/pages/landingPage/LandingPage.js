@@ -1221,7 +1221,7 @@ const LandingPage = () => {
           <RightNest>
             <HeaderLinkBlock>
               <Button>
-                <Link to="/signup"  style={{ textDecoration: 'none' }}>
+                <Link to="/signin"  style={{ textDecoration: 'none' }}>
                 <Apply>Get Started</Apply>
                 </Link>
               </Button>
@@ -1245,7 +1245,7 @@ const LandingPage = () => {
               finances and unlock a brighter financial future.
             </ExperienceTheConvenience>
             <Buttondefault>
-              <Link to="/signup"  style={{ textDecoration: 'none' }}>
+              <Link to="/signin"  style={{ textDecoration: 'none' }}>
                <DividerVector>Get Started</DividerVector>
               </Link>
              

@@ -677,58 +677,7 @@ const DropYourFiles2 = styled.div`
   line-height: 1.5rem;
   font-weight: 500;
 `;
-const ChevronLeftIcon2 = styled.img`
-  position: relative;
-  width: 1rem;
-  height: 1rem;
-  overflow: hidden;
-  flex-shrink: 0;
-  object-fit: cover;
-  display: none;
-`;
-const Link = styled.div`
-  position: relative;
-  letter-spacing: 0.01em;
-  line-height: 1.5rem;
-  font-weight: 600;
-`;
-const BorderBottom2 = styled.div`
-  align-self: stretch;
-  position: relative;
-  background-color: var(--blue-500);
-  height: 0.13rem;
-  display: none;
-`;
-const Placeholder = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  gap: var(--gap-11xs);
-`;
-const LinkDefault = styled.div`
-  overflow: hidden;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  gap: var(--gap-3xs);
-`;
-const Links = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: flex-start;
-  text-align: center;
-  color: var(--blue-500);
-`;
-const Title = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: center;
-  gap: var(--gap-8xs);
-`;
+
 const SecondaryLabel = styled.div`
   position: relative;
   font-size: var(--input-small-medium-size);
@@ -738,14 +687,7 @@ const SecondaryLabel = styled.div`
   color: var(--gray-400);
   text-align: center;
 `;
-const Content = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  gap: var(--gap-8xs);
-  z-index: 1;
-`;
+
 const FigmaIcon2 = styled.img`
   position: relative;
   width: 1rem;

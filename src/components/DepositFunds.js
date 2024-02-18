@@ -8,7 +8,7 @@ import MoneyInput from './inputs/MoneyInput';
 import { PaystackButton } from 'react-paystack';
 toast.configure();
 
-const DepositFunds = () => {
+const DepositFunds = ({ onClose, onModalClose }) => {
   let [fundamount, setAmount] = useState('');
 
   const publicKey = 'pk_test_e9f49ce67e8cb0632c3fe43e7205903280148364';
@@ -44,8 +44,8 @@ const DepositFunds = () => {
       const data = response.data;
       if (data.succeeded) {
         toast.success(data.message);
-        console.log(data.data.balance);
-        localStorage.setItem('balance', data.data.balance);
+        onClose();
+        onModalClose();
       } else {
         toast.error(data.message);
       }
@@ -65,6 +65,7 @@ const DepositFunds = () => {
     const formattedValue = parseFloat(sanitizedValue);
     let numm = formattedValue.toLocaleString();
     setAmount(numm);
+   
   };
 
   return (

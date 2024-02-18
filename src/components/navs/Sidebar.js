@@ -95,7 +95,7 @@ function Sidebar() {
                       </Link>
                     );
                   }
-                  else if(val.link === '/groups' || val.link==='/explore-groups'){
+                  else if(val.link === '/groups' || val.link==='/explore-groups' || val.link==='/active-groups' || val.link==='/active-group-details' || val.link==='/explore-group-details'){
                     return location.pathname === '/groups' ? (
                       <>
                       <Link style={{textDecoration:'none',color:'inherit'}} to={val.link}>
@@ -105,7 +105,28 @@ function Sidebar() {
                         </Feature1>
                         </Link>
                       </>
-                    ) :location.pathname === '/explore-groups' ? (
+                    ):location.pathname === '/explore-group-details' ? (
+                      <Link style={{textDecoration:'none',color:'inherit'}} to={val.link}>
+                      <Feature1>
+                        <VuesaxbulkhomeIcon1 alt="" src={val.iconActive} />
+                        <Dashboard1>{val.title}</Dashboard1>
+                      </Feature1>
+                      </Link>
+                    ) :location.pathname === '/active-group-details' ? (
+                      <Link style={{textDecoration:'none',color:'inherit'}} to={val.link}>
+                      <Feature1>
+                        <VuesaxbulkhomeIcon1 alt="" src={val.iconActive} />
+                        <Dashboard1>{val.title}</Dashboard1>
+                      </Feature1>
+                      </Link>
+                    ):location.pathname === '/active-groups' ? (
+                      <Link style={{textDecoration:'none',color:'inherit'}} to={val.link}>
+                      <Feature1>
+                        <VuesaxbulkhomeIcon1 alt="" src={val.iconActive} />
+                        <Dashboard1>{val.title}</Dashboard1>
+                      </Feature1>
+                      </Link>
+                    ):location.pathname === '/explore-groups' ? (
                       <Link style={{textDecoration:'none',color:'inherit'}} to={val.link}>
                       <Feature1>
                         <VuesaxbulkhomeIcon1 alt="" src={val.iconActive} />

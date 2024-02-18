@@ -45,21 +45,20 @@ const DashBoard = () => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`https://localhost:7226/api/Wallet/GetWalletByNumber?number=${localStorage.getItem("walletNumber")}`);
-        const result = await response.json();
-          setBalance(result.data.balance);
-        
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchData();
+  const fetchWalletBalance = async () => {
+    try {
+      const response = await fetch(`https://localhost:7226/api/Wallet/GetWalletByNumber?number=${localStorage.getItem("walletNumber")}`);
+      const result = await response.json();
+        setBalance(result.data.balance);
+      
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+  useEffect(() => {  
+    fetchWalletBalance();
   }, []);
-
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -82,6 +81,9 @@ const DashBoard = () => {
       .join(' ');
   };
 
+  const handleModalClose = () => {
+    fetchWalletBalance();
+  };
 
   const closeDepositFunds = useCallback(() => {
     setDepositFundsOpen(false);
@@ -692,7 +694,7 @@ const DashBoard = () => {
           placement="Centered"
           onOutsideClick={closeDepositFunds}
         >
-          <DepositFunds onClose={closeDepositFunds} />
+          <DepositFunds onClose={closeDepositFunds} handleClose={closeDepositFunds} onModalClose={handleModalClose}/>
         </PortalPopup>
       )}
        {isKYCOpen && (
