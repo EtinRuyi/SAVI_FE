@@ -65,6 +65,7 @@ const Frame_ExploreGroup = () => {
                     <Link
                       onClick={openNewGroupForm}
                       style={{ textDecoration: 'none' }}
+                      
                     >
                       {' '}
                       Create Group

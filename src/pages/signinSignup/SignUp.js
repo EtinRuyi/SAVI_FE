@@ -16,6 +16,7 @@ const SignUp = () => {
   const [signInAttempted, setSignInAttempted] = useState(false);
   const [loginError, setLoginError] = useState('');
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const responseGoogleSuccess = async (response) => {
     console.log(response);
@@ -39,6 +40,7 @@ const SignUp = () => {
 
   const handleSignUp = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const response = await axios.post(
         'https://localhost:7226/api/Authentication/Register',
@@ -56,24 +58,43 @@ const SignUp = () => {
         }
       );
 
-      // const data = response.data;
-      // if (data.succeeded) {
-        toast.success("User registered successfully")
-      // } else {
-      //   toast.error("Failed to register user");
-      // }
-
-      //localStorage.setItem('token', token);
-      //navigate('/user_dashboard'); // Redirect to your dashboard or desired route
+    //  const data = response.data;
+      console.log("response",response);
+      if (response.status===200) {
+        if(response.data==="success"){
+          navigate('/RegistrationSuccessful');
+        }else{
+          toast.error(""+response.data);
+        }
+        
+      } else {
+        toast.error("Failed to register user");
+      }
+      setLoading(false);
+      
     } catch (error) {
-      toast.error('Registration failed. ' + error);
+      setLoading(false);
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log("Error response status:", error.response.status);
+        console.log("Response data:", error.response.data.message);
+        toast.error('' + error.response.data.message);
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.log("No response received:", error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log("Error:", error.message);
+      }
+      console.log("Config:", error.config);
     }
   };
 
   return (
     <SignUpRoot>
       <SignUpauthentication>
-        <Link to="/" style={{ textDecoration: 'none' }}>
+        <Link to="/" style={{ textDecoration: 'none',color:'inherit' }}>
           <Savi>Savi.</Savi>
         </Link>
         <Text1>Welcome to Savi.</Text1>
@@ -138,7 +159,7 @@ const SignUp = () => {
                 </ButtondefaultParent>
               </FrameWrapper>
               <Ctadefault onClick={handleSignUp}>
-                <Text6>Sign up</Text6>
+                <Text6 disabled={loading}>{loading ? 'Signing up... please wait' : 'Sign up'}</Text6>
               </Ctadefault>
             </FrameContainer>
           </FrameGroup>

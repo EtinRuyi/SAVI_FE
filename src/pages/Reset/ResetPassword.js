@@ -1,6 +1,84 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Footer from './components/Footer';
+import { Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+
+const ResetPassword = (props) => {
+  const location = useLocation();
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const handleResetSubmit = async () => {
+   
+    const searchParams = new URLSearchParams(location.search);
+      const email = searchParams.get('email');
+      const token = searchParams.get('token');
+
+      if(newPassword !== confirmPassword){
+        toast.error("New password and confirm password do not match");
+        return;
+      }
+      setLoading(true);
+    await axios.post(
+      'https://localhost:7226/api/Authentication/reset-password',
+      {          
+        email,
+          token,
+          newPassword,
+          confirmPassword
+      }
+    ).then(response => {
+      console.log("data",response.data);
+      if(response.data.succeeded){
+        Swal.fire('Successful',response.data.message,'success').then(() => {
+          navigate('/signin');
+        });
+       
+      }else{
+        toast.error(""+response.data.message);
+      }
+      
+    }).catch(error => {
+      if (error.response) {
+        toast.error("a "+error.response.data.title);
+        console.log('Server responded with error status:', error.response);
+      } else if (error.request) {
+        console.log('No response received from server:', error.request);
+      } else {
+        console.log('Error setting up request:', error.message);
+      }
+    });
+    setLoading(false);
+  }
+
+  return (
+    <MainContainer>
+      <Link style={{ textDecoration: 'none' }} to="/">
+        <Logo>Savi.</Logo>
+      </Link>
+      <Container>
+        <ContentWrapper>
+          <Title>Reset your password</Title>
+          <SubTitle>New Password</SubTitle>
+          <PasswordInput value={newPassword} onChange={(e)=>setNewPassword(e.target.value)} type="password" placeholder="Enter new password" />
+          <SubTitle>Confirm New Password</SubTitle>
+          <PasswordInput type="password" onChange={(e)=>setConfirmPassword(e.target.value)}  value={confirmPassword} placeholder="Confirm new password" />
+          <ResetButton disabled={loading} onClick={handleResetSubmit}>{loading?'Resetting...':'Reset Password'}</ResetButton>
+          <Footer />
+        </ContentWrapper>
+      </Container>
+    </MainContainer>
+  );
+};
+
+export default ResetPassword;
 
 const MainContainer = styled.span`
   align-items: start;
@@ -104,7 +182,7 @@ const ResetButton = styled.button`
   margin-top: 24px;
   padding: 12px;
   font: 500 16px/140% Inter, sans-serif;
-
+border:none;
   @media (max-width: 991px) {
     padding: 12px;
   }
@@ -119,24 +197,3 @@ const CopyrightText = styled.div`
   color: #000;
   font: 500 18px Inter, sans-serif;
 `;
-
-const ResetPassword = (props) => {
-  return (
-    <MainContainer>
-      <Logo>Savi.</Logo>
-      <Container>
-        <ContentWrapper>
-          <Title>Reset your password</Title>
-          <SubTitle>New Password</SubTitle>
-          <PasswordInput type="password" placeholder="Enter new password" />
-          <SubTitle>Confirm New Password</SubTitle>
-          <PasswordInput type="password" placeholder="Confirm new password" />
-          <ResetButton>Reset Password</ResetButton>
-          <Footer />
-        </ContentWrapper>
-      </Container>
-    </MainContainer>
-  );
-};
-
-export default ResetPassword;

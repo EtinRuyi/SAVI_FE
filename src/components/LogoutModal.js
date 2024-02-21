@@ -27,7 +27,7 @@ const LogoutModal = () => {
           </HeaderTextContainer>
         </FrameDiv>
       </GroupParent>
-      <CloseIcon1 alt="" src="/close@2x.png" />
+      {/* <CloseIcon1 alt="" src="/close@2x.png" /> */}
     </LogoutModalRoot>
   );
 };

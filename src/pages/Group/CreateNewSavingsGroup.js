@@ -5,10 +5,11 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 
 
-const CreateSavingsGroupForm = ({onClose}) => {
+const CreateSavingsGroupForm = ({onClose,reloadPage}) => {
   const [safePortraitImageURL, setSafePortraitImageURL] = useState(null); 
   const [loading, setLoading] = useState(false);
-  
+  const [duration, setDuration] = useState("");
+
   const [formData, setFormData] = useState({
     groupName: '',
     contributionAmount: '',
@@ -37,6 +38,34 @@ const CreateSavingsGroupForm = ({onClose}) => {
     div2: '#ccc',
     div3: '#ccc',
   });
+
+  function getDuration(sdatee,edatee) {
+    // Parse the date strings into Date objects
+    var date1 = new Date(sdatee);
+    var date2 = new Date(edatee);
+
+    // Calculate the difference in milliseconds
+    var differenceMs = date2 - date1;
+
+    // Convert milliseconds to days
+    var differenceDays = Math.floor(differenceMs / (1000 * 60 * 60 * 24));
+
+    // Convert days to months, weeks, and remaining days
+    var months = Math.floor(differenceDays / 30);
+    var remainingDays = differenceDays % 30;
+    var weeks = Math.floor(remainingDays / 7);
+    var days = remainingDays % 7;
+
+    months = months===0?"":months;
+    weeks = weeks===0?"":weeks;
+    days = days===0?"":days;
+  
+    months = months ===1?months+" mon":months===""?"":months+" mons";
+    weeks = weeks ===1?weeks+" week":weeks===""?"":weeks+" weeks";
+    days = days ===1?days+" day":days===""?"":days+" days";
+   let dura = months+" "+ weeks+" "+days;
+   setDuration(dura)
+}
 
   const handleDivClick = (divId) => {
     if (divId === 'div1') {
@@ -95,6 +124,16 @@ const CreateSavingsGroupForm = ({onClose}) => {
         ...formData,
         [name]: value
       });
+      if (e.target.name === 'expectedStartDate' || e.target.name === 'expectedEndDate') {
+       var sdatee = document.getElementById("startDate").value;
+       var edatee = document.getElementById("endDate").value;
+      //alert(sdatee+" | "+edatee)
+      if(sdatee !=="" && edatee !==""){
+          getDuration(sdatee,edatee);
+      }
+     
+      }
+     
     }
   };
 
@@ -155,6 +194,7 @@ const CreateSavingsGroupForm = ({onClose}) => {
         if(response.data.succeeded){
           toast.success(response.data.message);
           onClose();
+          reloadPage();
         }else{
           toast.error(response.data.message);
         }        
@@ -268,7 +308,7 @@ const CreateSavingsGroupForm = ({onClose}) => {
           <Col>
             <FormGroup>
               <Label htmlFor="duration">Duration</Label>
-              <Input type="text" id="duration" readOnly />
+              <Input type="text" id="duratio" readOnly value={duration} />
             </FormGroup>
           </Col>
           <Col>
@@ -335,10 +375,10 @@ const CreateSavingsGroupForm = ({onClose}) => {
           >{formData.termsAndConditions}</TextArea>
         </FormGroup>
         <FormGroup>
-          <Label htmlFor="time">Is Public</Label>
+          <Label htmlFor="time">Visibility</Label>
           <Select  name="isOpen" onChange={handleChange} id="isopn" placeholder="e.g., 4:00pm">
-            <option value="1">YES</option>
-            <option value="0">NO</option>
+            <option value="1">Public</option>
+            <option value="0">Private</option>
           </Select>
         </FormGroup>
         <BigButton  disabled={loading} type="submit">{loading ? 'Adding...' : 'Add New Group'}</BigButton>

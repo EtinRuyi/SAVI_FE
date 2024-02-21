@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 
 toast.configure();
+
 const KYC = () => {
   const [formData, setFormData] = useState({
     gender: '0',
@@ -151,7 +152,7 @@ const KYC = () => {
       // }
       console.log('Form Data:', adaptedFormData);
 
-      const response = await axios.post(
+      await axios.post(
         `https://localhost:7226/api/Kyc/AddKyc?userId=${localStorage.getItem("userId")}`,
         adaptedFormData,
         {
@@ -159,13 +160,40 @@ const KYC = () => {
             'Content-Type': 'multipart/form-data',
           },
         }
-      );
-      if (response.status === 200) {
-        toast.success('Your account has been updated successfully');
-        
-      } else {
-        toast.error('Error:'+ response.data.message);
-      }
+      ).then(function (response) {
+        // Handle successful response here
+        console.log('Response data:', response);
+        if(response.data.succeeded){
+          toast.success(""+response.data.message);
+
+        }
+        else{
+          toast.error(""+response.data.message);
+        }
+      }).catch(function (error) {
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          console.log("Error response status:", error.response.status);
+          console.log("Response data:", error.response.data);
+          let errors = error.response.data.errors;
+
+          let firstError = ""; let i=1;
+
+          for (let key in errors) {
+              firstError = errors[key][0];
+              break;
+          }
+          toast.error(firstError);
+        } else if (error.request) {
+          // The request was made but no response was received
+          console.log("No response received:", error.request);
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.log("Error:", error.message);
+        }
+        console.log("Config:", error.config);
+      });
     } catch (error) {
       console.error('An error occurred:', error);
 
@@ -779,6 +807,7 @@ const Ctadefault = styled.button`
   padding: var(--padding-xs) var(--padding-base);
   gap: var(--gap-5xs);
   color: var(--white);
+  border:none;
 `;
 const FrameGroup = styled.div`
   display: flex;

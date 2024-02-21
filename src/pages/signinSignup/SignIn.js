@@ -13,6 +13,7 @@ const SignIn = () => {
   const [signInAttempted, setSignInAttempted] = useState(false);
   const [loginError, setLoginError] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   function parseJwt(token) {
@@ -67,6 +68,7 @@ const SignIn = () => {
       toast.error('Input your email and password');
       return;
     }
+    setLoading(true);
     try {
       const response = await axios.post(
         'https://localhost:7226/api/Authentication/Login',
@@ -79,6 +81,7 @@ const SignIn = () => {
       const data = response.data;
 
       if (data.succeeded) {
+        
         toast.success(data.message);
         const payload = parseJwt(data.data.jwToken);
         const response = await fetch(
@@ -90,19 +93,21 @@ const SignIn = () => {
         localStorage.setItem('email', email);
         localStorage.setItem('userId', payload.sub);
         localStorage.setItem('fullname', payload.given_name);
-        navigate('/dashboard');
+       navigate('/dashboard');
       } else {
-        toast.error('Login failed. ' + data.message);
+        toast.error('' + data.message);
       }
+      setLoading(false);
     } catch (error) {
-      toast.error('Login failed. ' + error);
+      setLoading(false);
+      toast.error('Error. ' + error);
     }
   };
 
   return (
     <SignInRoot>
       <FrameContainer1>
-        <Link to="/">
+        <Link to="/" style={{textDecoration:'none',color:'inherit'}}>
           {' '}
           <Savi>Savi.</Savi>
         </Link>
@@ -125,7 +130,7 @@ const SignIn = () => {
       </FrameContainer1>
       <LoginauthenticationParent>
         <Loginauthentication>
-          <Link style={{ textDecoration: 'none' }} to="/">
+          <Link style={{ textDecoration: 'none',color:'inherit' }} to="/">
             <Savi1>Savi.</Savi1>
           </Link>
           <Text1>Welcome back to Savi.</Text1>
@@ -170,7 +175,7 @@ const SignIn = () => {
                   </Link>
                 </ButtondefaultParent>
                 <Ctadefault onClick={handleSignIn}>
-                  <Text7>Login</Text7>
+                  <Text7 disabled={loading}>{loading ? 'Loging in...' : 'Login'}</Text7>
                 </Ctadefault>
               </FrameGroup>
             </FrameParent>
@@ -184,7 +189,7 @@ const SignIn = () => {
         </Loginauthentication>
         <PrivacyPolicyParent>
           <PrivacyPolicy>Privacy Policy</PrivacyPolicy>
-          <PrivacyPolicy>Copyright 2022</PrivacyPolicy>
+          <PrivacyPolicy>Copyright {new Date().getFullYear()}</PrivacyPolicy>
         </PrivacyPolicyParent>
       </LoginauthenticationParent>
     </SignInRoot>
@@ -615,6 +620,7 @@ const PrivacyPolicy = styled.div`
 const PrivacyPolicyParent = styled.div`
   align-self: stretch;
   overflow: hidden;
+  margin-top:3em;
   display: flex;
   flex-direction: row;
   align-items: flex-end;

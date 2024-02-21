@@ -3,72 +3,112 @@ import '../../App.css';
 import Header from '../../components/navs/Header';
 import Sidebar from '../../components/navs/Sidebar';
 import { Col, Container, Row } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-
+import Swal from 'sweetalert2';
 
 const ActiveGroupDetails = () => {
-  
   const navigate = useNavigate();
 
-const [groupDetail, setGroupDetail] = useState("");
-const [groupMembers, setGroupMember] = useState('');
-const [isContentLoaded, setIsContentLoaded] = useState(false);
+  const [groupDetail, setGroupDetail] = useState('');
+  const [groupMembers, setGroupMember] = useState('');
+  const [transactions, setTransactions] = useState('');
+  const [isContentLoaded, setIsContentLoaded] = useState(false);
+  const [isTransactionsSet, setTransactionSet] = useState(false);
+  const [userId, setUserId] = useState(localStorage.getItem('userId'));
+  const [isDismissed, setDismissed] = useState(false);
+  const [balance, setBalance] = useState();
 
-
-const getGroupDetails = async () => {
-  try {
-    const id = "06fb8ed6-8405-4773-8eaf-921d76bdf0df";
-    
-    
-    const response = await fetch(
-      `https://localhost:7226/api/Group/get-explore-details?id=${id}`
-    );
-    let data = await response.json();
-    if (data.succeeded) {
-      setGroupDetail(data.data);
-      setGroupMember(data.data.groupSavingsMembers);
-      setIsContentLoaded(true);
-      console.log(data.data)
-    } else {
-      navigate('/explore-group')
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const groupId = searchParams.get('id');
+  const getGroupDetails = async () => {
+    try {
+      const response = await fetch(
+        `https://localhost:7226/api/Group/get-explore-details?id=${groupId}`
+      );
+      let data = await response.json();
+      if (data.succeeded) {
+        setGroupDetail(data.data);
+        setGroupMember(data.data.groupSavingsMembers);
+        setIsContentLoaded(true);
+        console.log(data.data);
+      } else {
+        // navigate('/explore-group')
+      }
+    } catch (error) {
+      toast.error('' + error);
     }
-  } catch (error) {
-    toast.error('' + error);
-  }
-}
-useEffect(() => {
-  getGroupDetails();
-}, []);
-const formatDate = (originalDateString) => {
-  var date = new Date(originalDateString);
-  var months = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
-  ];
+  };
 
-  var day = date.getDate();
-  var month = months[date.getMonth()];
-  var year = date.getFullYear();
-  return day + ' ' + month + ', ' + year;
-};
+  const getGroupMembers = async () => {
+    try {
+      await axios
+        .get(
+          `https://localhost:7226/api/GroupTransaction/get-group-transactions?groupId=${groupId}`
+        )
+        .then((response) => {
+          // const sortedData = response.data.data.sort(
+          //   (a, b) => parseInt(a.createdAt) - parseInt(b.createdAt)
+          // );
 
-function getDuration(date1String, date2String) {
-  // Parse the date strings into Date objects
-  var date1 = new Date(date1String);
-  
+          setTransactions(response.data.data);
+          setTransactionSet(true);
+          console.log('response', response.data.data);
+        })
+        .catch((error) => {
+          // Handle error
+          console.error('Error fetching data:', error);
+        });
+    } catch (error) {
+      console.error('Error fetching personal savings data:', error);
+    }
+  };
+  const fetchWalletBalance = async () => {
+    try {
+      const response = await fetch(`https://localhost:7226/api/Wallet/GetWalletByNumber?number=${localStorage.getItem("walletNumber")}`);
+      const result = await response.json();
+        setBalance(result.data.balance);
+      
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+ 
+  useEffect(() => {
+    getGroupDetails();
+    getGroupMembers();
+    fetchWalletBalance();
+  }, []);
+  const formatDate = (originalDateString) => {
+    var date = new Date(originalDateString);
+    var months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+
+    var day = date.getDate();
+    var month = months[date.getMonth()];
+    var year = date.getFullYear();
+    return day + ' ' + month + ', ' + year;
+  };
+
+  function getDuration(date1String, date2String) {
+    // Parse the date strings into Date objects
+    var date1 = new Date(date1String);
+
     var date2 = new Date(date2String);
 
     // Calculate the difference in milliseconds
@@ -83,23 +123,88 @@ function getDuration(date1String, date2String) {
     var weeks = Math.floor(remainingDays / 7);
     var days = remainingDays % 7;
 
-    months = months===0?"":months;
-    weeks = weeks===0?"":weeks;
-    days = days===0?"":days;
-  
-    months = months ===1?months+" mon":months===""?"":months+" mons";
-    weeks = weeks ===1?weeks+" week":weeks===""?"":weeks+" weeks";
-    days = days ===1?days+" day":days===""?"":days+" days";
-   return months+" "+ weeks+" "+days;
-}
+    months = months === 0 ? '' : months;
+    weeks = weeks === 0 ? '' : weeks;
+    days = days === 0 ? '' : days;
 
+    months =
+      months === 1 ? months + ' mon' : months === '' ? '' : months + ' mons';
+    weeks =
+      weeks === 1 ? weeks + ' week' : weeks === '' ? '' : weeks + ' weeks';
+    days = days === 1 ? days + ' day' : days === '' ? '' : days + ' days';
+    return months + ' ' + weeks + ' ' + days;
+  }
+  const openPayNow = () => {
+    Swal.fire({
+      title: 'Do you want to pay now?',
+      text: 'Pay your own quota of the contribution',
+      showDenyButton: true,
+      confirmButtonText: 'Yes',
+      denyButtonText: 'Cancel',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        let groupSavingsId = groupId;
+
+        await axios
+          .post('https://localhost:7226/api/GroupTransaction/fund-group', {
+            userId,
+            groupSavingsId,
+          })
+          .then((response) => {
+            console.log('data', response.data);
+            if (response.data.succeeded) {
+              Swal.fire('Success', 'Payment completed successfully', 'success');
+            } else {
+              toast.error('' + response.data.message);
+            }
+          })
+          .catch((error) => {
+            if (error.response) {
+              toast.error('' + error.response.data.message);
+              //  console.error('Server responded with error status:', error.response.data);
+            } else if (error.request) {
+              console.error('No response received from server:', error.request);
+            } else {
+              console.error('Error setting up request:', error.message);
+            }
+          });
+      }
+    });
+  };
+  const runDate = (a, b,onlydate) => {
+    let dt ="";let fg="";
+    var date1 = new Date(a);
+    if (new Date() > date1) {
+      dt = date1.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+      fg = date1.toLocaleDateString('en-US', { month: 'long' });
+    } else {
+      var date2 = new Date(b);
+      dt = date2.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+      fg=date2.toLocaleDateString('en-US', { month: 'long' });
+    }
+
+    
+    return onlydate?fg.toUpperCase():dt;
+  };
+
+  const handleDismiss = () => {
+    setDismissed(true);
+  };
   return (
     <>
       <Header />
       <Sidebar />
-      <Div  style={{marginLeft: '17.5rem',maxHeight:'100vh', marginTop: '5em',overflowY:'scroll' }}>
-     
-       <Container style={{maxHeight: '100%',overflowY:'scroll',marginTop:'1em'}}>
+      <Div
+        style={{
+          marginLeft: '17.5rem',
+          maxHeight: '100vh',
+          marginTop: '5em',
+          overflowY: 'scroll',
+        }}
+      >
+        <Container
+          style={{ maxHeight: '100%', overflowY: 'scroll', marginTop: '1em' }}
+        >
           <Row>
             <div
               style={{
@@ -115,7 +220,7 @@ function getDuration(date1String, date2String) {
                   <MyGoalsParent>
                     <div>
                       <Link
-                        to="/explore-groups"
+                        to="/active-groups"
                         style={{ textDecoration: 'none', color: 'inherit' }}
                       >
                         <Head>Active Savings Group</Head>
@@ -146,11 +251,17 @@ function getDuration(date1String, date2String) {
                 </div>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <June>JUNE CONTRIBUTION</June>
-                <JuneDate>June 1, 2023</JuneDate>
-                <Fifty>&#x20A6;50,000</Fifty>
+                <June>{runDate(groupDetail.runTime, groupDetail.nextRunTime, true)} CONTRIBUTION</June>
+                <JuneDate>
+                  
+                  {runDate(groupDetail.runTime, groupDetail.nextRunTime, false)}
+                </JuneDate>
+                <Fifty>
+                  &#x20A6;
+                  {parseFloat(groupDetail.contributionAmount).toLocaleString()}
+                </Fifty>
                 <Desc>Your payment will be debited from your </Desc>
-                <b>WALLET (₦500,000)</b>
+                <b>WALLET (₦{parseFloat(balance).toLocaleString()})</b>
               </div>
               <div
                 style={{
@@ -160,12 +271,18 @@ function getDuration(date1String, date2String) {
                   alignItems: 'center',
                 }}
               >
-                <PayNow>
-                  <PayText>Pay Now</PayText>
-                </PayNow>
-                <Dismiss>
-                  <DismissText>Dismiss</DismissText>
-                </Dismiss>
+                {isDismissed ? (
+                  <></>
+                ) : (
+                  <>
+                    <PayNow onClick={openPayNow}>
+                      <PayText>Pay Now</PayText>
+                    </PayNow>
+                    <Dismiss onClick={handleDismiss}>
+                      <DismissText>Dismiss</DismissText>
+                    </Dismiss>
+                  </>
+                )}
               </div>
             </div>
           </Row>
@@ -174,13 +291,13 @@ function getDuration(date1String, date2String) {
               <Image src="banner.jpg" />
             </ImageBack>
           </Row>
-          <Row style={{ marginTop: '1em',marginBottom:'2em' }}>
+          <Row style={{ marginTop: '1em', marginBottom: '2em' }}>
             <p>{groupDetail.purposeAndGoal}</p>
           </Row>
 
           <Row style={{ width: '100%' }}>
             <Col md={5}>
-            <BackG>
+              <BackG>
                 <GroupDetails>
                   <div style={{ width: '60%' }}>
                     <Heading>Contribution Amount</Heading>
@@ -204,13 +321,19 @@ function getDuration(date1String, date2String) {
                 <GroupDetails>
                   <div style={{ width: '60%' }}>
                     <Heading>Contribution Timeline</Heading>
-                    <Detail>{getDuration(groupDetail.expectedStartDate,groupDetail.expectedEndDate)}</Detail>
+                    <Detail>
+                      {getDuration(
+                        groupDetail.expectedStartDate,
+                        groupDetail.expectedEndDate
+                      )}
+                    </Detail>
                   </div>
                   <div style={{ width: '40%' }}>
                     <Heading>Estimated&nbsp;Collection</Heading>
                     <Detail>
                       {parseFloat(
-                        groupDetail.contributionAmount * groupDetail.membersMaximumCount
+                        groupDetail.contributionAmount *
+                          groupDetail.membersMaximumCount
                       ).toLocaleString()}
                     </Detail>
                   </div>
@@ -218,15 +341,11 @@ function getDuration(date1String, date2String) {
                 <GroupDetails>
                   <div style={{ width: '60%' }}>
                     <Heading>Start Date</Heading>
-                    <Detail>
-                      {formatDate(groupDetail.expectedStartDate)}
-                    </Detail>
+                    <Detail>{formatDate(groupDetail.expectedStartDate)}</Detail>
                   </div>
                   <div style={{ width: '40%' }}>
                     <Heading>End Date</Heading>
-                    <Detail>
-                      {formatDate(groupDetail.expectedEndDate)}
-                      </Detail>
+                    <Detail>{formatDate(groupDetail.expectedEndDate)}</Detail>
                   </div>
                 </GroupDetails>
                 <GroupDetails>
@@ -237,15 +356,16 @@ function getDuration(date1String, date2String) {
                         ? ''
                         : groupData.membersMaximumCount -
                           groupData.groupSavingsMembers.length} */}
-                          {isContentLoaded?(groupDetail.membersMaximumCount -
-                          groupMembers.length):(<p></p>)}
+                      {isContentLoaded ? (
+                        groupDetail.membersMaximumCount - groupMembers.length
+                      ) : (
+                        <p></p>
+                      )}
                     </Detail>
                   </div>
                   <div style={{ width: '40%' }}>
                     <Heading>Total Slots</Heading>
-                    <Detail>
-                      {groupDetail.membersMaximumCount}
-                      </Detail>
+                    <Detail>{groupDetail.membersMaximumCount}</Detail>
                   </div>
                 </GroupDetails>
               </BackG>
@@ -256,54 +376,37 @@ function getDuration(date1String, date2String) {
             <Col md={5}>
               <p style={{ color: '#475569' }}>Transaction History</p>
               <BackG>
-                <GroupDetails>
-                  <Firstdiv>
-                    <ImageDiv>
-                      <img src='img1.jpg' style={{width:'100%',height:'100%'}}/>
-                    </ImageDiv>
-                    <div>
-                      <Day>Contribution Timeline</Day>
-                    <Time>2:24pm</Time>
-                    </div>                    
-                  </Firstdiv>
-                  <Seconddiv  >
-                    <Amount>&#x20A6; 50,000</Amount>
-                  </Seconddiv>
-                </GroupDetails>
-                <GroupDetails>
-                  <Firstdiv>
-                    <ImageDiv>
-                      <img src='img1.jpg' style={{width:'50px',height:'50px'}}/>
-                    </ImageDiv>
-                    <div>
-                      <Day>Contribution Timeline</Day>
-                    <Time>2:24pm</Time>
-                    </div>                    
-                  </Firstdiv>
-                  <Seconddiv  >
-                    <Amount>&#x20A6; 50,000</Amount>
-                  </Seconddiv>
-                </GroupDetails>
-                <GroupDetails>
-                  <Firstdiv>
-                    <ImageDiv>
-                      <img alt='' src='img1.jpg' style={{width:'50px',height:'50px'}}/>
-                    </ImageDiv>
-                    <div>
-                      <Day>Contribution Timeline</Day>
-                    <Time>2:24pm</Time>
-                    </div>                    
-                  </Firstdiv>
-                  <Seconddiv  >
-                    <Amount>&#x20A6; 50,000</Amount>
-                  </Seconddiv>
-                </GroupDetails>
+                {isTransactionsSet ? (
+                  transactions.map((transaction, index) => (
+                    <GroupDetails>
+                      <Firstdiv>
+                        <ImageDiv>
+                          <img
+                            alt=""
+                            src={transaction.avatar}
+                            style={{ width: '100%', height: '100%' }}
+                          />
+                        </ImageDiv>
+                        <div>
+                          <Day>{transaction.firstname}</Day>
+                          <Time>2:24pm</Time>
+                        </div>
+                      </Firstdiv>
+                      <Seconddiv>
+                        <Amount isPositive={transaction.actionId === '1'}>
+                          {transaction.actionId === '2' ? '- ' : ''} &#x20A6;
+                          {parseFloat(transaction.amount).toLocaleString()}
+                        </Amount>
+                      </Seconddiv>
+                    </GroupDetails>
+                  ))
+                ) : (
+                  <></>
+                )}
               </BackG>
             </Col>
           </Row>
         </Container>
-       
-       
       </Div>
     </>
   );
@@ -311,19 +414,20 @@ function getDuration(date1String, date2String) {
 export default ActiveGroupDetails;
 
 const Div = styled.div`
-&::-webkit-scrollbar {
-  display: none;
-}
-background: #F9FAFB;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  background: #f9fafb;
 
-/* Optional: Hide scrollbar for Firefox */
-scrollbar-width: none;
+  /* Optional: Hide scrollbar for Firefox */
+  scrollbar-width: none;
 `;
+
 const Firstdiv = styled.div`
-width: 60%;
-display:flex;
-flex-direction:row;
-align-items: center;
+  width: 60%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 `;
 const Seconddiv = styled.div`
 width: 40%;
@@ -334,39 +438,40 @@ align-items: center;
 justifyContent: 'flex-end',
 text-align:right;
 `;
-const Amount=styled.span`
-font-family: Inter;
-font-size: 16px;
-font-weight: 500;
-line-height: 22px;
-letter-spacing: 0px;
-color: #EB5757;
+const Amount = styled.span`
+  font-family: Inter;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 22px;
+  letter-spacing: 0px;
+  // color: #eb5757;
+  color: ${(props) => (props.isPositive ? 'green' : 'red')};
 `;
 const ImageDiv = styled.div`
-width: 50px;
-height: 50px;
-border-radius: 999px;
-overflow:hidden;
+  width: 50px;
+  height: 50px;
+  border-radius: 999px;
+  overflow: hidden;
 `;
 const Time = styled.span`
-font-family: Inter;
-font-size: 14px;
-font-weight: 400;
-line-height: 20px;
-letter-spacing: 0.15000000596046448px;
-text-align: left;
-margin-left:0.5em;
-color: #98A2B3;
+  font-family: Inter;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0.15000000596046448px;
+  text-align: left;
+  margin-left: 0.5em;
+  color: #98a2b3;
 `;
 const Day = styled.div`
-font-family: Inter;
-font-size: 14px;
-font-weight: 600;
-line-height: 20px;
-letter-spacing: 0px;
-text-align: left;
-color: #000000;
-margin-left:0.5em;
+  font-family: Inter;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  letter-spacing: 0px;
+  text-align: left;
+  color: #000000;
+  margin-left: 0.5em;
 `;
 const BackG = styled.div`
   padding: 8px, 16px, 8px, 16px;
@@ -468,6 +573,10 @@ const PayNow = styled.div`
   background: #b5179e;
   display: grid;
   place-items: center;
+<<<<<<< HEAD
+  cursor: pointer;
+=======
+>>>>>>> develop
 `;
 
 const Dismiss = styled.div`
@@ -480,6 +589,10 @@ const Dismiss = styled.div`
   gap: 10px;
   margin-left: 14px;
   background: white;
+<<<<<<< HEAD
+  cursor: pointer;
+=======
+>>>>>>> develop
   display: grid;
   place-items: center;
 `;

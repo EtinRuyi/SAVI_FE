@@ -26,8 +26,15 @@ import CreateSavingsGroupForm from './pages/group/CreateNewSavingsGroup';
 import CreateGroupSuccessModal from './components/modal/CreateGroupSuccess';
 import ActiveGroupDetails from './pages/group/ActiveGroupDetails';
 import ExploreGroupDetails from './pages/group/ExploreGroupDetails';
+<<<<<<< HEAD
+import ActiveGroups from './pages/group/Frame_Group';
+import GroupFlow from './pages/group/GroupFlow';
+import RegistrationSuccessful from './pages/signinSignup/RegistrationSuccessful';
+import EmailConfirmed from './pages/signinSignup/EmailConfirmed';
+=======
 import ActiveGroups from './pages/group/ActiveGroups';
 import GroupFlow from './pages/group/GroupFlow';
+>>>>>>> develop
 // import ExploreGroup from './pages/Group/ExploreGroup';
 // App component
 function App() {
@@ -43,7 +50,7 @@ function App() {
               <Route path="/mygoals" element={<MyGoalsEmpty />} />
               <Route path="/kyc-verification" element={<KYC />} />
               <Route path="/dashboard" element={<DashBoard />} />
-              <Route path="/resetpassword" element={<ForgetPassword />} />
+              <Route path="/reset-password" element={<ForgetPassword />} />
               <Route path="/confirmpassword" element={<ResetPassword />} />
               <Route path="/sidebar" element={<Sidebar />} />
               <Route path="/signin" element={<Signin />} />
@@ -59,8 +66,9 @@ function App() {
               <Route path="/active-group-details"  element={<ActiveGroupDetails />}  />
               <Route path="/explore-group-details"  element={<ExploreGroupDetails />}  />
                <Route path="/groupflow" element={<GroupFlow />} />
+               <Route path="/RegistrationSuccessful" element={<RegistrationSuccessful />} />
+               <Route path="/email-confirmed" element={<EmailConfirmed />} />
             </Routes>
-           
           </GlobalProvider>
         </Router>
       </Suspense>

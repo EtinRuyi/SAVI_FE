@@ -17,6 +17,8 @@ const ExploreGroups = () => {
   const [isGroupFrameOpen, setGroupFrameOpen] = useState(false);
   const [userId, setUserId] = useState(localStorage.getItem("userId"));
   const [activeSavings, setActiveSavings] = useState([]);
+  const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
+ 
   
   const fetchData = async () => {
 
@@ -55,9 +57,16 @@ const ExploreGroups = () => {
     setGroupFrameOpen(false);
   }, []);
 
-  const toggleGroupFrame = useCallback(() => {
+  const toggleGroupFramee = useCallback(() => {
     setGroupFrameOpen(true);
   }, []);
+  const toggleGroupFrame = (event) => {
+    const { clientX, clientY } = event;
+    const popupTop = clientY; // Example: 10px below the clicked component
+    const popupLeft = clientX; // Same left position as the clicked component
+    setPopupPosition({ top: popupTop, left: popupLeft });
+    setGroupFrameOpen(true);
+  }
 
   const closeLogoutModal = useCallback(() => {
     setLogoutModalOpen(false);
@@ -137,10 +146,6 @@ Swal.fire({
         }
       });
 
-
-
-
-
    }
 });
 }
@@ -177,7 +182,7 @@ Swal.fire({
                   </BadgeAndTag>
                   
                   <JoinContainer>
-                    <Group111Image alt="" src="/group111.png" />
+                    {/* <Group111Image alt="" src="/group111.png" /> */}
                     <Join onClick={() => { JoinNow(activesaving.groupName,activesaving.id) }}><JoinText>Join</JoinText></Join>
                     <VerticalDotsImage
                       alt=""
@@ -243,8 +248,9 @@ Swal.fire({
 
       {isGroupFrameOpen && (
         <PortalPopup
+        style={{ position: 'absolute', top: popupPosition.top, left: popupPosition.left }}
           overlayColor="rgba(113, 113, 113, 0.3)"
-          placement="Centered"
+          // placement="Centered"
           onOutsideClick={closeGroupFrame}
         >
           <GroupFrame onClose={closeGroupFrame} />
@@ -446,7 +452,12 @@ const JoinContainer = styled.div`
 const VerticalDotsImage = styled.img`
   width: 16px;
   height: 16px;
+<<<<<<< HEAD
+  margin-left: 40px; 
+  cursor:pointer;
+=======
   margin-left: 4px; // Adjust the margin as needed
+>>>>>>> develop
 `;
 
 const Group111Image = styled.img`

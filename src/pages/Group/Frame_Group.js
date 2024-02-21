@@ -32,7 +32,7 @@ const Frame_Group = () => {
                   <div>
                    <Link to="/explore-groups" style={{textDecoration:'none'}}>Explore Groups </Link> 
                     |
-                   <Link onClick={openNewGroupForm}  style={{textDecoration:'none'}}> Create Group</Link>
+                   <Link onClick={openNewGroupForm} onClose={closeNewGroupForm} style={{textDecoration:'none'}}> Create Group</Link>
 
                   </div>
                 </MyGoalsParent>

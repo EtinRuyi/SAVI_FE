@@ -140,7 +140,7 @@ const ActiveGroups = () => {
               </ImageContainer>
               <TextViewGroup>
                 <p>
-                  <Link style={{textDecoration:'none'}} to="/active-group-details">View Group</Link>
+                  <Link style={{textDecoration:'none'}} to={`/active-group-details?id=${activesaving.id}`}>View Group</Link>
                 </p>
               </TextViewGroup>
             </BadgeParent>

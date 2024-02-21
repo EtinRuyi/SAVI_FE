@@ -41,7 +41,11 @@ const WithdrawFunds = ({onClose, savingsId, refreshGoal}) => {
         console.error('Error setting up request:', error.message);
       }
     });
+<<<<<<< HEAD
+  }
+=======
   };
+>>>>>>> develop
 
   return (
     <WithdrawFundsRoot>

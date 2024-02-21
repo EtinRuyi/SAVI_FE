@@ -17,6 +17,11 @@ const AddMoreGoalsc = ({onClose,fetchPersonalSavings}) => {
   const [avatar, setAvatar] = useState(null); 
   const [loading, setLoading] = useState(false);
   
+<<<<<<< HEAD
+=======
+  const [loading, setLoading] = useState(false);
+  
+>>>>>>> develop
   const [formData, setFormData] = useState({
     title: '',
     goalamount: '',
@@ -91,6 +96,7 @@ const AddMoreGoalsc = ({onClose,fetchPersonalSavings}) => {
         ...formData,
         [name]: value
       });
+<<<<<<< HEAD
     }
   };
 
@@ -179,6 +185,79 @@ const AddMoreGoalsc = ({onClose,fetchPersonalSavings}) => {
       targetdate: date // Update startDate in the formData state with the selected date
     });
   };
+=======
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const formDataToSend = new FormData();
+      if(formData.title ===""){
+        toast.error("Title is required");
+        return;
+      }
+      if(formData.goalamount ===""){
+        toast.error("Target amount is required");
+        return;
+      }
+      if(formData.frequency ===""){
+        toast.error("Frequency is required");
+        return;
+      }
+      if(formData.startdate ===""){
+        toast.error("Start date is required");
+        return;
+      }
+      if(formData.targetdate ===""){
+        toast.error("Target date is required");
+        return;
+      }
+      if(formData.avatar ===null){
+        toast.error("Avatar is null");
+        return;
+      }
+      setLoading(true);
+      formDataToSend.append('title', formData.title);
+      formDataToSend.append('goalamount', formData.goalamount);
+      formDataToSend.append('avatar', formData.avatar);
+      formDataToSend.append('startdate', new Date(formData.startdate).toISOString());
+      formDataToSend.append('targetdate', new Date(formData.targetdate).toISOString());
+      formDataToSend.append('isautomatic', formData.isautomatic==="0"?false:true);
+      formDataToSend.append('amounttoadd', formData.amounttoadd);
+      formDataToSend.append('frequency', formData.frequency);
+      formDataToSend.append('walletnumber', formData.walletnumber);
+
+      await axios.post('https://localhost:7226/api/Saving/createPersonalSaving', formDataToSend, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then(response => {
+        console.log("data",response.data);
+        if(response.data.succeeded){
+          toast.success(response.data.message);
+          onClose();
+          fetchPersonalSavings();
+        }else{
+          toast.error("a "+response.data.message);
+        }
+        
+      }).catch(error => {
+        if (error.response) {
+          toast.error("b "+ error.response.data.title);
+          console.error('Server responded with error status:', error.response.data.title);
+        } else if (error.request) {
+          console.error('No response received from server:', error.request);
+        } else {
+          console.error('Error setting up request:', error.message);
+        }
+      });
+      setLoading(false);
+    } catch (error) {
+      console.error('Error during submit:', error);
+    }
+  };
+>>>>>>> develop
 
   return (
     <>
@@ -339,7 +418,11 @@ const AddMoreGoalsc = ({onClose,fetchPersonalSavings}) => {
                     <StyledDatePicker
                       selected={startDatee}
                       placeholderText="Pick your date"
+<<<<<<< HEAD
                       onChange={handleStartDateChange}
+=======
+                      onChange={{}}
+>>>>>>> develop
                       name="startdate"
                       dateFormat="MMMM d, yyyy"
                       id="startdate"
@@ -353,7 +436,11 @@ const AddMoreGoalsc = ({onClose,fetchPersonalSavings}) => {
                     <StyledDatePicker
                       selected={targetDate}
                       name="targetdate"
+<<<<<<< HEAD
                       onChange={handleTargetDateChange}
+=======
+                      onChange={{}}
+>>>>>>> develop
                       placeholderText="Pick your date"
                       dateFormat="MMMM d, yyyy"
                       id="withdrawaldate"
@@ -361,6 +448,7 @@ const AddMoreGoalsc = ({onClose,fetchPersonalSavings}) => {
                     />
                   </TextParent>
                 </FrameWrapper>
+<<<<<<< HEAD
                 <FrameWrapper2>
                   <TextParent>
                     <Text20>Upload Avatar</Text20>
@@ -397,6 +485,8 @@ const AddMoreGoalsc = ({onClose,fetchPersonalSavings}) => {
                   </TextParent>
                 </FrameWrapper2>
 
+=======
+>>>>>>> develop
               </FrameParent1>
               <Ctadefault onClick={handleSubmit} disabled={loading}>
                 <Text3>{loading ? 'Submitting...' : 'Submit'}</Text3>

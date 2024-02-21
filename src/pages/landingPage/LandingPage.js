@@ -1220,11 +1220,11 @@ const LandingPage = () => {
           <Faqs>FAQs</Faqs>
           <RightNest>
             <HeaderLinkBlock>
-              <Button>
+             
                 <Link to="/signin"  style={{ textDecoration: 'none' }}>
-                <Apply>Get Started</Apply>
-                </Link>
-              </Button>
+               <Button>  <Apply>Get Started</Apply>
+              </Button>  </Link>
+              
             </HeaderLinkBlock>
           </RightNest>
         </FrameFrame>

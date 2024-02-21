@@ -32,7 +32,7 @@ const ExploreGroupDetails = () => {
       let data = await response.json();
       let dat = data.data;
       if (data.succeeded) {
-        //console.log('members', data);
+        console.log('members', data);
         setGroupData(dat);
       } else {
         navigate('/explore-groups');
@@ -61,13 +61,6 @@ const ExploreGroupDetails = () => {
           // Handle error
           console.error("Error fetching data:", error);
         });
-
-
-
-
-
-
-
     } catch (error) {
       console.error('Error fetching personal savings data:', error);
     }
@@ -142,6 +135,32 @@ const ExploreGroupDetails = () => {
       }
     });
   };
+  function getDuration(date1String, date2String) {
+    // Parse the date strings into Date objects
+    var date1 = new Date(date1String);
+    var date2 = new Date(date2String);
+
+    // Calculate the difference in milliseconds
+    var differenceMs = date2 - date1;
+
+    // Convert milliseconds to days
+    var differenceDays = Math.floor(differenceMs / (1000 * 60 * 60 * 24));
+
+    // Convert days to months, weeks, and remaining days
+    var months = Math.floor(differenceDays / 30);
+    var remainingDays = differenceDays % 30;
+    var weeks = Math.floor(remainingDays / 7);
+    var days = remainingDays % 7;
+
+    months = months===0?"":months;
+    weeks = weeks===0?"":weeks;
+    days = days===0?"":days;
+  
+    months = months ===1?months+" mon":months===""?"":months+" mons";
+    weeks = weeks ===1?weeks+" week":weeks===""?"":weeks+" weeks";
+    days = days ===1?days+" day":days===""?"":days+" days";
+   return months+" "+ weeks+" "+days;
+}
   return (
     <>
       <Header />
@@ -242,7 +261,7 @@ const ExploreGroupDetails = () => {
             </ImageBack>
           </Row>
           <Row style={{ marginTop: '1em', marginBottom: '2em' }}>
-            <p>{groupData.purposeAndGoal}</p>
+            <InnerText>{groupData.purposeAndGoal}</InnerText>
           </Row>
 
           <Row style={{ width: '100%' }}>
@@ -271,7 +290,7 @@ const ExploreGroupDetails = () => {
                 <GroupDetails>
                   <div style={{ width: '60%' }}>
                     <Heading>Contribution Timeline</Heading>
-                    <Detail>1 month</Detail>
+                    <Detail>{getDuration(groupData.expectedStartDate,groupData.expectedEndDate)}</Detail>
                   </div>
                   <div style={{ width: '40%' }}>
                     <Heading>Estimated&nbsp;Collection</Heading>
@@ -397,6 +416,16 @@ const Members = styled.p`
   letter-spacing: 0.005em;
   text-align: left;
   color: #475569;
+`;
+
+const InnerText = styled.span`
+font-family: Inter;
+font-size: 16px;
+font-weight: 400;
+line-height: 22px;
+letter-spacing: 0.15000000596046448px;
+text-align: left;
+color:#667085;
 `;
 const BackG = styled.div`
   padding: 8px, 16px, 8px, 16px;
