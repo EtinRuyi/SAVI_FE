@@ -68,15 +68,17 @@ const ActiveGroupDetails = () => {
   };
   const fetchWalletBalance = async () => {
     try {
-      const response = await fetch(`https://localhost:7226/api/Wallet/GetWalletByNumber?number=${localStorage.getItem("walletNumber")}`);
+      const response = await fetch(
+        `https://localhost:7226/api/Wallet/GetWalletByNumber?number=${localStorage.getItem(
+          'walletNumber'
+        )}`
+      );
       const result = await response.json();
-        setBalance(result.data.balance);
-      
+      setBalance(result.data.balance);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   };
- 
   useEffect(() => {
     getGroupDetails();
     getGroupMembers();
@@ -171,20 +173,47 @@ const ActiveGroupDetails = () => {
       }
     });
   };
-  const runDate = (a, b,onlydate) => {
-    let dt ="";let fg="";
-    var date1 = new Date(a);
-    if (new Date() > date1) {
-      dt = date1.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-      fg = date1.toLocaleDateString('en-US', { month: 'long' });
+  const runDate = (a, onlymonth) => {
+    if (onlymonth) {
+      const date = new Date(a);
+      return date.toLocaleString('default', { month: 'long' });
     } else {
-      var date2 = new Date(b);
-      dt = date2.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-      fg=date2.toLocaleDateString('en-US', { month: 'long' });
-    }
+      const date = new Date(a);
 
-    
-    return onlydate?fg.toUpperCase():dt;
+      // Define an array to map month indices to month names
+      const months = [
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December',
+      ];
+
+      // Extract day, month, year, hour, and minute components from the date object
+      const day = date.getDate();
+      const month = months[date.getMonth()];
+      const year = date.getFullYear();
+      let hour = date.getHours();
+      const minute = date.getMinutes();
+
+      // Convert hour to 12-hour format and determine AM/PM
+      const ampm = hour >= 12 ? 'pm' : 'am';
+      hour = hour % 12 || 12;
+
+      // Format the date string
+      const formattedDate = `${day} ${month}, ${year} ${hour}:${minute
+        .toString()
+        .padStart(2, '0')}${ampm}`;
+
+      return formattedDate;
+    }
   };
 
   const handleDismiss = () => {
@@ -251,11 +280,8 @@ const ActiveGroupDetails = () => {
                 </div>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <June>{runDate(groupDetail.runTime, groupDetail.nextRunTime, true)} CONTRIBUTION</June>
-                <JuneDate>
-                  
-                  {runDate(groupDetail.runTime, groupDetail.nextRunTime, false)}
-                </JuneDate>
+                <June>{runDate(groupDetail.runTime,true).toUpperCase()} CONTRIBUTION</June>
+                <JuneDate>{runDate(groupDetail.runTime, false)}</JuneDate>
                 <Fifty>
                   &#x20A6;
                   {parseFloat(groupDetail.contributionAmount).toLocaleString()}
@@ -288,7 +314,7 @@ const ActiveGroupDetails = () => {
           </Row>
           <Row>
             <ImageBack>
-              <Image src="banner.jpg" />
+              <Image src={groupDetail.safePortraitImageURL} />
             </ImageBack>
           </Row>
           <Row style={{ marginTop: '1em', marginBottom: '2em' }}>
@@ -352,14 +378,10 @@ const ActiveGroupDetails = () => {
                   <div style={{ width: '60%' }}>
                     <Heading>Available Slots</Heading>
                     <Detail>
-                      {/* {groupData.groupSavingsMembers === undefined
-                        ? ''
-                        : groupData.membersMaximumCount -
-                          groupData.groupSavingsMembers.length} */}
                       {isContentLoaded ? (
                         groupDetail.membersMaximumCount - groupMembers.length
                       ) : (
-                        <p></p>
+                        <></>
                       )}
                     </Detail>
                   </div>
@@ -371,14 +393,14 @@ const ActiveGroupDetails = () => {
               </BackG>
             </Col>
             <Col md={2}>
-              <p></p>
+              <></>
             </Col>
             <Col md={5}>
               <p style={{ color: '#475569' }}>Transaction History</p>
               <BackG>
                 {isTransactionsSet ? (
                   transactions.map((transaction, index) => (
-                    <GroupDetails>
+                    <GroupDetails key={index}>
                       <Firstdiv>
                         <ImageDiv>
                           <img
@@ -510,7 +532,7 @@ const Heading = styled.p`
 `;
 const Image = styled.img`
   background-size: cover;
-  background-position: top;
+  background-position: bottom;
   top: 0;
   left: 0;
   width: 100%;
@@ -573,10 +595,7 @@ const PayNow = styled.div`
   background: #b5179e;
   display: grid;
   place-items: center;
-<<<<<<< HEAD
   cursor: pointer;
-=======
->>>>>>> develop
 `;
 
 const Dismiss = styled.div`
@@ -589,10 +608,7 @@ const Dismiss = styled.div`
   gap: 10px;
   margin-left: 14px;
   background: white;
-<<<<<<< HEAD
   cursor: pointer;
-=======
->>>>>>> develop
   display: grid;
   place-items: center;
 `;

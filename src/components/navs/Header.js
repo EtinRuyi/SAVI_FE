@@ -1,13 +1,44 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import '../../App.css';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import PortalPopup from '../PortalPopup';
+import LogoutModal from '../LogoutModal';
 const Header = () => {
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
+
+
+  const dropdownRef = useRef(null);
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+  const closeLogoutModal = useCallback(() => {
+    setLogoutModalOpen(false);
+  }, []);
+
   useEffect(() => {
     document.body.style.zoom = '86%';
   }, []);
 
   const navigate = useNavigate();
+
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setIsDropdownOpen(false);
+    }
+  };
+  const openLogoutModal = useCallback(() => {
+    setLogoutModalOpen(true);
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     if (localStorage.getItem('fullname') == null) {
@@ -40,31 +71,76 @@ const Header = () => {
               </SearchBar1>
             </SearchBarWrapper>
           </div>
-          <div>
-          <AvatardefaultParent>
+          <div ref={dropdownRef}>
+            <AvatardefaultParent onClick={toggleDropdown}>
               <AvatardefaultIcon alt="" src="/avatardefault@2x.png" />
-              <Savi>{localStorage.getItem("fullname").split(" ")[0]}</Savi>
+              <Savi>{localStorage.getItem('fullname').split(' ')[0]}</Savi>
+              {isDropdownOpen && (
+               <DropdownContent>
+               <DropdownList>
+                 <ListItem>Profile</ListItem>
+                 <ListItem>Settings</ListItem>
+                 <ListItem onClick={openLogoutModal}>Logout</ListItem>
+               </DropdownList>
+             </DropdownContent>
+              )}
             </AvatardefaultParent>
           </div>
         </div>
       </DashboardRoot>
-      {/* <Sidebar/> */}
+      
+      {isLogoutModalOpen && (
+      <PortalPopup
+        overlayColor="rgba(113, 113, 113, 0.3)"
+        placement="Centered"
+        onOutsideClick={closeLogoutModal}
+      >
+        <LogoutModal onClose={closeLogoutModal} />
+      </PortalPopup>
+    )}
     </>
   );
 };
 
 export default Header;
 
-const Savi = styled.div`
-margin-left:10px;
-margin-top:5px;
-font-family: Inter;
-font-size: 16px;
-font-weight: 400;
-line-height: 22px;
-letter-spacing: 0.15000000596046448px;
-text-align: left;
+const DropdownList = styled.ul`
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+`;
 
+const ListItem = styled.li`
+  padding: 10px 30px 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #808080;
+    color:white
+  }
+`;
+
+const DropdownContent = styled.div`
+  position: absolute;
+  top: 100%;
+  right: 1;
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 999;
+`;
+
+
+const Savi = styled.div`
+  margin-left: 10px;
+  margin-top: 5px;
+  font-family: Inter;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.15000000596046448px;
+  text-align: left;
 `;
 const Savi1 = styled.b``;
 const ChevronDownIcon2 = styled.img`
@@ -97,7 +173,7 @@ const SearchBar1 = styled.div`
 `;
 
 const SearchBarWrapper = styled.div`
-margin-top:1.5em;
+  margin-top: 1.5em;
   color: var(--grey-400);
 `;
 
@@ -110,11 +186,11 @@ const AvatardefaultIcon = styled.img`
 `;
 
 const AvatardefaultParent = styled.div`
-   display: flex;
+  display: flex;
   cursor: pointer;
-  margin-right:4em;
+  margin-right: 4em;
 
-  margin-top:1.5em;
+  margin-top: 1.5em;
 `;
 
 const Logo = styled.div`
@@ -128,7 +204,6 @@ const Logo = styled.div`
   font-family: var(--font-bodoni-moda);
 `;
 
-
 const SearchInput = styled.input`
   border: none;
   outline: none;
@@ -140,7 +215,7 @@ const SearchInput = styled.input`
 `;
 
 const DashboardRoot = styled.div`
-   position: fixed;
+  position: fixed;
   width: 100%;
   height: 6.5em;
   box-sizing: border-box; /* Include the border in the total width/height */
@@ -148,5 +223,7 @@ const DashboardRoot = styled.div`
   font-size: var(--input-small-medium-size);
   color: #101828;
   font-family: var(--text-md-medium);
-  top:0em;
+  top: 0em;
+  background:white;
+  z-index: 9999;
 `;

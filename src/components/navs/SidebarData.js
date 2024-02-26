@@ -1,11 +1,3 @@
-import GroupIcon from "../../assets/GroupIcon.svg";
-import UsersIcon from "../../assets/UsersIcon.svg";
-import SettingsIcon from "../../assets/SettingsIcon.svg";
-import LogoutIcon from "../../assets/LogoutIcon.svg"
-
-
-
-
 export const SidebarData = [
   {
     title: "Dashboard",
@@ -19,20 +11,16 @@ export const SidebarData = [
     iconActive:'security-card.png',
     link: "/mygoals",
   },
-
   {
     title: "Groups",
     icon: "people.png",
     iconActive:'peopleactive.png',
     link: "/groups",
   },
-  
   {
     title: "Transactions",
     icon: "translate.png",
     iconActive:'translateactive.png',
     link: "/transactions",
   },
-
- 
 ];

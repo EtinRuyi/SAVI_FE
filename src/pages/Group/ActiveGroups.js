@@ -88,7 +88,7 @@ const ActiveGroups = () => {
           <FrameDiv>
             <FrameChild
               alt=""
-              src={activesaving?.safePortraitImageURL || '/Frame-38813497.png'}
+              src={activesaving.safePortraitImageURL }
             />
             <BadgeParent>
               <Badge>

@@ -18,7 +18,8 @@ const ExploreGroups = () => {
   const [userId, setUserId] = useState(localStorage.getItem("userId"));
   const [activeSavings, setActiveSavings] = useState([]);
   const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
- 
+
+
   
   const fetchData = async () => {
 
@@ -162,7 +163,7 @@ Swal.fire({
             <FrameDiv>
               <FrameChild
                 alt=""
-                src={activesaving?.safePortraitImageURL || '/Frame-38813497.png'}
+                src={activesaving.safePortraitImageURL}
               />
               
               <BadgeParent>
@@ -180,8 +181,7 @@ Swal.fire({
                       <XLgIcon alt="" src="/xlg.svg" />
                     </CloseIcon>
                   </BadgeAndTag>
-                  
-                  <JoinContainer>
+                  {localStorage.getItem("userRole")==="User"?(<JoinContainer>
                     {/* <Group111Image alt="" src="/group111.png" /> */}
                     <Join onClick={() => { JoinNow(activesaving.groupName,activesaving.id) }}><JoinText>Join</JoinText></Join>
                     <VerticalDotsImage
@@ -189,7 +189,9 @@ Swal.fire({
                       src="/dots-vertical.svg"
                       onClick={toggleGroupFrame}
                     />
-                  </JoinContainer>
+                  </JoinContainer>):( <></>)}
+                
+
                 </Badge>
                 <TripToBali className="mt-3">{activesaving.groupName}</TripToBali>
                 <InnerText>{activesaving.purposeAndGoal}</InnerText>
@@ -289,6 +291,7 @@ text-align:center;
 background: #B5179E;
 position: relative;
 cursor:pointer;
+margin-right:1em;
 `;
 const JoinText = styled.span`
 font-family: Inter;

@@ -175,7 +175,7 @@ const CreateSavingsGroupForm = ({onClose,reloadPage}) => {
       formDataToSend.append('actualStartDate', formData.expectedStartDate);
       formDataToSend.append('expectedEndDate', formData.expectedEndDate);
       formDataToSend.append('frequency', formData.frequency);
-      formDataToSend.append('runTime', formData.expectedEndDate);
+      formDataToSend.append('runTime', formData.expectedStartDate+' '+formData.runTime);
       formDataToSend.append('purposeAndGoal', formData.purposeAndGoal);
       formDataToSend.append('termsAndConditions', formData.termsAndConditions);
 

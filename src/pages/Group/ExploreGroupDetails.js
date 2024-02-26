@@ -2,10 +2,11 @@ import styled from 'styled-components';
 import '../../App.css';
 import Header from '../../components/navs/Header';
 import Sidebar from '../../components/navs/Sidebar';
+import SidebarAdmin from '../../components/navs/SidebarAdmin';
 import { Col, Container, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { object } from 'yup';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
@@ -18,6 +19,20 @@ const ExploreGroupDetails = () => {
   const [groupData, setGroupData] = useState('');
   const [allAroupMembers, setAllGroupMembers] = useState('');
   const [isContentLoaded, setIsContentLoaded] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+
+  const dropdownRef = useRef(null);
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setIsDropdownOpen(false);
+    }
+  };
 
   const [userId, setUserId] = useState(localStorage.getItem('userId'));
   const navigate = useNavigate();
@@ -66,6 +81,13 @@ const ExploreGroupDetails = () => {
     }
   };
 
+  
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
   useEffect(() => {
     getDetails();
     getGroupMembers();
@@ -117,7 +139,7 @@ const ExploreGroupDetails = () => {
                   ' successfully. The contribution will commence immediately all the slots are occupied',
                 'success'
               );
-              navigate('/active-group-details?id=');
+              navigate('/active-group-details?id='+groupSavingsId);
             } else {
               toast.error('aa' + response.data.message);
             }
@@ -161,10 +183,13 @@ const ExploreGroupDetails = () => {
     days = days ===1?days+" day":days===""?"":days+" days";
    return months+" "+ weeks+" "+days;
 }
+
+
   return (
     <>
       <Header />
-      <Sidebar />
+      {localStorage.getItem("userRole")==="User"?( <Sidebar />):( <SidebarAdmin />)}
+     
       <div style={{ border: 'none', marginLeft: '17.5rem', paddingTop: '6em' }}>
         <Container>
           <Row>
@@ -245,19 +270,32 @@ const ExploreGroupDetails = () => {
                   alignItems: 'center',
                 }}
               >
-                <PayNow
+                {localStorage.getItem("userRole")==="User"?(  <PayNow
                   onClick={() => {
                     JoinNow(groupData.groupName, groupData.id);
                   }}
                 >
                   <PayText>Join</PayText>
-                </PayNow>
+                </PayNow>):( <Options onClick={toggleDropdown}><svg width="4" height="16" viewBox="0 0 4 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M2 8H2.01M2 2H2.01M2 14H2.01M3 8C3 8.55228 2.55228 9 2 9C1.44772 9 1 8.55228 1 8C1 7.44772 1.44772 7 2 7C2.55228 7 3 7.44772 3 8ZM3 14C3 14.5523 2.55228 15 2 15C1.44772 15 1 14.5523 1 14C1 13.4477 1.44772 13 2 13C2.55228 13 3 13.4477 3 14ZM3 2C3 2.55228 2.55228 3 2 3C1.44772 3 1 2.55228 1 2C1 1.44772 1.44772 1 2 1C2.55228 1 3 1.44772 3 2Z" stroke="#131A29" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+{isDropdownOpen && (
+               <DropdownContent style={{width:'5em'}}>
+               <DropdownList>
+                 <ListItem>Delete</ListItem>
+                 <ListItem>Disable</ListItem>
+                 <Link to="/group-transactions"><ListItem>View History</ListItem></Link>
+               </DropdownList>
+             </DropdownContent>
+              )}
+</Options>)}
+               
               </div>
             </div>
           </Row>
           <Row>
             <ImageBack>
-              <Image src="banner.jpg" />
+              <Image src={groupData.safePortraitImageURL} />
             </ImageBack>
           </Row>
           <Row style={{ marginTop: '1em', marginBottom: '2em' }}>
@@ -382,7 +420,37 @@ const ExploreGroupDetails = () => {
   );
 };
 export default ExploreGroupDetails;
+const DropdownList = styled.ul`
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+`;
 
+const ListItem = styled.li`
+  padding: 10px 30px 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #808080;
+    color:white
+  }
+`;
+
+const DropdownContent = styled.div`
+  position: absolute;
+  top: 1;
+  left:-1;
+  // margin-right: 3em;
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 999;
+`;
+
+const Options = styled.span`
+cursor:pointer;
+`;
 const Td = styled.td`
   border-bottom: 1px solid #e5e7eb;
 `;

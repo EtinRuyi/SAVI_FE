@@ -11,15 +11,13 @@ import { useNavigate } from 'react-router-dom';
 
 const Frame_GroupEmpty = () => {
   const navigate = useNavigate();
-  const [activeSavings, setActiveSavings] = useState("");
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch(`https://localhost:7226/api/Group/GetGroupsByUserId?userId=${localStorage.getItem("userId")}`);
         const result = await response.json();
-        console.log(result.data);
+       // console.log(result.data);
         if(result.data.length>0){          
-          setActiveSavings(result.data);
           navigate('/active-groups');
         }
       } catch (error) {

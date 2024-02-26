@@ -10,7 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import KYC from './pages/Kyc';
 import ForgetPassword from './pages/Reset/ForgetPassword';
 import ResetPassword from './pages/Reset/ResetPassword';
-import DashBoard from './pages/Frame_Dashboard';
+import DashBoard from './pages/dashboard/Frame_Dashboard';
 import GlobalStyles from './global';
 import Sidebar from './components/navs/Sidebar';
 import LandingPage from './pages/landingPage/LandingPage';
@@ -26,17 +26,18 @@ import CreateSavingsGroupForm from './pages/group/CreateNewSavingsGroup';
 import CreateGroupSuccessModal from './components/modal/CreateGroupSuccess';
 import ActiveGroupDetails from './pages/group/ActiveGroupDetails';
 import ExploreGroupDetails from './pages/group/ExploreGroupDetails';
-<<<<<<< HEAD
 import ActiveGroups from './pages/group/Frame_Group';
 import GroupFlow from './pages/group/GroupFlow';
 import RegistrationSuccessful from './pages/signinSignup/RegistrationSuccessful';
 import EmailConfirmed from './pages/signinSignup/EmailConfirmed';
-=======
-import ActiveGroups from './pages/group/ActiveGroups';
-import GroupFlow from './pages/group/GroupFlow';
->>>>>>> develop
-// import ExploreGroup from './pages/Group/ExploreGroup';
-// App component
+ import UserGroups from './pages/group/UserGroups';
+ import Transacations from './pages/group/Transacations';
+ import GroupTransactions from './pages/group/Group_Transactions';
+ import DefaultingUsers from './pages/group/Defaulting_Users';
+ import Users from './pages/group/Users';
+ import Complaints from './pages/Complaints';
+ import Settings from './pages/Settings';
+
 function App() {
   return (
     <ErrorBoundary>
@@ -65,9 +66,16 @@ function App() {
               <Route path="/active-groups"  element={<ActiveGroups />}  />
               <Route path="/active-group-details"  element={<ActiveGroupDetails />}  />
               <Route path="/explore-group-details"  element={<ExploreGroupDetails />}  />
-               <Route path="/groupflow" element={<GroupFlow />} />
-               <Route path="/RegistrationSuccessful" element={<RegistrationSuccessful />} />
-               <Route path="/email-confirmed" element={<EmailConfirmed />} />
+              <Route path="/groupflow" element={<GroupFlow />} />
+              <Route path="/RegistrationSuccessful" element={<RegistrationSuccessful />} />
+              <Route path="/email-confirmed" element={<EmailConfirmed />} />
+              <Route path="/user-groups" element={<UserGroups/>}/>
+              <Route path="/transactions" element={<Transacations/>}/>
+              <Route path="/group-transactions" element={<GroupTransactions/>}/>
+              <Route path= "/defaulting-users" element = {<DefaultingUsers/>}/>
+              <Route path= "/users" element = {<Users/>}/>
+              <Route path= "/complaints" element = {<Complaints/>}/>
+              <Route path= "/settings" element = {<Settings/>}/>
             </Routes>
           </GlobalProvider>
         </Router>

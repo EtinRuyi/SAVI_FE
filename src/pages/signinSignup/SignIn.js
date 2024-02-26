@@ -40,7 +40,7 @@ const SignIn = () => {
       )
       .then((backendResponse) => {
         if (backendResponse.data.succeeded) {
-          let val = backendResponse.data;     
+          let val = backendResponse.data;
           localStorage.setItem('email', val.data[0]);
           localStorage.setItem('userId', val.data[3]);
           localStorage.setItem('fullname', val.data[2]);
@@ -82,6 +82,42 @@ const SignIn = () => {
 
       if (data.succeeded) {
         
+<<<<<<< HEAD
+        const payload = parseJwt(data.data.jwToken);
+
+        const role =
+          payload[
+            'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
+          ];
+
+          if(role==="User"){
+            const response = await fetch(
+              `https://localhost:7226/api/Wallet/GetWalletByUserId?userId=${payload.sub}`
+            );
+            const result = await response.json();
+            
+            if (result.succeeded) {
+              //toast.success(data.message);
+              console.log('WN', result);
+              localStorage.setItem('walletNumber', result.data.walletNumber);
+              localStorage.setItem('email', email);
+              localStorage.setItem('userId', payload.sub);
+              localStorage.setItem('fullname', payload.given_name);
+              localStorage.setItem('userRole', role);
+              navigate('/dashboard');
+            } else {
+              toast.error('Error retriving wallet');
+            }
+          }else{
+            localStorage.setItem('email', email);
+              localStorage.setItem('userId', payload.sub);
+              localStorage.setItem('fullname', payload.given_name);
+              localStorage.setItem('userRole', role);
+              navigate('/dashboard');
+          }
+
+        
+=======
         toast.success(data.message);
         const payload = parseJwt(data.data.jwToken);
         const response = await fetch(
@@ -94,6 +130,7 @@ const SignIn = () => {
         localStorage.setItem('userId', payload.sub);
         localStorage.setItem('fullname', payload.given_name);
        navigate('/dashboard');
+>>>>>>> develop
       } else {
         toast.error('' + data.message);
       }
@@ -107,7 +144,11 @@ const SignIn = () => {
   return (
     <SignInRoot>
       <FrameContainer1>
+<<<<<<< HEAD
+        <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+=======
         <Link to="/" style={{textDecoration:'none',color:'inherit'}}>
+>>>>>>> develop
           {' '}
           <Savi>Savi.</Savi>
         </Link>
@@ -130,7 +171,11 @@ const SignIn = () => {
       </FrameContainer1>
       <LoginauthenticationParent>
         <Loginauthentication>
+<<<<<<< HEAD
+          <Link style={{ textDecoration: 'none', color: 'inherit' }} to="/">
+=======
           <Link style={{ textDecoration: 'none',color:'inherit' }} to="/">
+>>>>>>> develop
             <Savi1>Savi.</Savi1>
           </Link>
           <Text1>Welcome back to Savi.</Text1>
@@ -175,7 +220,13 @@ const SignIn = () => {
                   </Link>
                 </ButtondefaultParent>
                 <Ctadefault onClick={handleSignIn}>
+<<<<<<< HEAD
+                  <Text7 disabled={loading}>
+                    {loading ? 'Loging in...' : 'Login'}
+                  </Text7>
+=======
                   <Text7 disabled={loading}>{loading ? 'Loging in...' : 'Login'}</Text7>
+>>>>>>> develop
                 </Ctadefault>
               </FrameGroup>
             </FrameParent>
@@ -352,50 +403,7 @@ const Text1 = styled.div`
   font-weight: 600;
   color: var(--main-text);
 `;
-const Iconadd = styled.img`
-  position: relative;
-  width: 1.25rem;
-  height: 1.25rem;
-  overflow: hidden;
-  flex-shrink: 0;
-  display: none;
-`;
-// const GoogleIcon = styled.img`
-//   position: relative;
-//   width: 1.5rem;
-//   height: 1.5rem;
-//   overflow: hidden;
-//   flex-shrink: 0;
-//   min-height: 1.5rem;
-// `;
-// const Text2 = styled.input`
-//   width: calc(100% - 56px);
-//   border: none;
-//   outline: none;
-//   font-family: var(--body-textmedium-16);
-//   font-size: var(--body-textmedium-16-size);
-//   background-color: transparent;
-//   position: relative;
-//   letter-spacing: 0.15px;
-//   line-height: 140%;
-//   color: var(--grey-400);
-//   text-align: left;
-//   display: flex;
-//   align-items: center;
-// `;
-// const Buttondefault = styled.div`
-//   align-self: stretch;
-//   border-radius: var(--br-5xs);
-//   background-color: var(--white);
-//   border: 1px solid var(--grey-300);
-//   overflow: hidden;
-//   display: flex;
-//   flex-direction: row;
-//   align-items: center;
-//   justify-content: center;
-//   padding: var(--padding-xs) var(--padding-base);
-//   gap: var(--gap-5xs);
-// `;
+
 const DividerIcon = styled.img`
   position: relative;
   width: 8.75rem;
@@ -428,94 +436,7 @@ const ButtondefaultParent = styled.div`
   justify-content: flex-start;
   gap: var(--gap-base);
 `;
-// const Text4 = styled.div`
-//   position: relative;
-//   font-size: var(--body-textmedium-16-size);
-//   letter-spacing: 0.15px;
-//   line-height: 140%;
-//   font-weight: 600;
-//   font-family: var(--body-textmedium-16);
-//   color: var(--main-text);
-//   text-align: left;
-// `;
-// const Text5 = styled.input`
-//   width: 100%;
-//   border: none;
-//   outline: none;
-//   font-family: var(--body-textmedium-16);
-//   font-size: var(--body-textmedium-16-size);
-//   background-color: transparent;
-//   position: relative;
-//   letter-spacing: 0.15px;
-//   line-height: 140%;
-//   color: var(--grey-400);
-//   text-align: left;
-//   display: flex;
-//   align-items: center;
-// `;
-// const Buttondefault1 = styled.div`
-//   align-self: stretch;
-//   border-radius: var(--br-5xs);
-//   background-color: var(--white);
-//   border: 1px solid var(--grey-300);
-//   overflow: hidden;
-//   display: flex;
-//   flex-direction: row;
-//   align-items: center;
-//   justify-content: flex-start;
-//   padding: var(--padding-xs) var(--padding-base);
-//   gap: var(--gap-5xs);
-// `;
-// const TextParent = styled.div`
-//   align-self: stretch;
-//   display: flex;
-//   flex-direction: column;
-//   align-items: flex-start;
-//   justify-content: flex-start;
-//   gap: var(--gap-5xs);
-// `;
-// const Text6 = styled.input`
-//   width: calc(100% - 24px);
-//   border: none;
-//   outline: none;
-//   font-family: var(--body-textmedium-16);
-//   font-size: var(--button-normal-14-size);
-//   background-color: transparent;
-//   position: relative;
-//   line-height: 1.25rem;
-//   color: var(--grey-400);
-//   text-align: left;
-//   display: flex;
-//   align-items: center;
-// `;
-// const EyeIcon = styled.img`
-//   position: relative;
-//   width: 1.5rem;
-//   height: 1.5rem;
-//   overflow: hidden;
-//   flex-shrink: 0;
-// `;
-// const TextGroup = styled.div`
-//   flex: 1;
-//   display: flex;
-//   flex-direction: row;
-//   align-items: center;
-//   justify-content: space-between;
-//   gap: var(--gap-xl);
-// `;
-// const Buttondefault2 = styled.div`
-//   align-self: stretch;
-//   border-radius: var(--br-5xs);
-//   background-color: var(--white);
-//   border: 1px solid var(--grey-300);
-//   overflow: hidden;
-//   display: flex;
-//   flex-direction: row;
-//   align-items: center;
-//   justify-content: flex-start;
-//   padding: var(--padding-xs) 1.06rem var(--padding-xs) var(--padding-base);
-//   gap: var(--gap-5xs);
-// `;
+
 const CTA = styled.div`
   position: relative;
   font-size: var(--body-textmedium-16-size);
@@ -620,7 +541,11 @@ const PrivacyPolicy = styled.div`
 const PrivacyPolicyParent = styled.div`
   align-self: stretch;
   overflow: hidden;
+<<<<<<< HEAD
+  margin-top: 3em;
+=======
   margin-top:3em;
+>>>>>>> develop
   display: flex;
   flex-direction: row;
   align-items: flex-end;

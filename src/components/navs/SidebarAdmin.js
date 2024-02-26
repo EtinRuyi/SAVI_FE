@@ -1,18 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { SidebarData } from './SidebarData';
+import { SidebarDataAdmin } from './SidebarDataAdmin';
 import { Link, useLocation } from 'react-router-dom';
 import PortalPopup from '../PortalPopup';
 import LogoutModal from '../LogoutModal';
-import { navigate } from '@reach/router';
 
-
-function Sidebar() {
+function SidebarAdmin() {
   const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
 
-  const onFeature4Container1Click = useCallback(() => {
-    
-  }, []);
+  const onFeature4Container1Click = useCallback(() => {}, []);
 
   const onFeature4ContainerClick = useCallback(() => {}, []);
 
@@ -40,7 +36,7 @@ function Sidebar() {
           <OverviewParent>
             <Savi>Overview</Savi>
             <Feature1Parent>
-              {SidebarData.map(
+              {SidebarDataAdmin.map(
                 (val, key) => {
                   if (val.link === '/dashboard') {
                     return location.pathname === '/dashboard' ? (
@@ -61,92 +57,47 @@ function Sidebar() {
                       </Feature3>
                       </Link>
                     );
-                  } else if(val.link === '/mygoals' || val.link === '/personalsaving' || val.link === '/personal-saving-details'){
-                    return location.pathname === '/mygoals' ? (
+                  } else if(val.link === '/user-groups' || val.link === '/explore-group-details' || val.link === '/personal-saving-details'){
+                    return location.pathname === '/user-groups' ? (
                       <>
                       <Link style={{textDecoration:'none',color:'inherit'}} to={val.link}>
                         <Feature1>
-                          <VuesaxbulkhomeIcon1 alt="" src={val.iconActive} />
+                        <BulkhomeIcon>{val.iconActive}</BulkhomeIcon>
                           <Dashboard1>{val.title}</Dashboard1>
                         </Feature1>
                         </Link>
                       </>
-                    ) :location.pathname === '/personalsaving' ? (
-                      <>
-                      <Link style={{textDecoration:'none',color:'inherit'}} to={val.link}>
-                        <Feature1>
-                          <VuesaxbulkhomeIcon1 alt="" src={val.iconActive} />
-                          <Dashboard1>{val.title}</Dashboard1>
-                        </Feature1>
-                        </Link>
-                      </>
-                    ):location.pathname === '/personal-saving-details' ? (
-                      <>
-                      <Link style={{textDecoration:'none',color:'inherit'}} to={val.link}>
-                        <Feature1>
-                          <VuesaxbulkhomeIcon1 alt="" src={val.iconActive} />
-                          <Dashboard1>{val.title}</Dashboard1>
-                        </Feature1>
-                        </Link>
-                      </>
-                    ): (
+                    ) : (
                       <Link style={{textDecoration:'none',color:'inherit'}} to={val.link}>
                       <Feature3>
-                        <VuesaxbulkhomeIcon1 alt="" src={val.icon} />
+                      <BulkhomeIcon>{val.icon}</BulkhomeIcon>
                         <Savi>{val.title}</Savi>
                       </Feature3>
                       </Link>
                     );
                   }
-                  else if(val.link === '/groups' || val.link==='/explore-groups' || val.link==='/active-groups' || val.link==='/active-group-details' || val.link==='/explore-group-details'){
-                    return location.pathname === '/groups' ? (
+                  else if(val.link === '/defaulting-users' ){
+                    return location.pathname === '/defaulting-users' ? (
                       <>
                       <Link style={{textDecoration:'none',color:'inherit'}} to={val.link}>
                         <Feature1>
-                          <VuesaxbulkhomeIcon1 alt="" src={val.iconActive} />
+                        
+                          <BulkhomeIcon>{val.iconActive}</BulkhomeIcon>
                           <Dashboard1>{val.title}</Dashboard1>
                         </Feature1>
                         </Link>
                       </>
-                    ):location.pathname === '/explore-group-details' ? (
-                      <Link style={{textDecoration:'none',color:'inherit'}} to={val.link}>
-                      <Feature1>
-                        <VuesaxbulkhomeIcon1 alt="" src={val.iconActive} />
-                        <Dashboard1>{val.title}</Dashboard1>
-                      </Feature1>
-                      </Link>
-                    ) :location.pathname === '/active-group-details' ? (
-                      <Link style={{textDecoration:'none',color:'inherit'}} to={val.link}>
-                      <Feature1>
-                        <VuesaxbulkhomeIcon1 alt="" src={val.iconActive} />
-                        <Dashboard1>{val.title}</Dashboard1>
-                      </Feature1>
-                      </Link>
-                    ):location.pathname === '/active-groups' ? (
-                      <Link style={{textDecoration:'none',color:'inherit'}} to={val.link}>
-                      <Feature1>
-                        <VuesaxbulkhomeIcon1 alt="" src={val.iconActive} />
-                        <Dashboard1>{val.title}</Dashboard1>
-                      </Feature1>
-                      </Link>
-                    ):location.pathname === '/explore-groups' ? (
-                      <Link style={{textDecoration:'none',color:'inherit'}} to={val.link}>
-                      <Feature1>
-                        <VuesaxbulkhomeIcon1 alt="" src={val.iconActive} />
-                        <Dashboard1>{val.title}</Dashboard1>
-                      </Feature1>
-                      </Link>
-                    ):(
+                    ) :(
                       <Link style={{textDecoration:'none',color:'inherit'}} to={val.link}>
                       <Feature3>
-                        <VuesaxbulkhomeIcon1 alt="" src={val.icon} />
+                      <BulkhomeIcon>{val.icon}</BulkhomeIcon>
                         <Savi>{val.title}</Savi>
                       </Feature3>
                       </Link>
                     );
                   }
-                  else if(val.link === '/personalsavingnogoal'){
-                    return location.pathname === '/personalsavingnogoal' ? (
+                  else if(val.link === '/users'){
+                    return location.pathname === '/users' ? (
                       <>
                       <Link style={{textDecoration:'none',color:'inherit'}} to={val.link}>
                         <Feature1>
@@ -165,12 +116,12 @@ function Sidebar() {
                     );
                   }
 
-                  else if(val.link === '/transactions'){
-                    return location.pathname === '/transactions' ? (
+                  else if(val.link === '/complaints'){
+                    return location.pathname === '/complaints' ? (
                       <>
                       <Link style={{textDecoration:'none',color:'inherit'}} to={val.link}>
                         <Feature1>
-                          <VuesaxbulkhomeIcon1 alt="" src={val.iconActive} />
+                        <BulkhomeIcon>{val.iconActive}</BulkhomeIcon>
                           <Dashboard1>{val.title}</Dashboard1>
                         </Feature1>
                         </Link>
@@ -178,7 +129,7 @@ function Sidebar() {
                     ) : (
                       <Link style={{textDecoration:'none',color:'inherit'}} to={val.link}>
                       <Feature3>
-                        <VuesaxbulkhomeIcon1 alt="" src={val.icon} />
+                      <BulkhomeIcon>{val.icon}</BulkhomeIcon>
                         <Savi>{val.title}</Savi>
                       </Feature3>
                       </Link>
@@ -193,9 +144,8 @@ function Sidebar() {
           <OverviewParent>
             <Savi>Others</Savi>
             <Feature1Parent>
-           
             <Link style={{textDecoration:'none',color:'inherit'}} to="/settings">
-          <Feature3>
+          <Feature3 >
               <VuesaxbulkhomeIcon1 alt="" src="/setting-2.png" />
               <Savi>Settings</Savi>
             </Feature3>
@@ -223,7 +173,7 @@ function Sidebar() {
   );
 }
 
-export default Sidebar;
+export default SidebarAdmin;
 
 const OverviewParent = styled.div`
   display: flex;
@@ -316,7 +266,11 @@ const VuesaxbulkhomeIcon1 = styled.img`
   height: 1.5rem;
   object-fit: cover;
 `;
-
+const BulkhomeIcon = styled.div`
+  position: relative;
+  width: 1.5rem;
+  height: 1.5rem;
+`;
 const SideBardefault = styled.div`
   position: fixed;
   top: 6rem;

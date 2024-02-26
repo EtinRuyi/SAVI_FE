@@ -110,6 +110,7 @@ const StyledPaystackButton = styled(PaystackButton)`
   width: 20rem;
   overflow: hidden;
   cursor: pointer;
+  border:none;
   display: flex;
   flex-direction: row;
   align-items: center;

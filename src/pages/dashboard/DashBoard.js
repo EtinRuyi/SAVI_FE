@@ -1,12 +1,12 @@
-import '../App.css';
+import '../../App.css';
 import styled from 'styled-components';
 import { Container, Row, Col } from 'react-bootstrap';
 
 import { useCallback, useEffect, useState } from 'react';
-import PortalPopup from '../components/PortalPopup';
-import DepositFunds from '../components/DepositFunds';
+import PortalPopup from '../../components/PortalPopup';
+import DepositFunds from '../../components/DepositFunds';
 import { useNavigate } from 'react-router-dom';
-import KYC from './Kyc';
+import KYC from '../Kyc';
 
 
 
@@ -19,6 +19,7 @@ const DashBoard = () => {
   const [isKYCOpen, setKYCOpen] = useState(false);
   const [balance, setBalance] = useState();
   const [totalSavingBalance, setTotalSavingBalance] = useState(0);
+  const [totalGroupBalance, setTotalGroupBalance] = useState(0);
 
   const navigate = useNavigate();
 
@@ -32,7 +33,7 @@ const DashBoard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`https://localhost:7226/api/Kyc/GetKycByUserId?userId=${localStorage.getItem("userId")}`);
+        const response = await fetch(`https://localhost:7226/api/Kyc/GetKycByUserId?=${localStorage.getItem("userId")}`);
         const result = await response.json();
         if(!result.succeeded){
           setKycComplete(false);
@@ -57,6 +58,21 @@ const DashBoard = () => {
   };
   useEffect(() => {  
     fetchWalletBalance();
+  }, []);
+
+  const fetchGroupBalance = async () => {
+    try {
+      const response = await fetch(`https://localhost:7226/api/GroupTransaction/get-total-transactions?userId=${localStorage.getItem("userId")}`);
+      const result = await response.json();
+      console.log(result);
+      setTotalGroupBalance(result.data);
+      
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+  useEffect(() => {  
+    fetchGroupBalance();
   }, []);
   
   useEffect(() => {
@@ -193,7 +209,7 @@ const DashBoard = () => {
         </AccountBalanceWalletParent>
         <GlobalWalletParent>
           <SafeLock style={{marginBottom:'1.5em'}}>{`Total Group Savings `}</SafeLock>
-          <Div>₦ 0.00</Div>
+          <Div>₦ {totalGroupBalance.toLocaleString()}</Div>
         </GlobalWalletParent>
 
         <FrameParent1>
