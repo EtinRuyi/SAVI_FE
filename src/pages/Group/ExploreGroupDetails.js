@@ -284,7 +284,7 @@ const ExploreGroupDetails = () => {
                <DropdownList>
                  <ListItem>Delete</ListItem>
                  <ListItem>Disable</ListItem>
-                 <Link to="/group-transactions"><ListItem>View History</ListItem></Link>
+                 <Link to={`/group-transactions?id=${groupData.id}`}><ListItem>View History</ListItem></Link>
                </DropdownList>
              </DropdownContent>
               )}

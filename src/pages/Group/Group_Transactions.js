@@ -1,16 +1,51 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import '../../App.css';
 import Header from '../../components/navs/Header';
 import { Container, Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import PortalPopup from '../../components/PortalPopup';
 import CreateSavingsGroupForm from './CreateNewSavingsGroup';
-import ExploreGroups from './ExploreGroups';
 import SidebarAdmin from '../../components/navs/SidebarAdmin';
+import axios from 'axios';
 
 const Group_Transactions = () => {
   const [isNewGroup, setNewGroup] = useState(false);
+  const [transactions, setTransactions] = useState([]);
+  const [isTransactionsSet, setTransactionSet] = useState(false);
+
+  const location = useLocation();
+
+
+  const getUserGroupTransactions = async () => {
+    try {  
+      const searchParams = new URLSearchParams(location.search);
+  const groupId = searchParams.get('id');
+      await axios
+        .get(
+          `https://localhost:7226/api/GroupTransaction/get-group-transactions?groupId=${groupId}`
+        )
+        .then((response) => {
+          console.log("res",response.data.data);
+          if(response.data.data.length>0){
+             setTransactions(response.data.data);
+          setTransactionSet(true);
+          }
+         
+        })
+        .catch((error) => {
+          console.error('Error fetching data:', error);
+        });
+    } catch (error) {
+      console.error('Error fetching personal savings data:', error);
+    }
+  };
+
+
+
+  useEffect(() => {
+    getUserGroupTransactions(); 
+  }, []);
 
   const openNewGroupForm = () => {
     setNewGroup(true);
@@ -18,6 +53,8 @@ const Group_Transactions = () => {
   const closeNewGroupForm = () => {
     setNewGroup(false);
   };
+
+  //
 
   const [colors, setColors] = useState({
     div1: '#B5179E',
@@ -60,6 +97,18 @@ const Group_Transactions = () => {
       }
     }
   };
+  const getDate = (date) =>{
+    const inputDate = new Date(date);
+  const options = { year: 'numeric', month: 'short', day: '2-digit' };
+  const formattedDate = inputDate.toLocaleDateString('en-US', options);
+  
+  const hours = inputDate.getHours();
+  const minutes = inputDate.getMinutes();
+  const formattedTime = `${hours}:${minutes < 10 ? '0' : ''}${minutes} ${hours >= 12 ? 'pm' : 'am'}`;
+  return formattedDate+" "+formattedTime;
+  
+   }
+  
 
   return (
     <>
@@ -151,7 +200,7 @@ const Group_Transactions = () => {
             <Row style={{ paddingInline: '10px' }}>
               <DaySection>
                 <Table>
-                  <thead style={{ background: 'white' }}>
+                  <thead style={{ background: 'white',borderBottom: '4px solid #f9fafb' }}>
                     <tr>
                       <th style={{ padding: '20px' }}>Slot</th>
                       <th>User Image</th>
@@ -164,201 +213,56 @@ const Group_Transactions = () => {
                       <th></th>
                     </tr>
                   </thead>
-                  <TRows>
-                    <Td>
-                      <Text>1</Text>
-                    </Td>
-                    <td>
-                      <Pic src="profile.jpg"></Pic>
-                    </td>
-                    <td>
-                      <Text>Oluwadamilola Nwankwo</Text>
-                    </td>
-                    <td>
-                      <Text>Sent</Text>
-                    </td>
-                    <TdC>
-                      <Text>45,000</Text>
-                    </TdC>
-                    <td>
-                      <Text>24 Feb, 2024 </Text>
-                    </td>
-                    <td>
-                      <Text><Span>
-                          <svg
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M12 12H12.01M12 6H12.01M12 18H12.01M13 12C13 12.5523 12.5523 13 12 13C11.4477 13 11 12.5523 11 12C11 11.4477 11.4477 11 12 11C12.5523 11 13 11.4477 13 12ZM13 18C13 18.5523 12.5523 19 12 19C11.4477 19 11 18.5523 11 18C11 17.4477 11.4477 17 12 17C12.5523 17 13 17.4477 13 18ZM13 6C13 6.55228 12.5523 7 12 7C11.4477 7 11 6.55228 11 6C11 5.44772 11.4477 5 12 5C12.5523 5 13 5.44772 13 6Z"
-                              stroke="#131A29"
-                              stroke-width="2"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                          </svg>
-                        </Span></Text>
-                    </td>
-                  </TRows>
-                  <TRows>
-                    <Td>
-                      <Text>2</Text>
-                    </Td>
-                    <td>
-                      <Pic src="profile.jpg"></Pic>
-                    </td>
-                    <td>
-                      <Text>Oluwadamilola Nwankwo</Text>
-                    </td>
-                    <td>
-                      <Text>Sent</Text>
-                    </td>
-                    <TdC>
-                      <Text>45,000</Text>
-                    </TdC>
-                    <td>
-                      <Text>24 Feb, 2024 </Text>
-                    </td>
-                    <td>
-                      <Text><Span>
-                          <svg
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M12 12H12.01M12 6H12.01M12 18H12.01M13 12C13 12.5523 12.5523 13 12 13C11.4477 13 11 12.5523 11 12C11 11.4477 11.4477 11 12 11C12.5523 11 13 11.4477 13 12ZM13 18C13 18.5523 12.5523 19 12 19C11.4477 19 11 18.5523 11 18C11 17.4477 11.4477 17 12 17C12.5523 17 13 17.4477 13 18ZM13 6C13 6.55228 12.5523 7 12 7C11.4477 7 11 6.55228 11 6C11 5.44772 11.4477 5 12 5C12.5523 5 13 5.44772 13 6Z"
-                              stroke="#131A29"
-                              stroke-width="2"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                          </svg>
-                        </Span></Text>
-                    </td>
-                  </TRows>
-                  <TRows>
-                    <Td>
-                      <Text>3</Text>
-                    </Td>
-                    <td>
-                      <Pic src="profile.jpg"></Pic>
-                    </td>
-                    <td>
-                      <Text>Oluwadamilola Nwankwo</Text>
-                    </td>
-                    <td>
-                      <Text>Sent</Text>
-                    </td>
-                    <TdC>
-                      <Text>45,000</Text>
-                    </TdC>
-                    <td>
-                      <Text>24 Feb, 2024 </Text>
-                    </td>
-                    <td>
-                      <Text><Span>
-                          <svg
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M12 12H12.01M12 6H12.01M12 18H12.01M13 12C13 12.5523 12.5523 13 12 13C11.4477 13 11 12.5523 11 12C11 11.4477 11.4477 11 12 11C12.5523 11 13 11.4477 13 12ZM13 18C13 18.5523 12.5523 19 12 19C11.4477 19 11 18.5523 11 18C11 17.4477 11.4477 17 12 17C12.5523 17 13 17.4477 13 18ZM13 6C13 6.55228 12.5523 7 12 7C11.4477 7 11 6.55228 11 6C11 5.44772 11.4477 5 12 5C12.5523 5 13 5.44772 13 6Z"
-                              stroke="#131A29"
-                              stroke-width="2"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                          </svg>
-                        </Span></Text>
-                    </td>
-                  </TRows>
-                  <TRows>
-                    <Td>
-                      <Text>4</Text>
-                    </Td>
-                    <td>
-                      <Pic src="profile.jpg"></Pic>
-                    </td>
-                    <td>
-                      <Text>Oluwadamilola Nwankwo</Text>
-                    </td>
-                    <td>
-                      <Text>Sent</Text>
-                    </td>
-                    <TdC>
-                      <Text>45,000</Text>
-                    </TdC>
-                    <td>
-                      <Text>24 Feb, 2024 </Text>
-                    </td>
-                    <td>
-                      <Text><Span>
-                          <svg
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M12 12H12.01M12 6H12.01M12 18H12.01M13 12C13 12.5523 12.5523 13 12 13C11.4477 13 11 12.5523 11 12C11 11.4477 11.4477 11 12 11C12.5523 11 13 11.4477 13 12ZM13 18C13 18.5523 12.5523 19 12 19C11.4477 19 11 18.5523 11 18C11 17.4477 11.4477 17 12 17C12.5523 17 13 17.4477 13 18ZM13 6C13 6.55228 12.5523 7 12 7C11.4477 7 11 6.55228 11 6C11 5.44772 11.4477 5 12 5C12.5523 5 13 5.44772 13 6Z"
-                              stroke="#131A29"
-                              stroke-width="2"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                          </svg>
-                        </Span></Text>
-                    </td>
-                  </TRows>
-                  <TRows>
-                    <Td>
-                      <Text>5</Text>
-                    </Td>
-                    <td>
-                      <Pic src="profile.jpg"></Pic>
-                    </td>
-                    <td>
-                      <Text>Oluwadamilola Nwankwo</Text>
-                    </td>
-                    <td>
-                      <Text>Sent</Text>
-                    </td>
-                    <TdC>
-                      <Text>45,000</Text>
-                    </TdC>
-                    <td>
-                      <Text>24 Feb, 2024 </Text>
-                    </td>
-                    <td>
-                      <Text><Span>
-                          <svg
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M12 12H12.01M12 6H12.01M12 18H12.01M13 12C13 12.5523 12.5523 13 12 13C11.4477 13 11 12.5523 11 12C11 11.4477 11.4477 11 12 11C12.5523 11 13 11.4477 13 12ZM13 18C13 18.5523 12.5523 19 12 19C11.4477 19 11 18.5523 11 18C11 17.4477 11.4477 17 12 17C12.5523 17 13 17.4477 13 18ZM13 6C13 6.55228 12.5523 7 12 7C11.4477 7 11 6.55228 11 6C11 5.44772 11.4477 5 12 5C12.5523 5 13 5.44772 13 6Z"
-                              stroke="#131A29"
-                              stroke-width="2"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                          </svg>
-                        </Span></Text>
-                    </td>
-                  </TRows>
+                  
+                  
+                  {isTransactionsSet?(<> {transactions.map((item, index) => (
+              
+              <TRows>
+              <Td>
+                <Text>{item.position}</Text>
+              </Td>
+              <td>
+                <Pic src="profile.jpg"></Pic>
+              </td>
+              <td>
+                <Text>{item.fullname}</Text>
+              </td>
+              <td>
+                <Text>{item.actionId==="1"?<span style={{color:'green'}}>Received</span>:<span style={{color:'red'}}>Sent</span>}</Text>
+              </td>
+              <TdC>
+                <Text>&#x20A6;{parseFloat(item.amount).toLocaleString()}</Text>
+              </TdC>
+              <td>
+                <Text>{getDate(item.createdAt)} </Text>
+              </td>
+              <td>
+                <Text><Span>
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M12 12H12.01M12 6H12.01M12 18H12.01M13 12C13 12.5523 12.5523 13 12 13C11.4477 13 11 12.5523 11 12C11 11.4477 11.4477 11 12 11C12.5523 11 13 11.4477 13 12ZM13 18C13 18.5523 12.5523 19 12 19C11.4477 19 11 18.5523 11 18C11 17.4477 11.4477 17 12 17C12.5523 17 13 17.4477 13 18ZM13 6C13 6.55228 12.5523 7 12 7C11.4477 7 11 6.55228 11 6C11 5.44772 11.4477 5 12 5C12.5523 5 13 5.44772 13 6Z"
+                        stroke="#131A29"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </Span></Text>
+              </td>
+            </TRows>
+              ))}
+            
+            </>):(<TRows>
+                  <td colSpan={7} style={{textAlign:'center'}}><Text>No transactions</Text></td>
+                </TRows>)}
+
+              
                 </Table>
               </DaySection>
             </Row>
@@ -408,7 +312,7 @@ const Tools = styled.div`
 const Download = styled.button`
   width: 220px;
   height: 34px;
-  // cursor:pointer;
+   background:white;
   padding: 4px 16px 8px 16px;
   border-radius: 4px;
   gap: 10px;

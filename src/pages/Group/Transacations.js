@@ -11,215 +11,80 @@ import Swal from 'sweetalert2';
 
 const Transactions = () => {
   const navigate = useNavigate();
-
-  const [groupDetail, setGroupDetail] = useState('');
-  const [groupMembers, setGroupMember] = useState('');
-  const [transactions, setTransactions] = useState('');
-  const [isContentLoaded, setIsContentLoaded] = useState(false);
+  
+  const [previousTransactions, setPreviousTransactions] = useState([]);
+  const [todayTransactions, setTodayTransactions] = useState('');
+  const [yesterdayTransactions, setYesterdayTransactions] = useState('');
   const [isTransactionsSet, setTransactionSet] = useState(false);
-  const [userId, setUserId] = useState(localStorage.getItem('userId'));
-  const [isDismissed, setDismissed] = useState(false);
-  const [balance, setBalance] = useState();
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const groupId = searchParams.get('id');
-  const getGroupDetails = async () => {
-    try {
-      const response = await fetch(
-        `https://localhost:7226/api/Group/get-explore-details?id=${groupId}`
-      );
-      let data = await response.json();
-      if (data.succeeded) {
-        setGroupDetail(data.data);
-        setGroupMember(data.data.groupSavingsMembers);
-        setIsContentLoaded(true);
-        console.log(data.data);
-      } else {
-        // navigate('/explore-group')
-      }
-    } catch (error) {
-      toast.error('' + error);
-    }
-  };
 
-  const getGroupMembers = async () => {
+
+
+  const getUserGroupTransactions = async () => {
     try {
       await axios
         .get(
-          `https://localhost:7226/api/GroupTransaction/get-group-transactions?groupId=${groupId}`
+          `https://localhost:7226/api/GroupTransaction/get-group-transactions-by-userId?userId=${localStorage.getItem("userId")}`
         )
         .then((response) => {
-          // const sortedData = response.data.data.sort(
-          //   (a, b) => parseInt(a.createdAt) - parseInt(b.createdAt)
-          // );
-
-          setTransactions(response.data.data);
-          setTransactionSet(true);
-          console.log('response', response.data.data);
+          //console.log("res",response.data);
+          setGroupTransactions(response.data.data);
         })
         .catch((error) => {
-          // Handle error
           console.error('Error fetching data:', error);
         });
     } catch (error) {
       console.error('Error fetching personal savings data:', error);
     }
   };
-  const fetchWalletBalance = async () => {
-    try {
-      const response = await fetch(
-        `https://localhost:7226/api/Wallet/GetWalletByNumber?number=${localStorage.getItem(
-          'walletNumber'
-        )}`
-      );
-      const result = await response.json();
-      setBalance(result.data.balance);
-    } catch (error) {
-      console.error('Error fetching data:', error);
+ 
+  const setGroupTransactions = (data) =>{
+
+    if (!Array.isArray(data)) {
+      console.log("Value is not an array")
+      return;
     }
-  };
+    const today = new Date().toISOString().slice(0, 10);
 
-  useEffect(() => {
-    getGroupDetails();
-    getGroupMembers();
-    fetchWalletBalance();
-  }, []);
-  const formatDate = (originalDateString) => {
-    var date = new Date(originalDateString);
-    var months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ];
+    // Get yesterday's date by subtracting one day from today
+    const yesterday = new Date(Date.now() - 864e5).toISOString().slice(0, 10);
+  
+    // Filter the array based on date conditions
+    const todayItems = data.filter(item => item.createdAt.startsWith(today));
+    const yesterdayItems = data.filter(item => item.createdAt.startsWith(yesterday));
+    const  previousItems = data.filter(item => !item.createdAt.startsWith(today) && !item.createdAt.startsWith(yesterday));
 
-    var day = date.getDate();
-    var month = months[date.getMonth()];
-    var year = date.getFullYear();
-    return day + ' ' + month + ', ' + year;
-  };
+    setTodayTransactions(todayItems);
+    setYesterdayTransactions(yesterdayItems);
+    setPreviousTransactions(previousItems);
 
-  function getDuration(date1String, date2String) {
-    // Parse the date strings into Date objects
-    var date1 = new Date(date1String);
-
-    var date2 = new Date(date2String);
-
-    // Calculate the difference in milliseconds
-    var differenceMs = date2 - date1;
-
-    // Convert milliseconds to days
-    var differenceDays = Math.floor(differenceMs / (1000 * 60 * 60 * 24));
-
-    // Convert days to months, weeks, and remaining days
-    var months = Math.floor(differenceDays / 30);
-    var remainingDays = differenceDays % 30;
-    var weeks = Math.floor(remainingDays / 7);
-    var days = remainingDays % 7;
-
-    months = months === 0 ? '' : months;
-    weeks = weeks === 0 ? '' : weeks;
-    days = days === 0 ? '' : days;
-
-    months =
-      months === 1 ? months + ' mon' : months === '' ? '' : months + ' mons';
-    weeks =
-      weeks === 1 ? weeks + ' week' : weeks === '' ? '' : weeks + ' weeks';
-    days = days === 1 ? days + ' day' : days === '' ? '' : days + ' days';
-    return months + ' ' + weeks + ' ' + days;
+     console.log("today",todayItems);
+    // console.log("yesterdayItems",yesterdayItems);
+    // console.log("previousItems",previousItems);
+    setTransactionSet(true);
   }
-  const openPayNow = () => {
-    Swal.fire({
-      title: 'Do you want to pay now?',
-      text: 'Pay your own quota of the contribution',
-      showDenyButton: true,
-      confirmButtonText: 'Yes',
-      denyButtonText: 'Cancel',
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        let groupSavingsId = groupId;
+  useEffect(() => {
+    getUserGroupTransactions(); 
+  }, []);
+ const getDate = (date) =>{
+  const inputDate = new Date(date);
+const options = { year: 'numeric', month: 'short', day: '2-digit' };
+const formattedDate = inputDate.toLocaleDateString('en-US', options);
+return formattedDate;
 
-        await axios
-          .post('https://localhost:7226/api/GroupTransaction/fund-group', {
-            userId,
-            groupSavingsId,
-          })
-          .then((response) => {
-            console.log('data', response.data);
-            if (response.data.succeeded) {
-              Swal.fire('Success', 'Payment completed successfully', 'success');
-            } else {
-              toast.error('' + response.data.message);
-            }
-          })
-          .catch((error) => {
-            if (error.response) {
-              toast.error('' + error.response.data.message);
-              //  console.error('Server responded with error status:', error.response.data);
-            } else if (error.request) {
-              console.error('No response received from server:', error.request);
-            } else {
-              console.error('Error setting up request:', error.message);
-            }
-          });
-      }
-    });
-  };
-  const runDate = (a, onlymonth) => {
-    if (onlymonth) {
-      const date = new Date(a);
-      return date.toLocaleString('default', { month: 'long' });
-    } else {
-      const date = new Date(a);
+ }
+ const getTime = (time) =>{
+  const inputDate = new Date(time);
+const hours = inputDate.getHours();
+const minutes = inputDate.getMinutes();
+const formattedTime = `${hours}:${minutes < 10 ? '0' : ''}${minutes} ${hours >= 12 ? 'pm' : 'am'}`;
 
-      // Define an array to map month indices to month names
-      const months = [
-        'January',
-        'February',
-        'March',
-        'April',
-        'May',
-        'June',
-        'July',
-        'August',
-        'September',
-        'October',
-        'November',
-        'December',
-      ];
+return formattedTime;
 
-      // Extract day, month, year, hour, and minute components from the date object
-      const day = date.getDate();
-      const month = months[date.getMonth()];
-      const year = date.getFullYear();
-      let hour = date.getHours();
-      const minute = date.getMinutes();
-
-      // Convert hour to 12-hour format and determine AM/PM
-      const ampm = hour >= 12 ? 'pm' : 'am';
-      hour = hour % 12 || 12;
-
-      // Format the date string
-      const formattedDate = `${day} ${month}, ${year} ${hour}:${minute
-        .toString()
-        .padStart(2, '0')}${ampm}`;
-
-      return formattedDate;
-    }
-  };
-
-  const handleDismiss = () => {
-    setDismissed(true);
-  };
+ }
   return (
     <>
       <Header />
@@ -239,29 +104,30 @@ const Transactions = () => {
             </PersonalSavingRoot>
           </Row>
           <Row style={{paddingInline:'10px'}}>
+           
             <DaySection>
               <SectionTitle>
                 <Day>Today</Day>
               </SectionTitle>
                  <Table>
-                <TRows>
-                  <td><Pic src='profile.jpg'></Pic></td> 
-                  <td><Text>Oluwadamilola Nwankwo</Text></td>
-                  <td><Text>Lagos Corp Member</Text></td>
-                  <td><Text>28/05/2023</Text></td>
-                  <td><Text>10:37:19AM</Text></td>
-                  <td><Text>N500</Text></td>
-                  <td><Text>Received</Text></td>
-                </TRows>
-                <TRows>
-                  <td><Pic src='profile.jpg'></Pic></td> 
-                  <td><Text>Oluwadamilola Nwankwo</Text></td>
-                  <td><Text>Lagos Corp Member</Text></td>
-                  <td><Text>28/05/2023</Text></td>
-                  <td><Text>10:37:19AM</Text></td>
-                  <td><TextGreen>N500</TextGreen></td>
-                  <td><TextRed>Sent</TextRed></td>
-                </TRows>               
+
+                 {isTransactionsSet?(<>
+              {todayTransactions.map((item, index) => (
+                 <TRows>
+                 <td><Pic src='profile.jpg'></Pic></td> 
+                 <td><Text>{item.fullname}</Text></td>
+                 <td><Text>{item.groupName}</Text></td>
+                 <td><Text>{getDate(item.createdAt)}</Text></td>
+                 <td><Text>{getTime(item.createdAt)}</Text></td>
+                 <td><Text>N{parseFloat(item.amount).toLocaleString()}</Text></td>
+                 <td><Text>{item.actionId==="1"?<span style={{color:'green'}}>Received</span>:<span style={{color:'red'}}>Sent</span>}</Text></td>
+               </TRows>
+              ))}
+            
+            </>):(<TRows>
+                  <td colSpan={7} style={{textAlign:'center'}}><Text>No record</Text></td>
+                </TRows>)}
+         
               </Table>       
             </DaySection>
             <DaySection>
@@ -269,60 +135,51 @@ const Transactions = () => {
                 <Day>Yesterday</Day>
               </SectionTitle>
                  <Table>
+
+
+                 {isTransactionsSet?(<> {yesterdayTransactions.map((item, index) => (
                 <TRows>
+                <td><Pic src='profile.jpg'></Pic></td> 
+                <td><Text>{item.fullname}</Text></td>
+                <td><Text>{item.groupName}</Text></td>
+                <td><Text>{getDate(item.createdAt)}</Text></td>
+                <td><Text>{getTime(item.createdAt)}</Text></td>
+                <td><Text>N{parseFloat(item.amount).toLocaleString()}</Text></td>
+                <td><Text>{item.actionId==="1"?<span style={{color:'green'}}>Received</span>:<span style={{color:'red'}}>Sent</span>}</Text></td>
+              </TRows>
+              ))}
+            
+            </>):(<TRows>
+                  <td colSpan={7} style={{textAlign:'center'}}><Text>No record</Text></td>
+                </TRows>)}
+
+                 
+              </Table>       
+            </DaySection>
+            <DaySection>
+              <SectionTitle>
+                <Day>Previous Days</Day>
+              </SectionTitle>
+                 <Table>
+
+
+                 {isTransactionsSet?(<> {previousTransactions.map((item, index) => (
+                  <TRows>
                   <td><Pic src='profile.jpg'></Pic></td> 
-                  <td><Text>Oluwadamilola Nwankwo</Text></td>
-                  <td><Text>Lagos Corp Member</Text></td>
-                  <td><Text>28/05/2023</Text></td>
-                  <td><Text>10:37:19AM</Text></td>
-                  <td><Text>N500</Text></td>
-                  <td><TextRed>Sent</TextRed></td>
+                  <td><Text>{item.fullname}</Text></td>
+                  <td><Text>{item.groupName}</Text></td>
+                  <td><Text>{getDate(item.createdAt)}</Text></td>
+                  <td><Text>{getTime(item.createdAt)}</Text></td>
+                  <td><Text>N{parseFloat(item.amount).toLocaleString()}</Text></td>
+                  <td><Text>{item.actionId==="1"?<span style={{color:'green'}}>Received</span>:<span style={{color:'red'}}>Sent</span>}</Text></td>
                 </TRows>
-                <TRows>
-                  <td><Pic src='profile.jpg'></Pic></td> 
-                  <td><Text>Oluwadamilola Nwankwo</Text></td>
-                  <td><Text>Lagos Corp Member</Text></td>
-                  <td><Text>28/05/2023</Text></td>
-                  <td><Text>10:37:19AM</Text></td>
-                  <td><Text>N500</Text></td>
-                  <td><TextGreen>Received</TextGreen></td>
-                </TRows>             
-                <TRows>
-                  <td><Pic src='profile.jpg'></Pic></td> 
-                  <td><Text>Oluwadamilola Nwankwo</Text></td>
-                  <td><Text>Lagos Corp Member</Text></td>
-                  <td><Text>28/05/2023</Text></td>
-                  <td><Text>10:37:19AM</Text></td>
-                  <td><Text>N500</Text></td>
-                  <td><TextGreen>Received</TextGreen></td>
-                </TRows>     
-                <TRows>
-                  <td><Pic src='profile.jpg'></Pic></td> 
-                  <td><Text>Oluwadamilola Nwankwo</Text></td>
-                  <td><Text>Lagos Corp Member</Text></td>
-                  <td><Text>28/05/2023</Text></td>
-                  <td><Text>10:37:19AM</Text></td>
-                  <td><Text>N500</Text></td>
-                  <td><TextGreen>Received</TextGreen></td>
-                </TRows>     
-                <TRows>
-                  <td><Pic src='profile.jpg'></Pic></td> 
-                  <td><Text>Oluwadamilola Nwankwo</Text></td>
-                  <td><Text>Lagos Corp Member</Text></td>
-                  <td><Text>28/05/2023</Text></td>
-                  <td><Text>10:37:19AM</Text></td>
-                  <td><Text>N500</Text></td>
-                  <td><TextGreen>Received</TextGreen></td>
-                </TRows>     
-                <TRows>
-                  <td><Pic src='profile.jpg'></Pic></td> 
-                  <td><Text>Oluwadamilola Nwankwo</Text></td>
-                  <td><Text>Lagos Corp Member</Text></td>
-                  <td><Text>28/05/2023</Text></td>
-                  <td><Text>10:37:19AM</Text></td>
-                  <td><Text>N500</Text></td>
-                  <td><TextGreen>Received</TextGreen></td>
-                </TRows>       
+              ))}
+            
+            </>):(<TRows>
+                  <td colSpan={7} style={{textAlign:'center'}}><Text>No record</Text></td>
+                </TRows>)}
+
+                 
               </Table>       
             </DaySection>
           </Row>

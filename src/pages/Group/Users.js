@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import '../../App.css';
 import Header from '../../components/navs/Header';
@@ -6,8 +6,8 @@ import { Container, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import PortalPopup from '../../components/PortalPopup';
 import CreateSavingsGroupForm from './CreateNewSavingsGroup';
-import ExploreGroups from './ExploreGroups';
 import SidebarAdmin from '../../components/navs/SidebarAdmin';
+import axios from 'axios';
 
 const Users = () => {
   const [isNewGroup, setNewGroup] = useState(false);
@@ -15,6 +15,44 @@ const Users = () => {
   const openNewGroupForm = () => {
     setNewGroup(true);
   };
+  const[showing, setShowing]=useState('All');
+  const [activeUsers, setActiveUsers] = useState([]);
+  const [todayUsers, setTodayUser] = useState([]);
+  const [transactions, setTransactions] = useState([]);
+  const [isTransactionsSet, setTransactionSet] = useState(false);
+
+
+  const getUserGroupTransactions = async () => {
+    try {
+      setTransactionSet(false);
+      await axios
+        .get(`https://localhost:7226/api/User/AllUsers`)
+        .then((response) => {
+          if (response.data.data.length > 0) {
+            setTransactions(response.data.data);
+            const today = new Date().toISOString().slice(0, 10);
+            const datesToday = response.data.data.filter((item) =>
+              item.createdAt.startsWith(today)
+            );
+            const actives = response.data.data.filter((item) =>
+            item.isDeleted==="False");
+            setActiveUsers(actives);
+            setTodayUser(datesToday);
+            setTransactionSet(true);
+            //console.log('res', actives);
+          }
+        })
+        .catch((error) => {
+          console.error('Error fetching data:', error);
+        });
+    } catch (error) {
+      console.error('Error fetching personal savings data:', error);
+    }
+  };
+
+  useEffect(() => {
+    getUserGroupTransactions();
+  }, []);
 
   const closeNewGroupForm = () => {
     setNewGroup(false);
@@ -23,7 +61,7 @@ const Users = () => {
   const [colors, setColors] = useState({
     div1: '#B5179E',
     div2: '#fff',
-    div3: '#fff'
+    div3: '#fff',
   });
 
   const [foreColors, setForeColors] = useState({
@@ -61,6 +99,27 @@ const Users = () => {
         }));
       }
     }
+    if (divId === 'div1') {
+      setShowing("All");
+    }
+    if (divId === 'div2') {
+      setShowing("Active");
+    }
+    if (divId === 'div3') {
+      setShowing("New");
+    }
+  };
+  const getDate = (date) => {
+    const inputDate = new Date(date);
+    const options = { year: 'numeric', month: 'short', day: '2-digit' };
+    const formattedDate = inputDate.toLocaleDateString('en-US', options);
+
+    const hours = inputDate.getHours();
+    const minutes = inputDate.getMinutes();
+    const formattedTime = `${hours}:${minutes < 10 ? '0' : ''}${minutes} ${
+      hours >= 12 ? 'pm' : 'am'
+    }`;
+    return formattedDate + ' ' + formattedTime;
   };
 
   return (
@@ -111,7 +170,6 @@ const Users = () => {
                   >
                     New
                   </All>
-                
                 </Tools>
                 <div>
                   <Download>
@@ -153,121 +211,113 @@ const Users = () => {
             <Row style={{ paddingInline: '10px' }}>
               <DaySection>
                 <Table>
-                  <thead style={{ background: 'white' }}>
+                  <thead
+                    style={{
+                      background: 'white',
+                      borderBottom: '4px solid #f9fafb',
+                    }}
+                  >
                     <tr>
                       <Th>User Image</Th>
                       <th>Name</th>
                       <th>Email</th>
                       <th>Status</th>
-                      <th style={{ textAlign: 'center' }}>
-                        Last Login
-                      </th>
+                      <th style={{ textAlign: 'center' }}>Last Login</th>
                       <th></th>
                     </tr>
                   </thead>
-                  <TRows>
-                    <Td>
-                    <Pic src="profile.jpg"></Pic>
-                    </Td>
-                   
-                    <td>
-                      <Text>Oluwadamilola Nwankwo</Text>
-                    </td>
-                    <td>
-                      <Text>useraccount@gmail.com</Text>
-                    </td>
-                    <td>
-                      <Text>sent</Text>
-                    </td>
-                    <TdC>
-                    <Text>24 Feb, 2024 </Text>
-                    </TdC>
-                   
-                    <td>
-                      :
-                    </td>
-                  </TRows>
-                  <TRows>
-                  <Td>
-                    <Pic src="profile.jpg"></Pic>
-                    </Td>
-                    <td>
-                      <Text>Oluwadamilola Nwankwo</Text>
-                    </td>
-                    <td>
-                      <Text>useraccount@gmail.com</Text>
-                    </td>
-                    <td>
-                      <Text>sent</Text>
-                    </td>
-                    <TdC>
-                    <Text>24 Feb, 2024 </Text>
-                    </TdC>
-                    <td>
-                     :
-                    </td>
-                  </TRows>
-                  <TRows>
-                  <Td>
-                    <Pic src="profile.jpg"></Pic>
-                    </Td>
-                    <td>
-                      <Text>Oluwadamilola Nwankwo</Text>
-                    </td>
-                    <td>
-                      <Text>useraccount@gmail.com</Text>
-                    </td>
-                    <td>
-                      <Text>sent</Text>
-                    </td>
-                    <TdC>
-                    <Text>24 Feb, 2024 </Text>
-                    </TdC>
                     
-                    <td>
-                      :
-                    </td>
-                  </TRows>
-                  <TRows>
-                  <Td>
-                    <Pic src="profile.jpg"></Pic>
-                    </Td>
-                    <td>
-                      <Text>Oluwadamilola Nwankwo</Text>
-                    </td>
-                    <td>
-                      <Text>useraccount@gmail.com</Text>
-                    </td>
-                    <td>
-                      <Text>sent</Text>
-                    </td>
-                    <TdC>
-                    <Text>24 Feb, 2024 </Text>
-                    </TdC>
-                    <td>
-                    :
-                    </td>
-                  </TRows>
-                  <TRows>
-                  <Td>
-                    <Pic src="profile.jpg"></Pic>
-                    </Td>
-                    <td>
-                      <Text>Oluwadamilola Nwankwo</Text>
-                    </td>
-                    <td>
-                      <Text>useraccount@gmail.com</Text>
-                    </td>
-                    <td>
-                      <Text>sent</Text>
-                    </td>
-                    <TdC>
-                    <Text>24 Feb, 2024 </Text>
-                    </TdC>
-                    <td>
-                     :
-                    </td>
-                  </TRows>
+                  {showing==="All" ? (
+                    <>
+                      {' '}
+                      {transactions.map((item, index) => (
+                        <TRows>
+                          <Td>
+                            <Pic src="profile.jpg"></Pic>
+                          </Td>
+                          <td>
+                            <Text>{item.firstName + ' ' + item.lastName}</Text>
+                          </td>
+                          <td>
+                            <Text>{item.email}</Text>
+                          </td>
+                          <td>
+                            <Text>
+                              {item.isDeleted === 'False' ? (
+                                <span style={{ color: 'green' }}>Active</span>
+                              ) : (
+                                <span style={{ color: 'red' }}>Deleted</span>
+                              )}
+                            </Text>
+                          </td>
+                          <TdC>
+                            <Text>{getDate(item.lastLogin)} </Text>
+                          </TdC>
+                          <td>:</td>
+                        </TRows>
+                      ))}
+                    </>
+                  ) : showing==="Active"?(<>
+                  {activeUsers.map((item, index) => (
+                        <TRows>
+                          <Td>
+                            <Pic src="profile.jpg"></Pic>
+                          </Td>
+                          <td>
+                            <Text>{item.firstName + ' ' + item.lastName}</Text>
+                          </td>
+                          <td>
+                            <Text>{item.email}</Text>
+                          </td>
+                          <td>
+                            <Text>
+                              {item.isDeleted === 'False' ? (
+                                <span style={{ color: 'green' }}>Active</span>
+                              ) : (
+                                <span style={{ color: 'red' }}>Deleted</span>
+                              )}
+                            </Text>
+                          </td>
+                          <TdC>
+                            <Text>{getDate(item.lastLogin)} </Text>
+                          </TdC>
+                          <td>:</td>
+                        </TRows>
+                      ))}
+                  </>):showing==="New"?(<>
+                  {todayUsers.map((item, index) => (
+                        <TRows>
+                          <Td>
+                            <Pic src="profile.jpg"></Pic>
+                          </Td>
+                          <td>
+                            <Text>{item.firstName + ' ' + item.lastName}</Text>
+                          </td>
+                          <td>
+                            <Text>{item.email}</Text>
+                          </td>
+                          <td>
+                            <Text>
+                              {item.isDeleted === 'False' ? (
+                                <span style={{ color: 'green' }}>Active</span>
+                              ) : (
+                                <span style={{ color: 'red' }}>Deleted</span>
+                              )}
+                            </Text>
+                          </td>
+                          <TdC>
+                            <Text>{getDate(item.lastLogin)} </Text>
+                          </TdC>
+                          <td>:</td>
+                        </TRows>
+                      ))}
+                  </>) :(
+                    <TRows>
+                      <td colSpan={7} style={{ textAlign: 'center' }}>
+                        <Text>No transactions</Text>
+                      </td>
+                    </TRows>
+                  )}
                 </Table>
               </DaySection>
             </Row>
@@ -288,10 +338,7 @@ const Users = () => {
 };
 export default Users;
 const Th = styled.th`
-padding: 20px;
-`;
-const Span = styled.td`
-  cursor:pointer;
+  padding: 20px;
 `;
 const Td = styled.td`
   padding-left: 30px;
@@ -321,7 +368,7 @@ const Tools = styled.div`
 const Download = styled.button`
   width: 220px;
   height: 34px;
-  // cursor:pointer;
+  background: white;
   padding: 4px 16px 8px 16px;
   border-radius: 4px;
   gap: 10px;
@@ -353,22 +400,7 @@ const Text = styled.b`
   text-align: left;
   color: #000000;
 `;
-const TextGreen = styled.b`
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 19px;
-  letter-spacing: 0em;
-  text-align: left;
-  color: green;
-`;
-const TextRed = styled.b`
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 19px;
-  letter-spacing: 0em;
-  text-align: left;
-  color: red;
-`;
+
 const Table = styled.table`
   width: 100%;
 `;
@@ -384,18 +416,7 @@ const TRows = styled.tr`
     border-bottom: none; /* Remove border for the last row */
   }
 `;
-const SectionTitle = styled.div`
-  width: 100%;
-  height: 20px;
-  gap: 818px;
-  margin-bottom: 10px;
-`;
-const Day = styled.span`
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 20px;
-  letter-spacing: 0.005em;
-`;
+
 
 const DaySection = styled.div`
 width: 100%;
@@ -419,4 +440,3 @@ const MyGoalsParent = styled.div`
   margin-bottom: 2em;
   margin-top: 1em;
 `;
-

@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import '../../App.css';
 import Header from '../../components/navs/Header';
 import { Container, Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 import PortalPopup from '../../components/PortalPopup';
 import CreateSavingsGroupForm from './CreateNewSavingsGroup';
-import ExploreGroups from './ExploreGroups';
 import SidebarAdmin from '../../components/navs/SidebarAdmin';
+import axios from 'axios';
 
 const Defaulting_Users = () => {
   const [isNewGroup, setNewGroup] = useState(false);
+  const [transactions, setTransactions] = useState([]);
+  const[showing, setShowing]=useState('Today');
 
   const openNewGroupForm = () => {
     setNewGroup(true);
@@ -19,6 +20,8 @@ const Defaulting_Users = () => {
   const closeNewGroupForm = () => {
     setNewGroup(false);
   };
+
+  const [todayUsers, setTodayUser] = useState([]);
 
   const [colors, setColors] = useState({
     div1: '#B5179E',
@@ -29,6 +32,39 @@ const Defaulting_Users = () => {
     div11: 'white',
     div22: 'black',
   });
+
+  const getDefaultingUsers = async () => {
+    try {  
+      await axios
+        .get(
+          `https://localhost:7226/api/DefaultingUsers/GetAllDefaultingUsers`
+        )
+        .then((response) => {
+          
+          if(response.data.data.length>0){
+            const today = new Date().toISOString().slice(0, 10);
+            const datesToday = response.data.data.filter((item) =>item.defaultDateTime.startsWith(today)
+            );
+            setTodayUser(datesToday);            
+             setTransactions(response.data.data);
+          //console.log("rese",response.data.data);
+          }
+         
+        })
+        .catch((error) => {
+          console.error('Error fetching data:', error);
+        });
+    } catch (error) {
+      console.error('Error fetching personal savings data:', error);
+    }
+  };
+
+
+
+  useEffect(() => {
+    getDefaultingUsers(); 
+  }, []);
+
 
   const handleDivClick = (divId, foreGround) => {
     // Update background color based on the clicked div
@@ -45,7 +81,7 @@ const Defaulting_Users = () => {
         }));
       }
     }
-
+    
     setForeColors({
       ...foreColors,
       [foreGround]: 'white',
@@ -59,8 +95,25 @@ const Defaulting_Users = () => {
         }));
       }
     }
-  };
 
+    if (divId === 'div1') {
+      setShowing("Today");
+    }
+    if (divId === 'div2') {
+      setShowing("All");
+    }
+  };
+  const getDate = (date) =>{
+    const inputDate = new Date(date);
+  const options = { year: 'numeric', month: 'short', day: '2-digit' };
+  const formattedDate = inputDate.toLocaleDateString('en-US', options);
+  
+  const hours = inputDate.getHours();
+  const minutes = inputDate.getMinutes();
+  const formattedTime = `${hours}:${minutes < 10 ? '0' : ''}${minutes} ${hours >= 12 ? 'pm' : 'am'}`;
+  return formattedDate+" "+formattedTime;
+  
+   }
   return (
     <>
       <Header />
@@ -144,8 +197,10 @@ const Defaulting_Users = () => {
             <Row style={{ paddingInline: '10px' }}>
               <DaySection>
                 <Table>
-                  <thead style={{ background: 'white' }}>
+                  <thead style={{ background: 'white',borderBottom: '4px solid #f9fafb' }}>
                     <tr>
+                  
+
                       <Th >User Image</Th>
                       <th>Name</th>
                       <th>Email</th>
@@ -155,103 +210,62 @@ const Defaulting_Users = () => {
                       <th></th>
                     </tr>
                   </thead>
-                  <TRows>
-                    <Td>
-                      <Pic src="profile.jpg"></Pic>
-                    </Td>
-                   
-                    <td>
-                      <Text>Oluwadamilola Nwankwo</Text>
-                    </td>
-                    <td>
-                      <Text>dajiboladev@gmail.com</Text>
-                    </td>
-                    <TdC>
-                    <Text>24 Feb, 2024 </Text>
-                    </TdC>
-                   
-                    <td>
-                      <Text><Span>
-                      <SendEmail>Send Email</SendEmail>
-                        </Span></Text>
-                    </td>
-                  </TRows>
-                  <TRows>
-                  <Td>
-                      <Pic src="profile.jpg"></Pic>
-                    </Td>
-                    <td>
-                      <Text>Oluwadamilola Nwankwo</Text>
-                    </td>
-                    <td>
-                      <Text>dajiboladev@gmail.com</Text>
-                    </td>
-                    <TdC>
-                    <Text>24 Feb, 2024 </Text>
-                    </TdC>
-                    <td>
-                      <Text><Span>
-                      <SendEmail>Send Email</SendEmail>
-                        </Span></Text>
-                    </td>
-                  </TRows>
-                  <TRows>
-                  <Td>
-                      <Pic src="profile.jpg"></Pic>
-                    </Td>
-                    <td>
-                      <Text>Oluwadamilola Nwankwo</Text>
-                    </td>
-                    <td>
-                      <Text>dajiboladev@gmail.com</Text>
-                    </td>
-                    <TdC>
-                    <Text>24 Feb, 2024 </Text>
-                    </TdC>
-                    <td>
-                      <Text><Span>
-                      <SendEmail>Send Email</SendEmail>
-                        </Span></Text>
-                    </td>
-                  </TRows>
-                  <TRows>
-                  <Td>
-                      <Pic src="profile.jpg"></Pic>
-                    </Td>
-                    <td>
-                      <Text>Oluwadamilola Nwankwo</Text>
-                    </td>
-                    <td>
-                      <Text>dajiboladev@gmail.com</Text>
-                    </td>
-                    <TdC>
-                    <Text>24 Feb, 2024 </Text>
-                    </TdC>
-                    <td>
-                      <Text><Span>
-                      <SendEmail>Send Email</SendEmail>
-                        </Span></Text>
-                    </td>
-                  </TRows>
-                  <TRows>
-                  <Td>
-                      <Pic src="profile.jpg"></Pic>
-                    </Td>
-                    <td>
-                      <Text>Oluwadamilola Nwankwo</Text>
-                    </td>
-                    <td>
-                      <Text>dajiboladev@gmail.com</Text>
-                    </td>
-                    <TdC>
-                    <Text>24 Feb, 2024 </Text>
-                    </TdC>
-                    <td>
-                      <Text><Span>
-                          <SendEmail>Send Email</SendEmail>
-                        </Span></Text>
-                    </td>
-                  </TRows>
+                  {showing==="All"?(<> {transactions.map((item, index) => (
+              
+              
+              <TRows>
+              <Td>
+                <Pic src="profile.jpg"></Pic>
+              </Td>
+             
+              <td>
+                <Text>{item.name}</Text>
+              </td>
+              <td>
+                <Text>{item.email}</Text>
+              </td>
+              <TdC>
+              <Text>{getDate(item.defaultDateTime)} </Text>
+              </TdC>
+             
+              <td>
+                <Text><Span>
+                <SendEmail>Send Email</SendEmail>
+                  </Span></Text>
+              </td>
+            </TRows>
+              ))}
+            
+            </>):showing==="Today"?(<>
+              {todayUsers.map((item, index) => (
+              
+              
+              <TRows>
+              <Td>
+                <Pic src="profile.jpg"></Pic>
+              </Td>
+             
+              <td>
+                <Text>{item.name}</Text>
+              </td>
+              <td>
+                <Text>{item.email}</Text>
+              </td>
+              <TdC>
+              <Text>{getDate(item.defaultDateTime)} </Text>
+              </TdC>
+             
+              <td>
+                <Text><Span>
+                <SendEmail>Send Email</SendEmail>
+                  </Span></Text>
+              </td>
+            </TRows>
+              ))}
+            </>):(<TRows>
+                  <td colSpan={5} style={{textAlign:'center'}}><Text>No defaulting user</Text></td>
+                </TRows>)}
+
                 </Table>
               </DaySection>
             </Row>
@@ -319,7 +333,7 @@ const Tools = styled.div`
 const Download = styled.button`
   width: 220px;
   height: 34px;
-  // cursor:pointer;
+  background:white;
   padding: 4px 16px 8px 16px;
   border-radius: 4px;
   gap: 10px;
@@ -351,22 +365,7 @@ const Text = styled.b`
   text-align: left;
   color: #000000;
 `;
-const TextGreen = styled.b`
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 19px;
-  letter-spacing: 0em;
-  text-align: left;
-  color: green;
-`;
-const TextRed = styled.b`
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 19px;
-  letter-spacing: 0em;
-  text-align: left;
-  color: red;
-`;
+
 const Table = styled.table`
   width: 100%;
 `;
@@ -381,18 +380,6 @@ const TRows = styled.tr`
   &:last-child {
     border-bottom: none; /* Remove border for the last row */
   }
-`;
-const SectionTitle = styled.div`
-  width: 100%;
-  height: 20px;
-  gap: 818px;
-  margin-bottom: 10px;
-`;
-const Day = styled.span`
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 20px;
-  letter-spacing: 0.005em;
 `;
 
 const DaySection = styled.div`

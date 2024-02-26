@@ -82,7 +82,6 @@ const SignIn = () => {
 
       if (data.succeeded) {
         
-<<<<<<< HEAD
         const payload = parseJwt(data.data.jwToken);
 
         const role =
@@ -117,20 +116,6 @@ const SignIn = () => {
           }
 
         
-=======
-        toast.success(data.message);
-        const payload = parseJwt(data.data.jwToken);
-        const response = await fetch(
-          `https://localhost:7226/api/Wallet/GetWalletByUserId?userId=${payload.sub}`
-        );
-        const result = await response.json();
-        console.log('result', result);
-        localStorage.setItem('walletNumber', result.data.walletNumber);
-        localStorage.setItem('email', email);
-        localStorage.setItem('userId', payload.sub);
-        localStorage.setItem('fullname', payload.given_name);
-       navigate('/dashboard');
->>>>>>> develop
       } else {
         toast.error('' + data.message);
       }
@@ -144,11 +129,7 @@ const SignIn = () => {
   return (
     <SignInRoot>
       <FrameContainer1>
-<<<<<<< HEAD
         <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
-=======
-        <Link to="/" style={{textDecoration:'none',color:'inherit'}}>
->>>>>>> develop
           {' '}
           <Savi>Savi.</Savi>
         </Link>
@@ -171,11 +152,7 @@ const SignIn = () => {
       </FrameContainer1>
       <LoginauthenticationParent>
         <Loginauthentication>
-<<<<<<< HEAD
           <Link style={{ textDecoration: 'none', color: 'inherit' }} to="/">
-=======
-          <Link style={{ textDecoration: 'none',color:'inherit' }} to="/">
->>>>>>> develop
             <Savi1>Savi.</Savi1>
           </Link>
           <Text1>Welcome back to Savi.</Text1>
@@ -220,13 +197,9 @@ const SignIn = () => {
                   </Link>
                 </ButtondefaultParent>
                 <Ctadefault onClick={handleSignIn}>
-<<<<<<< HEAD
                   <Text7 disabled={loading}>
-                    {loading ? 'Loging in...' : 'Login'}
+                    {loading ? 'Login in...' : 'Login'}
                   </Text7>
-=======
-                  <Text7 disabled={loading}>{loading ? 'Loging in...' : 'Login'}</Text7>
->>>>>>> develop
                 </Ctadefault>
               </FrameGroup>
             </FrameParent>
@@ -541,11 +514,7 @@ const PrivacyPolicy = styled.div`
 const PrivacyPolicyParent = styled.div`
   align-self: stretch;
   overflow: hidden;
-<<<<<<< HEAD
   margin-top: 3em;
-=======
-  margin-top:3em;
->>>>>>> develop
   display: flex;
   flex-direction: row;
   align-items: flex-end;

@@ -3,11 +3,10 @@ import styled from 'styled-components';
 import '../App.css';
 import Header from '../components/navs/Header';
 import { Container, Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 import PortalPopup from '../components/PortalPopup';
 import CreateSavingsGroupForm from './group/CreateNewSavingsGroup';
-import ExploreGroups from './group/ExploreGroups';
 import SidebarAdmin from '../components/navs/SidebarAdmin';
+import Sidebar from '../components/navs/Sidebar';
 
 const Settings = () => {
   const [isNewGroup, setNewGroup] = useState(false);
@@ -66,7 +65,7 @@ const Settings = () => {
   return (
     <>
       <Header />
-      <SidebarAdmin />
+     {localStorage.getItem("userRole")==="Admin"?(<SidebarAdmin />):(<Sidebar />)} 
       <div style={{ border: 'none', marginLeft: '17.5rem', paddingTop: '5em' }}>
         <div>
           <Container style={{ background: '#f9fafb' }}>
