@@ -50,10 +50,6 @@ const ActiveGroupDetails = () => {
           `https://localhost:7226/api/GroupTransaction/get-group-transactions?groupId=${groupId}`
         )
         .then((response) => {
-          // const sortedData = response.data.data.sort(
-          //   (a, b) => parseInt(a.createdAt) - parseInt(b.createdAt)
-          // );
-
           setTransactions(response.data.data);
           setTransactionSet(true);
           console.log('response', response.data.data);

@@ -70,7 +70,7 @@ const UserGroups = () => {
       <SidebarAdmin />
       <div style={{ border: 'none', marginLeft: '17.5rem', paddingTop: '5em' }}>
         <div>
-          <Container>
+          <Container style={{ background: '#f9fafb' }}>
             <Row>
               <PersonalSavingRoot>
                 <MyGoalsParent>
@@ -193,7 +193,7 @@ const Tools = styled.div`
 const Download = styled.button`
   width: 220px;
   height: 34px;
-  // cursor:pointer;
+  background:white;
   padding: 4px 16px 8px 16px;
   border-radius: 4px;
   gap: 10px;
