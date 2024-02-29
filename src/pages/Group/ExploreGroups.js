@@ -11,26 +11,48 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useLocation } from 'react-router-dom';
 
-const ExploreGroups = () => {
+const ExploreGroups = ({ sort }) => {
   const [isAddMoreGoalsOpen, setAddMoreGoalsOpen] = useState(false);
   const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
   const [isGroupFrameOpen, setGroupFrameOpen] = useState(false);
   const [userId, setUserId] = useState(localStorage.getItem("userId"));
   const [activeSavings, setActiveSavings] = useState([]);
+  const [allTrans, setAllTrans] = useState([]);
+  const [newSavings, setNew] = useState([]);
   const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
 
 
   
   const fetchData = async () => {
 
-    
+    var response = null;
       try {
-        const response = await fetch(
-          `https://localhost:7226/api/Group/ExploreGroups`
+        if(localStorage.getItem('userRole')==="User"){
+            response = await fetch(
+          `https://localhost:7226/api/Group/ExploreGroups
+          `
         );
+        }else{
+           response = await fetch(
+            `https://localhost:7226/api/Group/get-all-group`
+          );
+        }
+       
         const result = await response.json();
         if (result.succeeded) {
-          console.log('data', result.data);
+
+          setAllTrans(result.data);
+          // const today = new Date().toISOString().slice(0, 10);
+             const active = result.data.filter((item) =>item.groupStatus ===1);
+             setActiveSavings(active);
+
+             const today = new Date().toISOString().slice(0, 10);
+             const neww = result.data.filter((item) =>item.groupStatus ===2);
+             setNew(neww);            
+            //  setTransactions(response.data.data);
+          //console.log("rese",response.data.data);
+
+          console.log('dataa', result.data);
           setActiveSavings(result.data);
         }
       } catch (error) {
@@ -50,9 +72,6 @@ const ExploreGroups = () => {
     setAddMoreGoalsOpen(false);
   }, []);
 
-  const onFrameContainerClick = useCallback(() => {
-    // Please sync "Personal Saving" to the project
-  }, []);
 
   const closeGroupFrame = useCallback(() => {
     setGroupFrameOpen(false);
@@ -134,7 +153,9 @@ Swal.fire({
           Swal.fire('Successful','You joined '+ val+' successfully. The contribution will commence immediately all the slots are occupied','success');
            refreshGroup();
         }else{
-          toast.error("aa"+response.data.message);
+          Swal.fire('KYC NOT FOUND',response.data.message,'error');
+         
+          //toast.error("aa"+response.data.message);
         }        
       }).catch(error => {
         if (error.response) {
@@ -219,7 +240,6 @@ Swal.fire({
                 </ImageContainer>
                 <TextViewGroup>
                   <p>
-                  
                     <Link style={{textDecoration:'none'}} to={`/explore-group-details?id=${activesaving.id}`}>View Group</Link>
                   </p>
                 </TextViewGroup>

@@ -406,8 +406,8 @@ const ActiveGroupDetails = () => {
                           />
                         </ImageDiv>
                         <div>
-                          <Day>{transaction.firstname}</Day>
-                          <Time>2:24pm</Time>
+                          <Day>{transaction.fullname}</Day>
+                          <Time>{runDate(transaction.createdAt,false).split(" ")[3]}</Time>
                         </div>
                       </Firstdiv>
                       <Seconddiv>

@@ -4,11 +4,38 @@ import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import PortalPopup from '../PortalPopup';
 import LogoutModal from '../LogoutModal';
+import CreateSavingsGroupForm from '../../pages/group/CreateNewSavingsGroup';
+import Profile from './Profile';
+import axios from 'axios';
+
 const Header = () => {
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
+  const [imageCheck, setImageCheck]=useState(null);
 
+  const [isNewGroup, setNewGroup] = useState(false);
+
+  const openNewGroupForm = () => {
+    setNewGroup(true);
+  };
+  const closeNewGroupForm = () => {
+    setNewGroup(false);
+  };
+
+  if(localStorage.getItem('userImage')==null || localStorage.getItem('userImage')===""){
+    axios.get(`https://localhost:7226/api/User/getUserById?userId=${localStorage.getItem('userId')}`)
+    .then(response => {
+      const img = response.data.data.imageUrl;
+      localStorage.setItem('userImage',img);
+      console.log("img",img);
+      setImageCheck(img);
+    })
+    .catch(error => {
+      // Handle error
+      console.error("Error fetching data:", error);
+    });
+  }
 
   const dropdownRef = useRef(null);
   const toggleDropdown = () => {
@@ -73,12 +100,12 @@ const Header = () => {
           </div>
           <div ref={dropdownRef}>
             <AvatardefaultParent onClick={toggleDropdown}>
-              <AvatardefaultIcon alt="" src="/avatardefault@2x.png" />
+              <AvatardefaultIcon alt="" src={localStorage.getItem('userImage')==null?imageCheck:localStorage.getItem('userImage')} />
               <Savi>{localStorage.getItem('fullname').split(' ')[0]}</Savi>
               {isDropdownOpen && (
                <DropdownContent>
                <DropdownList>
-                 <ListItem>Profile</ListItem>
+                 <ListItem onClick={openNewGroupForm}>Profile</ListItem>
                  <ListItem>Settings</ListItem>
                  <ListItem onClick={openLogoutModal}>Logout</ListItem>
                </DropdownList>
@@ -98,6 +125,16 @@ const Header = () => {
         <LogoutModal onClose={closeLogoutModal} />
       </PortalPopup>
     )}
+
+      {isNewGroup && (
+        <PortalPopup
+          overlayColor="rgba(113, 113, 113, 0.3)"
+          placement="Centered"
+          onOutsideClick={closeNewGroupForm}
+        >
+          <Profile onClose={closeNewGroupForm} />
+        </PortalPopup>
+      )}
     </>
   );
 };
@@ -225,5 +262,5 @@ const DashboardRoot = styled.div`
   font-family: var(--text-md-medium);
   top: 0em;
   background:white;
-  z-index: 9999;
+   z-index: 10;
 `;

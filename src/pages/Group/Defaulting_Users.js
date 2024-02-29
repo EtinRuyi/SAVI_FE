@@ -7,6 +7,8 @@ import PortalPopup from '../../components/PortalPopup';
 import CreateSavingsGroupForm from './CreateNewSavingsGroup';
 import SidebarAdmin from '../../components/navs/SidebarAdmin';
 import axios from 'axios';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 const Defaulting_Users = () => {
   const [isNewGroup, setNewGroup] = useState(false);
@@ -58,6 +60,37 @@ const Defaulting_Users = () => {
       console.error('Error fetching personal savings data:', error);
     }
   };
+
+  const handleDownload = () => {
+    console.log('Button clicked!');
+  
+    const elementId = 'savi'; // Replace with the actual ID of the element you want to capture
+  
+    // Get the element by ID
+    const element = document.getElementById(elementId);
+  
+    if (!element) {
+      console.error(`Element with ID '${elementId}' not found.`);
+      return;
+    }
+  
+    // Capture the content of the specified element as an image using html2canvas
+    html2canvas(element, { scale: 2 }).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+  
+      // Create a new jsPDF instance
+      const pdf = new jsPDF();
+  
+      // Add the captured image to the PDF
+      pdf.addImage(imgData, 'PDF', 0, 0, pdf.internal.pageSize.getWidth(), 0);
+  
+      // Save the PDF with a specified filename
+      pdf.save(`${elementId}-report.pdf`);
+  
+      console.log('PDF generation completed.');
+    });
+  };
+
 
 
 
@@ -158,7 +191,7 @@ const Defaulting_Users = () => {
                 
                 </Tools>
                 <div>
-                  <Download>
+                  <Download onClick={ handleDownload}>
                     <svg
                       width="16"
                       height="16"
@@ -195,7 +228,7 @@ const Defaulting_Users = () => {
             </Row>
 
             <Row style={{ paddingInline: '10px' }}>
-              <DaySection>
+              <DaySection id='savi'>
                 <Table>
                   <thead style={{ background: 'white',borderBottom: '4px solid #f9fafb' }}>
                     <tr>
@@ -215,7 +248,7 @@ const Defaulting_Users = () => {
               
               <TRows>
               <Td>
-                <Pic src="profile.jpg"></Pic>
+                <Pic src={item.imageUrl}></Pic>
               </Td>
              
               <td>
@@ -242,7 +275,7 @@ const Defaulting_Users = () => {
               
               <TRows>
               <Td>
-                <Pic src="profile.jpg"></Pic>
+                <Pic src={item.imageUrl}></Pic>
               </Td>
              
               <td>

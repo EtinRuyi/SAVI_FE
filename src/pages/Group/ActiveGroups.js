@@ -93,7 +93,7 @@ const ActiveGroups = () => {
             <BadgeParent>
               <Badge>
                 <BadgeAndTag>
-                  <AvatarIcon alt="" src="/avatar@2x.png" />
+                  {/* <AvatarIcon alt="" src="/avatar@2x.png" /> */}
                   <StarsIcon alt="" src="/stars.svg" />
                   <Placeholder1>
                     <Status1 />
@@ -106,7 +106,7 @@ const ActiveGroups = () => {
                   </CloseIcon>
                 </BadgeAndTag>
                 <JoinContainer>
-                  <Group111Image alt="" src="/group111.png" />
+                  {/* <Group111Image alt="" src="/group111.png" /> */}
                   <VerticalDotsImage
                     alt=""
                     src="/dots-vertical.svg"

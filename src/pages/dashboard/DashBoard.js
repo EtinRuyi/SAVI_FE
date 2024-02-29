@@ -29,16 +29,16 @@ const DashBoard = () => {
       navigate('/signin');
     }
   }, [navigate]);
-
-  useEffect(() => {
-    const fetchData = async () => {
+const fetchData = async () => {
+      
       try {
         const response = await fetch(
-          `https://localhost:7226/api/Kyc/GetKycByUserId?=${localStorage.getItem(
+          `https://localhost:7226/api/Kyc/GetKycByUserId?userId=${localStorage.getItem(
             'userId'
           )}`
         );
         const result = await response.json();
+        console.log("kyc",result);
         if (!result.succeeded) {
           setKycComplete(false);
         }
@@ -46,6 +46,8 @@ const DashBoard = () => {
         console.error('Error fetching data:', error);
       }
     };
+  useEffect(() => {
+    
 
     fetchData();
   }, []);
@@ -94,12 +96,12 @@ const DashBoard = () => {
   const fetchGroupBalance = async () => {
     try {
       const response = await fetch(
-        `https://localhost:7226/api/GroupTransaction/get-total-transactions?userId=${localStorage.getItem(
+        `https://localhost:7226/api/Group/total-Group-Savings/${localStorage.getItem(
           'userId'
         )}`
       );
       const result = await response.json();
-      // console.log(result);
+       console.log("rese",result);
       setTotalGroupBalance(result.data);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -662,34 +664,37 @@ const DashBoard = () => {
             </TransactionHistoryParent>
 
             <FrameParent23>
-              <ReceiverParent>            
-                <SafeLock>Receiver</SafeLock>
-                <TypeParent>
-                  <SafeLock>Type</SafeLock>
-                  <SafeLock>Date</SafeLock>
-                  <SafeLock>Amount</SafeLock>
-                </TypeParent>
-              </ReceiverParent>
-
-
-              {groupTransactions.length === 0 ? (
+              <table style={{width:'100%'}}>
+                <thead>
+                  <th>Receiver</th>
+                  <th>Type</th>
+                  <th>Date</th>
+                  <th>Amount</th>
+                </thead>
+                <tbody>
+                {groupTransactions.length === 0 ? (
               <>No personal savings</>
             ) : (
               groupTransactions.map((trans) => (
-                <>
-                <BoladeAdegbeteParent>
-                <SafeLock>{trans.fullname}</SafeLock>
-                <LagosCorpGroupParent>
-                  <SafeLock>{trans.groupName}</SafeLock>
-                  <SafeLock>{getDate(trans.createdAt)}</SafeLock>
-                  <SafeLock>₦ {parseFloat(trans.amount).toLocaleString()}</SafeLock>
-                </LagosCorpGroupParent>
-              </BoladeAdegbeteParent>
-              <Divider10 />               
+             
+                <tr>
+                <td style={{padding:'5px'}}>{trans.fullname}</td>
                 
-                </>
+                  <td style={{padding:'5px'}}>{trans.groupName}</td>
+                  <td style={{padding:'5px'}}>{getDate(trans.createdAt)}</td>
+                  <td style={{padding:'5px'}}>₦{parseFloat(trans.amount).toLocaleString()}</td>
+            
+              </tr>
+              // <Divider10 />               
+                
+               
               ))
             )}
+                </tbody>
+              </table>
+
+
+              
 
             </FrameParent23>
           </FrameParent21>
@@ -2379,11 +2384,16 @@ const Divider10 = styled.div`
   height: 0.06rem;
 `;
 const FrameParent23 = styled.div`
+<<<<<<< HEAD
+
+  width:100%;
+=======
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
   gap: 0.56rem;
+>>>>>>> develop
 `;
 const FrameParent21 = styled.div`
   display: flex;

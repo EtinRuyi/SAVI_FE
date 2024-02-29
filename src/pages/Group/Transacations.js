@@ -114,7 +114,7 @@ return formattedTime;
                  {isTransactionsSet?(<>
               {todayTransactions.map((item, index) => (
                  <TRows>
-                 <td><Pic src='profile.jpg'></Pic></td> 
+                 <td><Pic src={item.avatar}></Pic></td> 
                  <td><Text>{item.fullname}</Text></td>
                  <td><Text>{item.groupName}</Text></td>
                  <td><Text>{getDate(item.createdAt)}</Text></td>
@@ -139,7 +139,7 @@ return formattedTime;
 
                  {isTransactionsSet?(<> {yesterdayTransactions.map((item, index) => (
                 <TRows>
-                <td><Pic src='profile.jpg'></Pic></td> 
+                <td><Pic src={item.avatar}></Pic></td> 
                 <td><Text>{item.fullname}</Text></td>
                 <td><Text>{item.groupName}</Text></td>
                 <td><Text>{getDate(item.createdAt)}</Text></td>
@@ -165,7 +165,7 @@ return formattedTime;
 
                  {isTransactionsSet?(<> {previousTransactions.map((item, index) => (
                   <TRows>
-                  <td><Pic src='profile.jpg'></Pic></td> 
+                  <td><Pic src={item.avatar}></Pic></td> 
                   <td><Text>{item.fullname}</Text></td>
                   <td><Text>{item.groupName}</Text></td>
                   <td><Text>{getDate(item.createdAt)}</Text></td>

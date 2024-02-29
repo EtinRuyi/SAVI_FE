@@ -588,16 +588,18 @@ const Text3 = styled.div`
 `;
 const Buttondefault = styled.div`
   width: 20rem;
-  border-radius: var(--br-5xs);
+  border-radius: var(--br-3xs);
   background-color: var(--white);
   border: 1px solid var(--grey-300);
   box-sizing: border-box;
   overflow: hidden;
+  padding-left:10px;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
-  padding: var(--padding-xs) var(--padding-base);
+  // padding: var(--padding-xs) var(--padding-base);
+  height:40px;
   gap: var(--gap-81xl);
   font-size: var(--button-semi-bold-14-size);
   color: var(--grey-400);
@@ -641,16 +643,17 @@ const ArrowDropDownIcon = styled.img`
 `;
 const Buttondefault1 = styled.div`
   width: 20rem;
-  border-radius: var(--br-5xs);
+  border-radius: var(--br-3xs);
   background-color: var(--white);
   border: 1px solid var(--grey-300);
   box-sizing: border-box;
   overflow: hidden;
   display: flex;
+  padding-left:10px;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: var(--padding-xs) var(--padding-base);
+  height:40px;
   font-size: var(--button-semi-bold-14-size);
   color: var(--grey-400);
 `;

@@ -3,13 +3,40 @@ import styled from 'styled-components';
 import { Container, Row, Col } from 'react-bootstrap';
 
 import { useCallback, useEffect, useState } from 'react';
-import PortalPopup from '../../components/PortalPopup';
-import DepositFunds from '../../components/DepositFunds';
-import { useNavigate } from 'react-router-dom';
-import KYC from '../Kyc';
+
 import SWCBarChart from './SWCBarChart';
+import axios from 'axios';
+
 
 const AdminDashBoard = () => {
+  const [topbar, setTopBarTransactions] = useState([]);
+
+
+  const getUserGroupTransactions = async () => {
+    try {
+      await axios
+        .get(
+          `https://localhost:7226/api/User/dashboard-user-data`
+        )
+        .then((response) => {        
+          var dat = response.data.data;
+            console.log("respo",dat);
+            setTopBarTransactions(dat);
+        })
+        .catch((error) => {
+          console.error('Error fetching data:', error);
+        });
+    } catch (error) {
+      console.error('Error fetching dataa:', error);
+    }
+  };
+
+  useEffect(() => {
+    getUserGroupTransactions();
+  }, []);
+
+
+
   return (
     <Container style={{ backgroundColor: '#F9FAFB' }}>
       <Row style={{ width: '100%' }}>
@@ -18,7 +45,7 @@ const AdminDashBoard = () => {
             <WelcomeBackJohn1>Welcome back Admin</WelcomeBackJohn1>
             <EmojiParent>
               <EmojiIcon1 alt="" src="/emoji@2x.png" />
-              <Savi>May 29, 2024</Savi>
+              <Savi>Feb 26, 2024</Savi>
             </EmojiParent>
           </WelcomeBackJohnDoeParent>
         </Col>
@@ -28,19 +55,19 @@ const AdminDashBoard = () => {
         <Col md={3}>
           <FirstDiv>
             <Title>New Registrations</Title>
-            <Number>300</Number>
+            <Number>{topbar[0]}</Number>
           </FirstDiv>
         </Col>
         <Col md={3}>
           <FirstDiv>
             <Title>New&nbsp;Saving Groups</Title>
-            <Number>300</Number>
+            <Number>{topbar[1]}</Number>
           </FirstDiv>
         </Col>
         <Col md={3}>
           <FirstDiv>
             <Title>New&nbsp;Defaulting Users</Title>
-            <Number>300</Number>
+            <Number>{topbar[2]}</Number>
           </FirstDiv>
         </Col>
       </Row>
@@ -68,28 +95,63 @@ const AdminDashBoard = () => {
                 </ImgIcon>
 
                 <InnerFrame>
-                  <span>Total</span>
+                  <span>Total Savings Group</span>
 
-                  <BoldNumber>&#x20A6;3,000</BoldNumber>
+                  <BoldNumber>{topbar[3]}</BoldNumber>
                 </InnerFrame>
                 <LastFrame>
-                  <Percent>
-                    -15%{' '}
-                    <svg
+                  {
+                    topbar[6]>-1?(<PercentGreen>
+                      +{topbar[5]}%
+                      <svg
                       width="16"
                       height="16"
                       viewBox="0 0 16 16"
                       fill="none"
                       xmlns="http://www.w3.org/2000/svg"
                     >
-                      <path d="M5.98 14H2.002V10L5.98 14Z" fill="#EB5757" />
-                      <path
-                        d="M9.261 8.23595L4.639 12.854L3.142 11.357L7.765 6.73895L9.261 8.23595ZM12.159 5.29295L10.709 6.74095L9.262 5.29095L10.712 3.84395L12.159 5.29295ZM15.056 2.39895L13.606 3.84595L12.159 2.39795L13.61 0.949951L15.056 2.39895Z"
-                        fill="#EB5757"
-                      />
+                      <g clip-path="url(#clip0_212_23403)">
+                        <path
+                          d="M10.02 2L13.998 2L13.998 6L10.02 2Z"
+                          fill="#34A853"
+                        />
+                        <path
+                          d="M6.739 7.76405L11.361 3.14605L12.858 4.64305L8.235 9.26105L6.739 7.76405ZM3.841 10.707L5.291 9.25905L6.738 10.709L5.288 12.156L3.841 10.707ZM0.944002 13.601L2.394 12.154L3.841 13.602L2.39 15.05L0.944002 13.601Z"
+                          fill="#34A853"
+                        />
+                      </g>
+                      <defs>
+                        <clipPath id="clip0_212_23403">
+                          <rect
+                            width="16"
+                            height="16"
+                            fill="white"
+                            transform="translate(16 16) rotate(-180)"
+                          />
+                        </clipPath>
+                      </defs>
                     </svg>
+                      <Des> than last month</Des>
+                    </PercentGreen>):(<Percent>
+                      -{topbar[6]}%
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path d="M5.98 14H2.002V10L5.98 14Z" fill="#EB5757" />
+                        <path
+                          d="M9.261 8.23595L4.639 12.854L3.142 11.357L7.765 6.73895L9.261 8.23595ZM12.159 5.29295L10.709 6.74095L9.262 5.29095L10.712 3.84395L12.159 5.29295ZM15.056 2.39895L13.606 3.84595L12.159 2.39795L13.61 0.949951L15.056 2.39895Z"
+                          fill="#EB5757"
+                        />
+                      </svg>
+                      
                     <Des> than last month</Des>
-                  </Percent>
+                  </Percent>)
+                  }
+                  
                 </LastFrame>
               </SecondDiv>
             </Col>
@@ -129,11 +191,11 @@ const AdminDashBoard = () => {
                 <InnerFrame>
                   <span>Total Funds Saved</span>
 
-                  <BoldNumber>&#x20A6;500,000</BoldNumber>
+                  <BoldNumber>&#x20A6;{parseFloat(topbar[4]).toLocaleString()}</BoldNumber>
                 </InnerFrame>
                 <LastFrame>
-                  <PercentGreen>
-                    +25%{' '}
+                  {topbar[5]>-1?(<PercentGreen>
+                    +{topbar[5]}%{' '}
                     <svg
                       width="16"
                       height="16"
@@ -162,8 +224,29 @@ const AdminDashBoard = () => {
                         </clipPath>
                       </defs>
                     </svg>
+                  
                     <Des> than last month</Des>
-                  </PercentGreen>
+                  </PercentGreen>):(  <Percent>
+                    -{topbar[5]}%{' '}
+                    <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path d="M5.98 14H2.002V10L5.98 14Z" fill="#EB5757" />
+                        <path
+                          d="M9.261 8.23595L4.639 12.854L3.142 11.357L7.765 6.73895L9.261 8.23595ZM12.159 5.29295L10.709 6.74095L9.262 5.29095L10.712 3.84395L12.159 5.29295ZM15.056 2.39895L13.606 3.84595L12.159 2.39795L13.61 0.949951L15.056 2.39895Z"
+                          fill="#EB5757"
+                        />
+                      </svg>
+                    <Des> than last month</Des>
+                  </Percent>
+)}
+                  
+
+                
                 </LastFrame>
               </SecondDiv>
             </Col>
@@ -185,13 +268,13 @@ const AdminDashBoard = () => {
                 </ImgIcon>
 
                 <InnerFrame>
-                  <span>Total Withdrawn</span>
+                  <span>Total Funds Withdrawn</span>
 
-                  <BoldNumber>&#x20A6;38,000</BoldNumber>
+                  <BoldNumber>&#x20A6;0</BoldNumber>
                 </InnerFrame>
                 <LastFrame>
                   <Percent>
-                    -15%{' '}
+                    0%{' '}
                     <svg
                       width="16"
                       height="16"
@@ -233,11 +316,11 @@ const AdminDashBoard = () => {
                 <InnerFrame>
                   <span>Total Withdrawals</span>
 
-                  <BoldNumber>&#x20A6;3,000</BoldNumber>
+                  <BoldNumber>0</BoldNumber>
                 </InnerFrame>
                 <LastFrame>
                   <Percent>
-                    -15%{' '}
+                    0%{' '}
                     <svg
                       width="16"
                       height="16"

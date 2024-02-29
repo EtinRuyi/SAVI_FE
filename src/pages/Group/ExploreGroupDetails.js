@@ -141,7 +141,9 @@ const ExploreGroupDetails = () => {
               );
               navigate('/active-group-details?id='+groupSavingsId);
             } else {
-              toast.error('aa' + response.data.message);
+            //  toast.error('aa' + response.data.message);
+              Swal.fire('KYC NOT FOUND',response.data.message,'error');
+        
             }
           })
           .catch((error) => {

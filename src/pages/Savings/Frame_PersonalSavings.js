@@ -46,7 +46,7 @@ const Frame_PersonalSaving = () => {
       <Sidebar />
       <div style={{ border: 'none', marginLeft: '17.5rem' }}>
         <div style={{ marginTop: '7em' }}>
-        <Container >
+        <Container  style={{ background: '#f9fafb',paddingBottom:'2em' }}>
           <Row style={{ width: '100%' }}>
 
           <FrameOfMyGoals>

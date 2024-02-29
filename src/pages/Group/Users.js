@@ -8,6 +8,8 @@ import PortalPopup from '../../components/PortalPopup';
 import CreateSavingsGroupForm from './CreateNewSavingsGroup';
 import SidebarAdmin from '../../components/navs/SidebarAdmin';
 import axios from 'axios';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 const Users = () => {
   const [isNewGroup, setNewGroup] = useState(false);
@@ -39,7 +41,7 @@ const Users = () => {
             setActiveUsers(actives);
             setTodayUser(datesToday);
             setTransactionSet(true);
-            //console.log('res', actives);
+           // console.log('res', actives);
           }
         })
         .catch((error) => {
@@ -70,6 +72,36 @@ const Users = () => {
     div33: 'black',
   });
 
+  const handleDownload = () => {
+    console.log('Button clicked!');
+  
+    const elementId = 'savi'; // Replace with the actual ID of the element you want to capture
+  
+    // Get the element by ID
+    const element = document.getElementById(elementId);
+  
+    if (!element) {
+      console.error(`Element with ID '${elementId}' not found.`);
+      return;
+    }
+  
+    // Capture the content of the specified element as an image using html2canvas
+    html2canvas(element, { scale: 2 }).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+  
+      // Create a new jsPDF instance
+      const pdf = new jsPDF();
+  
+      // Add the captured image to the PDF
+      pdf.addImage(imgData, 'PDF', 0, 0, pdf.internal.pageSize.getWidth(), 0);
+  
+      // Save the PDF with a specified filename
+      pdf.save(`${elementId}-report.pdf`);
+  
+      console.log('PDF generation completed.');
+    });
+  };
+
   const handleDivClick = (divId, foreGround) => {
     // Update background color based on the clicked div
     setColors({
@@ -90,6 +122,8 @@ const Users = () => {
       ...foreColors,
       [foreGround]: 'white',
     });
+
+
 
     for (let keys in foreColors) {
       if (keys !== foreGround) {
@@ -172,7 +206,7 @@ const Users = () => {
                   </All>
                 </Tools>
                 <div>
-                  <Download>
+                  <Download onClick={handleDownload}>
                     <svg
                       width="16"
                       height="16"
@@ -209,7 +243,7 @@ const Users = () => {
             </Row>
 
             <Row style={{ paddingInline: '10px' }}>
-              <DaySection>
+              <DaySection id='savi'>
                 <Table>
                   <thead
                     style={{
@@ -233,7 +267,7 @@ const Users = () => {
                       {transactions.map((item, index) => (
                         <TRows>
                           <Td>
-                            <Pic src="profile.jpg"></Pic>
+                            <Pic src={item.imageUrl}></Pic>
                           </Td>
                           <td>
                             <Text>{item.firstName + ' ' + item.lastName}</Text>
@@ -261,7 +295,7 @@ const Users = () => {
                   {activeUsers.map((item, index) => (
                         <TRows>
                           <Td>
-                            <Pic src="profile.jpg"></Pic>
+                            <Pic src={item.imageUrl}></Pic>
                           </Td>
                           <td>
                             <Text>{item.firstName + ' ' + item.lastName}</Text>
@@ -288,7 +322,7 @@ const Users = () => {
                   {todayUsers.map((item, index) => (
                         <TRows>
                           <Td>
-                            <Pic src="profile.jpg"></Pic>
+                            <Pic src={item.imageUrl}></Pic>
                           </Td>
                           <td>
                             <Text>{item.firstName + ' ' + item.lastName}</Text>

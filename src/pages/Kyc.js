@@ -37,6 +37,7 @@ const KYC = () => {
   const [isDropdownMenu2Open, setDropdownMenu2Open] = useState(false);
   const [uploadedProof, setUploadedProof] = useState(null);
   const [uploadedDocument, setUploadedDocument] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleDocumentDrop = (event) => {
     event.preventDefault();
@@ -142,14 +143,7 @@ const KYC = () => {
         ProofOfAddressUrl: formData.proofOfAddress,
       };
      
-
-      // const formDataToSend = new FormData();
-
-      // for (const key in adaptedFormData) {
-      //   if (adaptedFormData.hasOwnProperty(key)) {
-      //     formDataToSend.append(key, adaptedFormData[key]);
-      //   }
-      // }
+      setLoading(true);
       console.log('Form Data:', adaptedFormData);
 
       await axios.post(
@@ -199,6 +193,7 @@ const KYC = () => {
 
       toast.error('An unexpected error occurred. '+error);
     }
+    setLoading(false);
   };
 
   const closeDropdownMenu = useCallback(() => {
@@ -415,7 +410,7 @@ const KYC = () => {
               </FrameWrapper2>
               <Ctadefault type="submit">
                 <Iconadd16 alt="" />
-                <Text20>Submit</Text20>
+                <Text20>{loading ? 'Submitting...' : 'Submit'}</Text20>
                 <Iconadd16 alt="" />
               </Ctadefault>
             </FrameGroup>

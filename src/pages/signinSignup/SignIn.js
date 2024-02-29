@@ -46,6 +46,11 @@ const SignIn = () => {
           localStorage.setItem('fullname', val.data[2]);
           localStorage.setItem('walletNumber', val.data[1]);
           toast.success(backendResponse.data.message);
+          if(val.data[0]==="admin@gmail.com"){
+            localStorage.setItem('userRole', "Admin");
+          }else{
+            localStorage.setItem('userRole', "User");
+          }
           navigate('/dashboard');
         } else {
           toast.error(backendResponse.data.message);
